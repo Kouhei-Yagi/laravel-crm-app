@@ -74,6 +74,15 @@ touch database/database.sqlite
 
 # Breeze導入後、テーブル作成のためマイグレーションを実行
 php artisan migrate
+
+# .env の主な設定（日本語化後）
+APP_NAME="Customer Manager"
+APP_URL=http://customer-manager.test
+DB_CONNECTION=sqlite
+DB_DATABASE=./database/database.sqlite
+APP_LOCALE=ja
+APP_FAKER_LOCALE=ja_JP
+※ 本プロジェクトは日本語ロケール（ja）および JST（Asia/Tokyo）に設定済みです。
 ```
 
 ---
