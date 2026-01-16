@@ -1,0 +1,49 @@
+erDiagram
+
+    customers ||--o{ projects : "has many"
+    customers ||--o{ interactions : "has many"
+
+    projects ||--o{ interactions : "has many"
+    users ||--o{ projects : "assigned to"
+    users ||--o{ interactions : "logs"
+
+    customers {
+        int id PK
+        string name
+        string status
+        string rank
+        string address
+        string phone
+        datetime created_at
+        datetime updated_at
+    }
+
+    projects {
+        int id PK
+        int customer_id FK
+        int user_id FK
+        string name
+        string project_status
+        datetime created_at
+        datetime updated_at
+    }
+
+    interactions {
+        int id PK
+        int customer_id FK
+        int project_id FK "nullable"
+        int user_id FK
+        string interaction_type
+        text content
+        datetime created_at
+        datetime updated_at
+    }
+
+    users {
+        int id PK
+        string name
+        string email
+        string password
+        datetime created_at
+        datetime updated_at
+    }
