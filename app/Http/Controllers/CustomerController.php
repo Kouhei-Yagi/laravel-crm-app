@@ -29,7 +29,23 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Customer::create([
+            'name' => $request->name,
+            'kana' => $request->kana,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'postal_code' => $request->postal_code,
+            'address' => $request->address,
+            'address_detail' => $request->address_detail,
+            'company_name' => $request->company_name,
+            'department' => $request->department,
+            'position' => $request->position,
+            'status' => $request->status,
+            'rank' => $request->rank,
+            'assigned_user_id' => $request->assigned_user_id,
+            'memo' => $request->memo,
+        ]);
+        return redirect()->route('customers.index');
     }
 
     /**
