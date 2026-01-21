@@ -32,7 +32,9 @@
                             <tbody>
                                 @foreach ($customers as $customer)
                                     <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                        <td class="px-3 py-2 border">{{ $customer->name }}</td>
+                                        <td class="px-3 py-2 border">
+                                            <a href="{{ route('customers.show', $customer) }}">{{ $customer->name }}</a>
+                                        </td>
                                         <td class="px-3 py-2 border">{{ $customer->kana }}</td>
                                         <td class="px-3 py-2 border">{{ $customer->email }}</td>
                                         <td class="px-3 py-2 border">{{ $customer->phone }}</td>
