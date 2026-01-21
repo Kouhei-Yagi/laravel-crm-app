@@ -45,7 +45,8 @@ class CustomerController extends Controller
             'assigned_user_id' => $request->assigned_user_id,
             'memo' => $request->memo,
         ]);
-        return redirect()->route('customers.index');
+        return redirect()->route('customers.index')
+            ->with('success', '登録しました。');
     }
 
     /**
