@@ -1,63 +1,63 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            顧客一覧ページ
+        </h2>
+    </x-slot>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Customer Index</title>
-</head>
+    <div class="py-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
 
-<body>
-    <main>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>顧客名</th>
-                    <th>フリガナ</th>
-                    <th>メールアドレス</th>
-                    <th>電話番号</th>
-                    <th>会社名</th>
-                    <th>部署名</th>
-                    <th>役職</th>
-                    <th>郵便番号</th>
-                    <th>住所</th>
-                    <th>住所詳細</th>
-                    <th>ステータス</th>
-                    <th>ランク</th>
-                    <th>担当者</th>
-                    <th>メモ</th>
-                    <th>作成日</th>
-                    <th>更新日</th>
-                    <th>削除日</th>
-                </tr>
-            </thead>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th class="px-3 py-2 border">顧客名</th>
+                                    <th class="px-3 py-2 border">フリガナ</th>
+                                    <th class="px-3 py-2 border">メール</th>
+                                    <th class="px-3 py-2 border">電話番号</th>
+                                    <th class="px-3 py-2 border">会社名</th>
+                                    <th class="px-3 py-2 border">部署</th>
+                                    <th class="px-3 py-2 border">役職</th>
+                                    <th class="px-3 py-2 border">住所</th>
+                                    <th class="px-3 py-2 border">ステータス</th>
+                                    <th class="px-3 py-2 border">ランク</th>
+                                    <th class="px-3 py-2 border">担当者</th>
+                                    <th class="px-3 py-2 border">作成日</th>
+                                </tr>
+                            </thead>
 
-            <tbody>
-                @foreach ($customers as $customer)
-                    <tr>
-                        <td>{{ $customer->name }}</td>
-                        <td>{{ $customer->kana }}</td>
-                        <td>{{ $customer->email }}</td>
-                        <td>{{ $customer->phone }}</td>
-                        <td>{{ $customer->company_name }}</td>
-                        <td>{{ $customer->department }}</td>
-                        <td>{{ $customer->position }}</td>
-                        <td>{{ $customer->postal_code }}</td>
-                        <td>{{ $customer->address }}</td>
-                        <td>{{ $customer->address_detail }}</td>
-                        <td>{{ $customer->status }}</td>
-                        <td>{{ $customer->rank }}</td>
-                        <td>{{ optional($customer->user)->name }}</td>
-                        <td>{{ $customer->memo }}</td>
-                        <td>{{ $customer->created_at }}</td>
-                        <td>{{ $customer->updated_at }}</td>
-                        <td>{{ $customer->deleted_at }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                            <tbody>
+                                @foreach ($customers as $customer)
+                                    <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                        <td class="px-3 py-2 border">{{ $customer->name }}</td>
+                                        <td class="px-3 py-2 border">{{ $customer->kana }}</td>
+                                        <td class="px-3 py-2 border">{{ $customer->email }}</td>
+                                        <td class="px-3 py-2 border">{{ $customer->phone }}</td>
+                                        <td class="px-3 py-2 border">{{ $customer->company_name }}</td>
+                                        <td class="px-3 py-2 border">{{ $customer->department }}</td>
+                                        <td class="px-3 py-2 border">{{ $customer->position }}</td>
+                                        <td class="px-3 py-2 border whitespace-normal break-words max-w-[240px]">
+                                            {{ $customer->address }} {{ $customer->address_detail }}
+                                        </td>
+                                        <td class="px-3 py-2 border">{{ $customer->status }}</td>
+                                        <td class="px-3 py-2 border">{{ $customer->rank }}</td>
+                                        <td class="px-3 py-2 border">{{ optional($customer->user)->name }}</td>
+                                        <td class="px-3 py-2 border">{{ $customer->created_at->format('Y-m-d') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
 
-        {{ $customers->links() }}
-    </main>
-</body>
+                    <div class="mt-4">
+                        {{ $customers->links() }}
+                    </div>
 
-</html>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
