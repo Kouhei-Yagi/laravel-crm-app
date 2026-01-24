@@ -51,8 +51,8 @@ class CustomerController extends Controller
             'postal_code' => 'nullable|string|max:7',
             'address' => 'nullable|string|max:255',
             'address_detail' => 'nullable|string|max:255',
-            'status' => 'required|in:prospect, negotiation, won, lost, inactive',
-            'rank' => 'nullable|in:A, B, C',
+            'status' => 'required|in:prospect,negotiation,won,lost,inactive',
+            'rank' => 'nullable|in:A,B,C',
             'assigned_user_id' => 'nullable|integer|exists:users,id',
             'memo' => 'nullable|string',
         ]);
