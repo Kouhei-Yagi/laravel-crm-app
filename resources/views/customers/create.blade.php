@@ -1,156 +1,231 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            顧客新規登録ページ
+        </h2>
+    </x-slot>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>顧客新規作成ページ</title>
-</head>
+    <div class="py-6">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
 
-<body>
-    <h1>顧客新規作成ページ</h1>
+                    <form action="{{ route('customers.store') }}" method="post" class="space-y-6">
+                        @csrf
 
-    <form action="{{ route('customers.store') }}" method="post">
-        @csrf
+                        {{-- 基本情報 --}}
+                        <h3 class="font-semibold text-lg">基本情報</h3>
 
-        <div>
-            <label for="name">顧客名</label><br>
-            <input type="text" id="name" name="name" placeholder="例：山田太郎" value="{{ old('name') }}">
-            @error('name')
-                {{ $message }}
-            @enderror
+                        <div>
+                            <label for="name" class="block mb-1">顧客名</label>
+                            <input type="text" id="name" name="name"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                placeholder="例：山田太郎" value="{{ old('name') }}">
+                            @error('name')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="kana" class="block mb-1">フリガナ</label>
+                            <input type="text" id="kana" name="kana"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                placeholder="例：ヤマダタロウ" value="{{ old('kana') }}">
+                            @error('kana')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="email" class="block mb-1">メール</label>
+                            <input type="email" id="email" name="email"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                placeholder="例：example@example.com" value="{{ old('email') }}">
+                            @error('email')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="phone" class="block mb-1">電話番号</label>
+                            <input type="tel" id="phone" name="phone"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                placeholder="例：090-1234-5678" value="{{ old('phone') }}">
+                            @error('phone')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- 住所情報 --}}
+                        <h3 class="font-semibold text-lg">住所情報</h3>
+
+                        <div>
+                            <label for="postal_code" class="block mb-1">郵便番号</label>
+                            <input type="text" id="postal_code" name="postal_code"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                placeholder="例：123-4567" value="{{ old('postal_code') }}">
+                            @error('postal_code')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="address" class="block mb-1">住所</label>
+                            <input type="text" id="address" name="address"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                placeholder="例：福岡県福岡市〇〇" value="{{ old('address') }}">
+                            @error('address')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="address_detail" class="block mb-1">住所詳細</label>
+                            <input type="text" id="address_detail" name="address_detail"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                placeholder="例：マンション名・部屋番号など" value="{{ old('address_detail') }}">
+                            @error('address_detail')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- 会社情報 --}}
+                        <h3 class="font-semibold text-lg">会社情報</h3>
+
+                        <div>
+                            <label for="company_name" class="block mb-1">会社名</label>
+                            <input type="text" id="company_name" name="company_name"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                placeholder="例：株式会社サンプル" value="{{ old('company_name') }}">
+                            @error('company_name')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="department" class="block mb-1">部署</label>
+                            <input type="text" id="department" name="department"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                value="{{ old('department') }}">
+                            @error('department')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="position" class="block mb-1">役職</label>
+                            <input type="text" id="position" name="position"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                value="{{ old('position') }}">
+                            @error('position')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- 管理情報 --}}
+                        <h3 class="font-semibold text-lg">管理情報</h3>
+
+                        <div>
+                            <label for="status" class="block mb-1">ステータス</label>
+                            <select id="status" name="status"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">
+                                @foreach ($statuses as $status)
+                                    <option value="{{ $status }}" @selected(old('status') == $status)>
+                                        {{ $status }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('status')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="rank" class="block mb-1">ランク</label>
+                            <select id="rank" name="rank"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">
+                                @foreach ($ranks as $rank)
+                                    <option value="{{ $rank }}" @selected(old('rank') == $rank)>
+                                        {{ $rank }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('rank')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="assigned_user_id" class="block mb-1">担当者</label>
+                            <select id="assigned_user_id" name="assigned_user_id"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}" @selected(old('assigned_user_id') == $user->id)>
+                                        {{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('assigned_user_id')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- メモ --}}
+                        <h3 class="font-semibold text-lg">メモ</h3>
+
+                        <div>
+                            <textarea id="memo" name="memo"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                placeholder="自由記述欄">{{ old('memo') }}</textarea>
+                            @error('memo')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- ボタン --}}
+                        <div class="flex items-center gap-4 mt-6">
+                            <button type="submit"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                新規登録
+                            </button>
+
+                            <a href="{{ route('customers.index') }}" class="text-blue-600 hover:underline">
+                                一覧に戻る
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
         </div>
-
-        <div>
-            <label for="kana">フリガナ</label><br>
-            <input type="text" id="kana" name="kana" placeholder="例：ヤマダタロウ" value="{{ old('kana') }}">
-            @error('kana')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="email">メール</label><br>
-            <input type="email" id="email" name="email" placeholder="例：example@example.com"
-                value="{{ old('email') }}">
-            @error('email')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="phone">電話番号</label><br>
-            <input type="tel" id="phone" name="phone" placeholder="例：090-1234-5678"
-                value="{{ old('phone') }}">
-            @error('phone')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="postal_code">郵便番号</label><br>
-            <input type="text" id="postal_code" name="postal_code" placeholder="例：123-4567"
-                value="{{ old('postal_code') }}">
-            @error('postal_code')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="address">住所</label><br>
-            <input type="text" id="address" name="address" placeholder="例：福岡県福岡市〇〇" value="{{ old('address') }}">
-            @error('address')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="address_detail">住所詳細</label><br>
-            <input type="text" id="address_detail" name="address_detail" placeholder="例：マンション名・部屋番号など"
-                value="{{ old('address_detail') }}">
-            @error('address_detail')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="company_name">会社名</label><br>
-            <input type="text" id="company_name" name="company_name" placeholder="例：株式会社サンプル"
-                value="{{ old('company_name') }}">
-            @error('company_name')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="department">部署</label><br>
-            <input type="text" id="department" name="department" value="{{ old('department') }}">
-            @error('department')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="position">役職</label><br>
-            <input type="text" id="position" name="position" value="{{ old('position') }}">
-            @error('position')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="status">ステータス</label><br>
-            <select name="status" id="status">
-                @foreach ($statuses as $status)
-                    <option value="{{ $status }}" @selected(old('status') == $status)>
-                        {{ $status }}
-                    </option>
-                @endforeach
-            </select>
-            @error('status')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="rank">ランク</label><br>
-            <select name="rank" id="rank">
-                @foreach ($ranks as $rank)
-                    <option value="{{ $rank }}" @selected(old('rank') == $rank)>
-                        {{ $rank }}
-                    </option>
-                @endforeach
-            </select>
-            @error('rank')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="assigned_user_id">担当者</label><br>
-            <select name="assigned_user_id" id="assigned_user_id">
-                @foreach ($users as $user)
-                    <option value="{{ $user->id }}" @selected(old('assigned_user_id') == $user->id)>
-                        {{ $user->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('assigned_user_id')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <div>
-            <label for="memo">メモ</label><br>
-            <textarea id="memo" name="memo" placeholder="自由記述欄">{{ old('memo') }}</textarea>
-            @error('memo')
-                {{ $message }}
-            @enderror
-        </div>
-
-        <button type="submit">登録する</button>
-    </form>
-
-</body>
-
-</html>
+    </div>
+</x-app-layout>
