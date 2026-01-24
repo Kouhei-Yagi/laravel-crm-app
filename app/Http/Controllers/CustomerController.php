@@ -39,23 +39,30 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        Customer::create([
-            'name' => $request->name,
-            'kana' => $request->kana,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'postal_code' => $request->postal_code,
-            'address' => $request->address,
-            'address_detail' => $request->address_detail,
-            'company_name' => $request->company_name,
-            'department' => $request->department,
-            'position' => $request->position,
-            'status' => $request->status,
-            'rank' => $request->rank,
-            'assigned_user_id' => $request->assigned_user_id,
-            'memo' => $request->memo,
+        // バリデーション
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'kana' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'position' => 'nullable|string|max:255',
+            'postal_code' => 'nullable|string|max:7',
+            'address' => 'nullable|string|max:255',
+            'address_detail' => 'nullable|string|max:255',
+            'status' => 'required|in:prospect, negotiation, won, lost, inactive',
+            'rank' => 'nullable|in:A, B, C',
+            'assigned_user_id' => 'nullable|integer|exists:users,id',
+            'memo' => 'nullable|string',
         ]);
-        return redirect()->route('customers.index')
+
+        // 新規登録処理
+        Customer::create($validated);
+
+        // リダイレクト・フラッシュメッセージ
+        return redirect()
+            ->route('customers.index')
             ->with('success', '登録しました。');
     }
 
