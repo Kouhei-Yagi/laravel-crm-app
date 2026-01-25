@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -21,7 +22,16 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        // ステータス欄選択肢
+        $statuses = ['prospect', 'negotiation', 'won', 'lost', 'inactive'];
+
+        // ランク欄選択肢
+        $ranks = ['A', 'B', 'C'];
+
+        // 担当者欄選択肢
+        $users = User::all();
+
+        return view('customers.create', compact('statuses', 'ranks', 'users'));
     }
 
     /**
@@ -29,7 +39,31 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // バリデーション
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'kana' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'position' => 'nullable|string|max:255',
+            'postal_code' => 'nullable|string|max:7',
+            'address' => 'nullable|string|max:255',
+            'address_detail' => 'nullable|string|max:255',
+            'status' => 'required|in:prospect,negotiation,won,lost,inactive',
+            'rank' => 'nullable|in:A,B,C',
+            'assigned_user_id' => 'nullable|integer|exists:users,id',
+            'memo' => 'nullable|string',
+        ]);
+
+        // 新規登録処理
+        Customer::create($validated);
+
+        // リダイレクト・フラッシュメッセージ
+        return redirect()
+            ->route('customers.index')
+            ->with('success', '登録しました。');
     }
 
     /**
