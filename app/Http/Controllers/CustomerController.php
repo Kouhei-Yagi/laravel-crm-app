@@ -79,7 +79,16 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        // ステータス選択肢
+        $statuses = ['prospect', 'negotiation', 'won', 'lost', 'inactive'];
+
+        // ランク選択肢
+        $ranks = ['A', 'B', 'C'];
+
+        // 担当者選択肢
+        $users = User::all();
+
+        return view('customers.edit', compact('customer', 'statuses', 'ranks', 'users'));
     }
 
     /**

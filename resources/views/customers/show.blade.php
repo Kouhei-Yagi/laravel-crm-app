@@ -65,8 +65,15 @@
                         </tbody>
                     </table>
 
-                    <div class="mt-4">
-                        <a href="{{ route('customers.index') }}" class="text-blue-600 hover:underline">
+                    {{-- ボタン --}}
+                    <div class="flex items-center gap-4 mt-6">
+                        <a href="{{ route('customers.edit', $customer) }}"
+                            class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-500">
+                            編集
+                        </a>
+
+                        <a href="{{ route('customers.index') }}"
+                            class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
                             一覧に戻る
                         </a>
                     </div>
