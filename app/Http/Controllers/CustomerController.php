@@ -113,7 +113,9 @@ class CustomerController extends Controller
             'memo' => $request->memo,
         ]);
 
-        return redirect()->route('customers.show', $customer);
+        return redirect()
+            ->route('customers.show', $customer)
+            ->with('success', '更新しました。');
     }
 
     /**
