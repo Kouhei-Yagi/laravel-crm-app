@@ -90,11 +90,11 @@
                             編集
                         </a>
 
-                        <form action="{{ route('customers.destroy', $customer) }}" method="post">
+                        <form action="{{ route('customers.destroy', $customer) }}" method="post" class="inline-block">
                             @csrf
                             @method('delete')
-                            <button type="submit"
-                                class="inline-block px-4 py-2 bg-red-600 rounded-md hover:bg-red-700 dark:hover:bg-red-500">
+                            <button type="submit" onclick="return confirm('本当に削除しますか？')"
+                                class="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 dark:hover:bg-red-500">
                                 削除
                             </button>
                         </form>
