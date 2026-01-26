@@ -90,6 +90,15 @@
                             編集
                         </a>
 
+                        <form action="{{ route('customers.destroy', $customer) }}" method="post">
+                            @csrf
+                            @method('delete')
+                            <button type="submit"
+                                class="inline-block px-4 py-2 bg-red-600 rounded-md hover:bg-red-700 dark:hover:bg-red-500">
+                                削除
+                            </button>
+                        </form>
+
                         <a href="{{ route('customers.index') }}"
                             class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
                             一覧に戻る
