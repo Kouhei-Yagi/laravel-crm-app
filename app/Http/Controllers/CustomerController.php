@@ -79,7 +79,16 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        // ステータス選択肢
+        $statuses = ['prospect', 'negotiation', 'won', 'lost', 'inactive'];
+
+        // ランク選択肢
+        $ranks = ['A', 'B', 'C'];
+
+        // 担当者選択肢
+        $users = User::all();
+
+        return view('customers.edit', compact('customer', 'statuses', 'ranks', 'users'));
     }
 
     /**
@@ -87,7 +96,31 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        // バリデーション
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'kana' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'position' => 'nullable|string|max:255',
+            'postal_code' => 'nullable|string|max:7',
+            'address' => 'nullable|string|max:255',
+            'address_detail' => 'nullable|string|max:255',
+            'status' => 'required|in:prospect,negotiation,won,lost,inactive',
+            'rank' => 'nullable|in:A,B,C',
+            'assigned_user_id' => 'nullable|integer|exists:users,id',
+            'memo' => 'nullable|string',
+        ]);
+
+        // 更新処理
+        $customer->update($validated);
+
+        // リダイレクト・フラッシュメッセージ
+        return redirect()
+            ->route('customers.show', $customer)
+            ->with('success', '更新しました。');
     }
 
     /**
