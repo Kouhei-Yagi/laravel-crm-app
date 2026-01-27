@@ -1,48 +1,63 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            案件一覧ページ
+        </h2>
+    </x-slot>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>案件一覧ページ</title>
-</head>
+    <div class="py-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
 
-<body>
-    <h1>案件一覧ページ</h1>
+                    @if (session('success'))
+                        <div
+                            class="mb-4 p-3 rounded-md bg-green-100 text-green-800 border border-green-300 dark:bg-green-900 dark:text-green-100 dark:border-green-700">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>顧客名</th>
-                <th>案件名</th>
-                <th>案件内容</th>
-                <th>ステータス</th>
-                <th>税抜金額</th>
-                <th>開始日</th>
-                <th>終了日</th>
-                <th>担当者</th>
-                <th>メモ</th>
-            </tr>
-        </thead>
+                    {{-- ★ 横スクロール可能にするラッパー --}}
+                    <div class="overflow-x-auto">
+                        <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th class="px-3 py-2 border">顧客名</th>
+                                    <th class="px-3 py-2 border">案件名</th>
+                                    <th class="px-3 py-2 border">案件内容</th>
+                                    <th class="px-3 py-2 border">ステータス</th>
+                                    <th class="px-3 py-2 border">税抜金額</th>
+                                    <th class="px-3 py-2 border">開始日</th>
+                                    <th class="px-3 py-2 border">終了日</th>
+                                    <th class="px-3 py-2 border">担当者</th>
+                                    <th class="px-3 py-2 border">メモ</th>
+                                </tr>
+                            </thead>
 
-        <tbody>
-            @foreach ($projects as $project)
-                <tr>
-                    <td>{{ optional($project->customer)->name }}</td>
-                    <td>{{ $project->title }}</td>
-                    <td>{{ $project->description }}</td>
-                    <td>{{ $project->status }}</td>
-                    <td>{{ $project->amount }}</td>
-                    <td>{{ $project->start_date }}</td>
-                    <td>{{ $project->end_date }}</td>
-                    <td>{{ optional($project->user)->name }}</td>
-                    <td>{{ $project->memo }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+                            <tbody>
+                                @foreach ($projects as $project)
+                                    <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                        <td class="px-3 py-2 border">{{ optional($project->customer)->name }}</td>
+                                        <td class="px-3 py-2 border">{{ $project->title }}</td>
+                                        <td class="px-3 py-2 border">{{ $project->description }}</td>
+                                        <td class="px-3 py-2 border">{{ $project->status }}</td>
+                                        <td class="px-3 py-2 border">{{ number_format($project->amount) }}</td>
+                                        <td class="px-3 py-2 border">{{ $project->start_date }}</td>
+                                        <td class="px-3 py-2 border">{{ $project->end_date }}</td>
+                                        <td class="px-3 py-2 border">{{ optional($project->user)->name }}</td>
+                                        <td class="px-3 py-2 border">{{ $project->memo }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
 
-    {{ $projects->links() }}
-</body>
+                    <div class="mt-4">
+                        {{ $projects->links() }}
+                    </div>
 
-</html>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
