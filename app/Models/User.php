@@ -48,6 +48,11 @@ class User extends Authenticatable
 
     public function customers()
     {
-        return $this->hasMany(Customer::class);
+        return $this->hasMany(Customer::class, 'assigned_user_id');
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'assigned_user_id');
     }
 }
