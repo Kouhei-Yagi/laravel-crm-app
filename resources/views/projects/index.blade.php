@@ -13,14 +13,14 @@
     <table border="1">
         <thead>
             <tr>
-                <th>顧客ID</th>
+                <th>顧客名</th>
                 <th>案件名</th>
                 <th>案件内容</th>
                 <th>ステータス</th>
                 <th>税抜金額</th>
                 <th>開始日</th>
                 <th>終了日</th>
-                <th>担当者ID</th>
+                <th>担当者</th>
                 <th>メモ</th>
             </tr>
         </thead>
@@ -28,14 +28,14 @@
         <tbody>
             @foreach ($projects as $project)
                 <tr>
-                    <td>{{ $project->customer_id }}</td>
+                    <td>{{ optional($project->customer)->name }}</td>
                     <td>{{ $project->title }}</td>
                     <td>{{ $project->description }}</td>
                     <td>{{ $project->status }}</td>
                     <td>{{ $project->amount }}</td>
                     <td>{{ $project->start_date }}</td>
                     <td>{{ $project->end_date }}</td>
-                    <td>{{ $project->assigned_user_id }}</td>
+                    <td>{{ optional($project->user)->name }}</td>
                     <td>{{ $project->memo }}</td>
                 </tr>
             @endforeach

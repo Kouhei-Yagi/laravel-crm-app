@@ -32,4 +32,9 @@ class Customer extends Model
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
     }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'customer_id');
+    }
 }

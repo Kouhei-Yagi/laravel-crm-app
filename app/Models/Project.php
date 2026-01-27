@@ -17,4 +17,14 @@ class Project extends Model
         'assigned_user_id',
         'memo',
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'assigned_user_id');
+    }
 }
