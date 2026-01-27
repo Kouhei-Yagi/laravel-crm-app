@@ -8,11 +8,13 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 案件一覧を表示
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
-        $projects = Project::all();
+        $projects = Project::paginate(20);
 
         return view('projects.index', compact('projects'));
     }
