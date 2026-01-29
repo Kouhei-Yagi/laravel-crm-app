@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
     /**
-     * 案件一覧を表示
+     * 案件一覧ページを表示する
      *
      * @return \Illuminate\Contracts\View\View
      */
@@ -36,11 +36,14 @@ class ProjectController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 案件詳細ページを表示する
+     *
+     * @param Project $project
+     * @return \Illuminate\Contracts\View\View
      */
     public function show(Project $project)
     {
-        //
+        return view('projects.show', compact('project'));
     }
 
     /**
