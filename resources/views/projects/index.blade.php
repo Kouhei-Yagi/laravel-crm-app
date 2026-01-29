@@ -17,47 +17,62 @@
                         </div>
                     @endif
 
-                    {{-- ★ 横スクロール可能にするラッパー --}}
-                    <div class="overflow-x-auto">
-                        <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
-                            <thead class="bg-gray-50 dark:bg-gray-700">
-                                <tr>
-                                    <th class="px-3 py-2 border">顧客名</th>
-                                    <th class="px-3 py-2 border">案件名</th>
-                                    <th class="px-3 py-2 border">案件内容</th>
-                                    <th class="px-3 py-2 border">ステータス</th>
-                                    <th class="px-3 py-2 border">税抜金額</th>
-                                    <th class="px-3 py-2 border">開始日</th>
-                                    <th class="px-3 py-2 border">終了日</th>
-                                    <th class="px-3 py-2 border">担当者</th>
-                                    <th class="px-3 py-2 border">メモ</th>
+                    <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-3 py-2 border">案件名</th>
+                                <th class="px-3 py-2 border">顧客名</th>
+                                <th class="px-3 py-2 border">ステータス</th>
+                                <th class="px-3 py-2 border">税抜金額</th>
+                                <th class="px-3 py-2 border">担当者</th>
+                                <th class="px-3 py-2 border">期間</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($projects as $project)
+                                <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                    <td class="px-3 py-2 border">
+                                        <a href="{{ route('projects.show', $project) }}"
+                                            class="text-blue-600 hover:underline">
+                                            {{ $project->title }}
+                                        </a>
+                                    </td>
+                                    <td class="px-3 py-2 border">
+                                        @if ($project->customer)
+                                            <a href="{{ route('customers.show', $project->customer) }}"
+                                                class="text-blue-600 hover:underline">
+                                                {{ optional($project->customer)->name }}
+                                            </a>
+                                        @else
+                                            <span class="text-gray-400">未設定</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-3 py-2 border">
+                                        {{ $project->status }}
+                                    </td>
+                                    <td class="px-3 py-2 border">
+                                        {{ number_format($project->amount) }}
+                                    </td>
+                                    <td class="px-3 py-2 border">
+                                        {{ optional($project->user)->name }}
+                                    </td>
+                                    <td class="px-3 py-2 border">
+                                        {{ $project->start_date->format('Y-m-d') }} ～
+                                        {{ $project->end_date->format('Y-m-d') }}
+                                    </td>
                                 </tr>
-                            </thead>
-
-                            <tbody>
-                                @foreach ($projects as $project)
-                                    <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                        <td class="px-3 py-2 border">{{ optional($project->customer)->name }}</td>
-                                        <td class="px-3 py-2 border">{{ $project->title }}</td>
-                                        <td class="px-3 py-2 border">{{ $project->description }}</td>
-                                        <td class="px-3 py-2 border">{{ $project->status }}</td>
-                                        <td class="px-3 py-2 border">{{ number_format($project->amount) }}</td>
-                                        <td class="px-3 py-2 border">{{ $project->start_date }}</td>
-                                        <td class="px-3 py-2 border">{{ $project->end_date }}</td>
-                                        <td class="px-3 py-2 border">{{ optional($project->user)->name }}</td>
-                                        <td class="px-3 py-2 border">{{ $project->memo }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="mt-4">
-                        {{ $projects->links() }}
-                    </div>
-
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
+
+                <div class="mt-4">
+                    {{ $projects->links() }}
+                </div>
+
             </div>
         </div>
+    </div>
     </div>
 </x-app-layout>
