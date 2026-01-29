@@ -18,7 +18,7 @@
             </tr>
             <tr>
                 <th>顧客名</th>
-                <td>{{ $project->customer_id }}</td>
+                <td>{{ optional($project->customer)->name }}</td>
             </tr>
             <tr>
                 <th>案件内容</th>
@@ -30,19 +30,19 @@
             </tr>
             <tr>
                 <th>税抜金額</th>
-                <td>{{ $project->amount }} 円</td>
+                <td>{{ number_format($project->amount) }} 円</td>
             </tr>
             <tr>
                 <th>開始日</th>
-                <td>{{ $project->start_date }}</td>
+                <td>{{ $project->start_date->format('Y-m-d') }}</td>
             </tr>
             <tr>
                 <th>終了日</th>
-                <td>{{ $project->end_date }}</td>
+                <td>{{ $project->end_date->format('Y-m-d') }}</td>
             </tr>
             <tr>
                 <th>担当者</th>
-                <td>{{ $project->assigned_user_id }}</td>
+                <td>{{ optional($project->user)->name }}</td>
             </tr>
             <tr>
                 <th>メモ</th>
