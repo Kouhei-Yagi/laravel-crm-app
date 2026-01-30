@@ -20,11 +20,13 @@ class ProjectController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 案件新規作成ページを表示する
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
-        //
+        return view('projects.create');
     }
 
     /**
