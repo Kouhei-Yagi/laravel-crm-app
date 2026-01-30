@@ -30,11 +30,26 @@ class ProjectController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 案件新規登録処理
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        //
+        Project::create([
+            'title' => $request->title,
+            'customer_id' => $request->customer_id,
+            'description' => $request->description,
+            'status' => $request->status,
+            'amount' => $request->amount,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'assigned_user_id' => $request->assigned_user_id,
+            'memo' => $request->memo,
+        ]);
+
+        return redirect()->route('projects.index');
     }
 
     /**
