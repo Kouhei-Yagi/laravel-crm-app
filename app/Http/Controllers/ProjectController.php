@@ -14,7 +14,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::paginate(20);
+        $projects = Project::orderBy('created_at', 'desc')->paginate(20);
 
         return view('projects.index', compact('projects'));
     }
@@ -49,7 +49,9 @@ class ProjectController extends Controller
             'memo' => $request->memo,
         ]);
 
-        return redirect()->route('projects.index');
+        return redirect()
+            ->route('projects.index')
+            ->with('success', '登録しました。');
     }
 
     /**
