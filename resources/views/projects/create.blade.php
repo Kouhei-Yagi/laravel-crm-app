@@ -20,7 +20,11 @@
 
         <p>
             <label for="customer_id">顧客名</label><br>
-            <input type="number" id="customer_id" name="customer_id">
+            <select id="customer_id" name="customer_id">
+                @foreach ($customers as $customer)
+                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                @endforeach
+            </select>
         </p>
 
         <p>
@@ -30,7 +34,11 @@
 
         <p>
             <label for="status">ステータス</label><br>
-            <input type="text" id="status" name="status">
+            <select id="status" name="status">
+                @foreach ($statuses as $value => $label)
+                    <option value="{{ $value }}">{{ $label }}</option>
+                @endforeach
+            </select>
         </p>
 
         <p>
@@ -50,7 +58,11 @@
 
         <p>
             <label for="assigned_user_id">担当者</label><br>
-            <input type="number" id="assigned_user_id" name="assigned_user_id">
+            <select id="assigned_user_id" name="assigned_user_id">
+                @foreach ($users as $user)
+                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                @endforeach
+            </select>
         </p>
 
         <p>

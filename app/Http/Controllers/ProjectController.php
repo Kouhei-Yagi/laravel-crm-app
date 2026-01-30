@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -26,7 +28,16 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('projects.create');
+        // 顧客名の選択肢
+        $customers = Customer::all();
+
+        // ステータスの選択肢
+        $statuses = Project::STATUSES;
+
+        // 担当者の選択肢
+        $users = User::all();
+
+        return view('projects.create', compact('customers', 'statuses', 'users'));
     }
 
     /**
