@@ -9,6 +9,14 @@ class Project extends Model
 {
     use HasFactory;
 
+    const STATUSES = [
+        'estimating' => '見積中',
+        'proposing' => '提案中',
+        'contracted' => '契約済み',
+        'lost' => '失注',
+        'on_hold' => '保留',
+    ];
+
     protected $fillable = [
         'customer_id',
         'title',

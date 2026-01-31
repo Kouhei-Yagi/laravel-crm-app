@@ -49,7 +49,7 @@
                                         @endif
                                     </td>
                                     <td class="px-3 py-2 border">
-                                        {{ $project->status }}
+                                        {{ App\Models\Project::STATUSES[$project->status] }}
                                     </td>
                                     <td class="px-3 py-2 border">
                                         {{ number_format($project->amount) }}
