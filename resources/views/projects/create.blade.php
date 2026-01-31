@@ -15,59 +15,95 @@
 
         <p>
             <label for="title">案件名</label><br>
-            <input type="text" id="title" name="title">
+            <input type="text" id="title" name="title" value="{{ old('title') }}">
+
+            @error('title')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="customer_id">顧客名</label><br>
             <select id="customer_id" name="customer_id">
                 @foreach ($customers as $customer)
-                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                    <option value="{{ $customer->id }}" @selected(old('customer_id') == $customer->id)>{{ $customer->name }}</option>
                 @endforeach
             </select>
+
+            @error('customer_id')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="description">案件内容</label><br>
-            <textarea id="description" name="description"></textarea>
+            <textarea id="description" name="description">{{ old('description') }}</textarea>
+
+            @error('description')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="status">ステータス</label><br>
             <select id="status" name="status">
                 @foreach ($statuses as $value => $label)
-                    <option value="{{ $value }}">{{ $label }}</option>
+                    <option value="{{ $value }}" @selected(old('status') == $value)>{{ $label }}</option>
                 @endforeach
             </select>
+
+            @error('status')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="amount">税抜金額</label><br>
-            <input type="number" id="amount" name="amount">
+            <input type="number" id="amount" name="amount" value="{{ old('amount') }}">
+
+            @error('amount')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="start_date">開始日</label><br>
-            <input type="date" id="start_date" name="start_date">
+            <input type="date" id="start_date" name="start_date" value="{{ old('start_date') }}">
+
+            @error('start_date')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="end_date">終了日</label><br>
-            <input type="date" id="end_date" name="end_date">
+            <input type="date" id="end_date" name="end_date" value="{{ old('end_date') }}">
+
+            @error('end_date')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="assigned_user_id">担当者</label><br>
             <select id="assigned_user_id" name="assigned_user_id">
                 @foreach ($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    <option value="{{ $user->id }}" @selected(old('assigned_user_id') == $user->id)>{{ $user->name }}</option>
                 @endforeach
             </select>
+
+            @error('assigned_user_id')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="memo">メモ</label><br>
-            <textarea id="memo" name="memo"></textarea>
+            <textarea id="memo" name="memo">{{ old('memo') }}</textarea>
+
+            @error('memo')
+                {{ $message }}
+            @enderror
         </p>
 
         <button type="submit">登録</button>
