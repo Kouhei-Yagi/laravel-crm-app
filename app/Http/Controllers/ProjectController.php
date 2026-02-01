@@ -102,11 +102,27 @@ class ProjectController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 案件更新処理
+     *
+     * @param Request $request
+     * @param Project $project
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Project $project)
     {
-        //
+        $project->update([
+            'title' => $request->title,
+            'customer_id' => $request->customer_id,
+            'description' => $request->description,
+            'status' => $request->status,
+            'amount' => $request->amount,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'assigned_user_id' => $request->assigned_user_id,
+            'memo' => $request->memo,
+        ]);
+
+        return redirect()->route('projects.show', $project);
     }
 
     /**
