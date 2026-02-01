@@ -82,19 +82,54 @@ class ProjectController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 案件編集ページを表示する
+     *
+     * @param Project $project
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Project $project)
     {
-        //
+        // 顧客名の選択肢
+        $customers = Customer::all();
+
+        // 案件ステータスの選択肢
+        $statuses = Project::STATUSES;
+
+        // 担当者の選択肢
+        $users = User::all();
+
+        return view('projects.edit', compact('project', 'customers', 'statuses', 'users'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * 案件更新処理
+     *
+     * @param Request $request
+     * @param Project $project
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Project $project)
     {
-        //
+        // バリデーション
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'customer_id' => 'required|integer|exists:customers,id',
+            'description' => 'nullable|string',
+            'status' => 'required|in:estimating,proposing,contracted,lost,on_hold',
+            'amount' => 'nullable|integer|min:0',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'assigned_user_id' => 'nullable|integer|exists:users,id',
+            'memo' => 'nullable|string',
+        ]);
+
+        // 更新処理
+        $project->update($validated);
+
+        // リダイレクト・フラッシュメッセージ
+        return redirect()
+            ->route('projects.show', $project)
+            ->with('success', '更新しました。');
     }
 
     /**

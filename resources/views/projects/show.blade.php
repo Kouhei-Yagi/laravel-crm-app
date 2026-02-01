@@ -10,6 +10,13 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
+                    @if (session('success'))
+                        <div
+                            class="mb-4 p-3 rounded-md bg-green-100 text-green-800 border border-green-300 dark:bg-green-900 dark:text-green-100 dark:border-green-700">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     <table class="w-full border border-gray-300 dark:border-gray-700 text-sm">
                         <tbody>
 
@@ -67,6 +74,11 @@
 
                     {{-- ボタン --}}
                     <div class="flex items-center gap-4 mt-6">
+                        <a href="{{ route('projects.edit', $project) }}"
+                            class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-500">
+                            編集
+                        </a>
+
                         <a href="{{ route('projects.index') }}"
                             class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
                             一覧に戻る
