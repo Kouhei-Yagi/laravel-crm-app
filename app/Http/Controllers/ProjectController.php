@@ -122,7 +122,9 @@ class ProjectController extends Controller
             'memo' => $request->memo,
         ]);
 
-        return redirect()->route('projects.show', $project);
+        return redirect()
+            ->route('projects.show', $project)
+            ->with('success', '更新しました。');
     }
 
     /**
