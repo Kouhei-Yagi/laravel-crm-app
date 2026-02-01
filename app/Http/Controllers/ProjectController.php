@@ -82,11 +82,23 @@ class ProjectController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 案件編集ページを表示する
+     *
+     * @param Project $project
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Project $project)
     {
-        //
+        // 顧客名の選択肢
+        $customers = Customer::all();
+
+        // 案件ステータスの選択肢
+        $statuses = Project::STATUSES;
+
+        // 担当者の選択肢
+        $users = User::all();
+
+        return view('projects.edit', compact('project', 'customers', 'statuses', 'users'));
     }
 
     /**
