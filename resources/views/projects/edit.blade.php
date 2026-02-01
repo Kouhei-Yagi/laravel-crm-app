@@ -16,7 +16,11 @@
 
         <p>
             <label for="title">案件名</label><br>
-            <input type="text" name="title" id="title" value="{{ $project->title }}">
+            <input type="text" name="title" id="title" value="{{ old('title', $project->title) }}"><br>
+
+            @error('title')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
@@ -27,56 +31,88 @@
                         {{ $customer->name }}
                     </option>
                 @endforeach
-            </select>
+            </select><br>
+
+            @error('customer_id')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="description">案件内容</label><br>
-            <textarea name="description" id="description">{{ $project->description }}</textarea>
+            <textarea name="description" id="description">{{ old('description', $project->description) }}</textarea><br>
+
+            @error('description')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="status">案件ステータス</label><br>
             <select name="status" id="status">
                 @foreach ($statuses as $value => $label)
-                    <option value="{{ $value }}" @selected(old('status') ?? $project->status == $value)>
+                    <option value="{{ $value }}" @selected((old('status') ?? $project->status) == $value)>
                         {{ $label }}
                     </option>
                 @endforeach
-            </select>
+            </select><br>
+
+            @error('status')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="amount">税抜金額</label><br>
-            <input type="number" name="amount" id="amount" value="{{ $project->amount }}"> 円
+            <input type="number" name="amount" id="amount" value="{{ old('amount', $project->amount) }}"> 円<br>
+
+            @error('amount')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
-            <label for="start_date"">開始日</label><br>
+            <label for="start_date">開始日</label><br>
             <input type="date" name="start_date" id="start_date"
-                value="{{ optional($project->start_date)->format('Y-m-d') }}">
+                value="{{ old('start_date', optional($project->start_date)->format('Y-m-d')) }}"><br>
+
+            @error('start_date')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
-            <label for="end_date"">終了日</label><br>
+            <label for="end_date">終了日</label><br>
             <input type="date" name="end_date" id="end_date"
-                value="{{ optional($project->end_date)->format('Y-m-d') }}">
+                value="{{ old('end_date', optional($project->end_date)->format('Y-m-d')) }}"><br>
+
+            @error('end_date')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="assigned_user_id">担当者</label><br>
             <select name="assigned_user_id" id="assigned_user_id">
                 @foreach ($users as $user)
-                    <option value="{{ $user->id }}" @selected(old('assigned_user_id') ?? $project->user->id == $user->id)>
+                    <option value="{{ $user->id }}" @selected((old('assigned_user_id') ?? $project->assigned_user_id) == $user->id)>
                         {{ $user->name }}
                     </option>
                 @endforeach
-            </select>
+            </select><br>
+
+            @error('assigned_user_id')
+                {{ $message }}
+            @enderror
         </p>
 
         <p>
             <label for="memo">メモ</label><br>
-            <textarea name="memo" id="memo">{{ $project->memo }}</textarea>
+            <textarea name="memo" id="memo">{{ old('memo', $project->memo) }}</textarea><br>
+
+            @error('memo')
+                {{ $message }}
+            @enderror
         </p>
 
         <button type="submit">更新</button>

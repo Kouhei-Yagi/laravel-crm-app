@@ -110,18 +110,23 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        $project->update([
-            'title' => $request->title,
-            'customer_id' => $request->customer_id,
-            'description' => $request->description,
-            'status' => $request->status,
-            'amount' => $request->amount,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'assigned_user_id' => $request->assigned_user_id,
-            'memo' => $request->memo,
+        // バリデーション
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'customer_id' => 'required|integer|exists:customers,id',
+            'description' => 'nullable|string',
+            'status' => 'required|in:estimating,proposing,contracted,lost,on_hold',
+            'amount' => 'nullable|integer|min:0',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'assigned_user_id' => 'nullable|integer|exists:users,id',
+            'memo' => 'nullable|string',
         ]);
 
+        // 更新処理
+        $project->update($validated);
+
+        // リダイレクト・フラッシュメッセージ
         return redirect()
             ->route('projects.show', $project)
             ->with('success', '更新しました。');
