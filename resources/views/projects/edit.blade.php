@@ -1,122 +1,172 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            案件編集ページ
+        </h2>
+    </x-slot>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>案件編集ページ</title>
-</head>
+    <div class="py-6">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
 
-<body>
-    <h1>案件編集ページ</h1>
+                    <form action="{{ route('projects.update', $project) }}" method="post" class="space-y-6">
+                        @csrf
+                        @method('patch')
 
-    <form action="{{ route('projects.update', $project) }}" method="post">
-        @csrf
-        @method('patch')
+                        {{-- 基本情報 --}}
+                        <h3 class="font-semibold text-lg">基本情報</h3>
 
-        <p>
-            <label for="title">案件名</label><br>
-            <input type="text" name="title" id="title" value="{{ old('title', $project->title) }}"><br>
+                        <div>
+                            <label for="title" class="block mb-1">案件名</label>
+                            <input type="text" id="title" name="title"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                value="{{ old('title', $project->title) }}">
+                            @error('title')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-            @error('title')
-                {{ $message }}
-            @enderror
-        </p>
+                        <div>
+                            <label for="customer_id" class="block mb-1">顧客名</label>
+                            <select id="customer_id" name="customer_id"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">
+                                @foreach ($customers as $customer)
+                                    <option value="{{ $customer->id }}" @selected((old('customer_id') ?? $project->customer_id) == $customer->id)>
+                                        {{ $customer->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('customer_id')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-        <p>
-            <label for="customer_id">顧客名</label><br>
-            <select name="customer_id" id="customer_id">
-                @foreach ($customers as $customer)
-                    <option value="{{ $customer->id }}" @selected((old('customer_id') ?? $project->customer_id) == $customer->id)>
-                        {{ $customer->name }}
-                    </option>
-                @endforeach
-            </select><br>
+                        <div>
+                            <label for="description" class="block mb-1">案件内容</label>
+                            <textarea id="description" name="description"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">{{ old('description', $project->description) }}</textarea>
+                            @error('description')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-            @error('customer_id')
-                {{ $message }}
-            @enderror
-        </p>
+                        {{-- ステータス・金額 --}}
+                        <h3 class="font-semibold text-lg">案件ステータス</h3>
 
-        <p>
-            <label for="description">案件内容</label><br>
-            <textarea name="description" id="description">{{ old('description', $project->description) }}</textarea><br>
+                        <div>
+                            <label for="status" class="block mb-1">ステータス</label>
+                            <select id="status" name="status"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">
+                                @foreach ($statuses as $value => $label)
+                                    <option value="{{ $value }}" @selected((old('status') ?? $project->status) == $value)>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('status')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-            @error('description')
-                {{ $message }}
-            @enderror
-        </p>
+                        <div>
+                            <label for="amount" class="block mb-1">税抜金額</label>
+                            <input type="number" id="amount" name="amount"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                value="{{ old('amount', $project->amount) }}">
+                            @error('amount')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-        <p>
-            <label for="status">案件ステータス</label><br>
-            <select name="status" id="status">
-                @foreach ($statuses as $value => $label)
-                    <option value="{{ $value }}" @selected((old('status') ?? $project->status) == $value)>
-                        {{ $label }}
-                    </option>
-                @endforeach
-            </select><br>
+                        {{-- 期間 --}}
+                        <h3 class="font-semibold text-lg">期間</h3>
 
-            @error('status')
-                {{ $message }}
-            @enderror
-        </p>
+                        <div>
+                            <label for="start_date" class="block mb-1">開始日</label>
+                            <input type="date" id="start_date" name="start_date"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                value="{{ old('start_date', optional($project->start_date)->format('Y-m-d')) }}">
+                            @error('start_date')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-        <p>
-            <label for="amount">税抜金額</label><br>
-            <input type="number" name="amount" id="amount" value="{{ old('amount', $project->amount) }}"> 円<br>
+                        <div>
+                            <label for="end_date" class="block mb-1">終了日</label>
+                            <input type="date" id="end_date" name="end_date"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                value="{{ old('end_date', optional($project->end_date)->format('Y-m-d')) }}">
+                            @error('end_date')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-            @error('amount')
-                {{ $message }}
-            @enderror
-        </p>
+                        {{-- 担当者 --}}
+                        <h3 class="font-semibold text-lg">担当者</h3>
 
-        <p>
-            <label for="start_date">開始日</label><br>
-            <input type="date" name="start_date" id="start_date"
-                value="{{ old('start_date', optional($project->start_date)->format('Y-m-d')) }}"><br>
+                        <div>
+                            <label for="assigned_user_id" class="block mb-1">担当者</label>
+                            <select id="assigned_user_id" name="assigned_user_id"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}" @selected((old('assigned_user_id') ?? $project->assigned_user_id) == $user->id)>
+                                        {{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('assigned_user_id')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-            @error('start_date')
-                {{ $message }}
-            @enderror
-        </p>
+                        {{-- メモ --}}
+                        <h3 class="font-semibold text-lg">メモ</h3>
 
-        <p>
-            <label for="end_date">終了日</label><br>
-            <input type="date" name="end_date" id="end_date"
-                value="{{ old('end_date', optional($project->end_date)->format('Y-m-d')) }}"><br>
+                        <div>
+                            <textarea id="memo" name="memo"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                placeholder="自由記述欄">{{ old('memo', $project->memo) }}</textarea>
+                            @error('memo')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-            @error('end_date')
-                {{ $message }}
-            @enderror
-        </p>
+                        {{-- ボタン --}}
+                        <div class="flex items-center gap-4 mt-6">
+                            <button type="submit"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                更新
+                            </button>
 
-        <p>
-            <label for="assigned_user_id">担当者</label><br>
-            <select name="assigned_user_id" id="assigned_user_id">
-                @foreach ($users as $user)
-                    <option value="{{ $user->id }}" @selected((old('assigned_user_id') ?? $project->assigned_user_id) == $user->id)>
-                        {{ $user->name }}
-                    </option>
-                @endforeach
-            </select><br>
+                            <a href="{{ route('projects.show', $project) }}"
+                                class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
+                                詳細ページに戻る
+                            </a>
+                        </div>
 
-            @error('assigned_user_id')
-                {{ $message }}
-            @enderror
-        </p>
+                    </form>
 
-        <p>
-            <label for="memo">メモ</label><br>
-            <textarea name="memo" id="memo">{{ old('memo', $project->memo) }}</textarea><br>
-
-            @error('memo')
-                {{ $message }}
-            @enderror
-        </p>
-
-        <button type="submit">更新</button>
-    </form>
-</body>
-
-</html>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
