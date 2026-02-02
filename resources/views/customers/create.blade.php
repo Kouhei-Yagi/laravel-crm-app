@@ -217,7 +217,8 @@
                                 新規登録
                             </button>
 
-                            <a href="{{ route('customers.index') }}" class="text-blue-600 hover:underline">
+                            <a href="{{ route('customers.index') }}"
+                                class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
                                 一覧に戻る
                             </a>
                         </div>

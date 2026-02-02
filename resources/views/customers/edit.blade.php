@@ -219,9 +219,9 @@
                                 更新
                             </button>
 
-                            <a href="{{ route('customers.index') }}"
+                            <a href="{{ route('customers.show', $customer) }}"
                                 class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
-                                一覧に戻る
+                                詳細ページに戻る
                             </a>
                         </div>
 
