@@ -13,7 +13,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::paginate(20);
+        $customers = Customer::orderBy('created_at', 'desc')->paginate(20);
         return view('customers.index', compact('customers'));
     }
 
@@ -23,10 +23,10 @@ class CustomerController extends Controller
     public function create()
     {
         // ステータス欄選択肢
-        $statuses = ['prospect', 'negotiation', 'won', 'lost', 'inactive'];
+        $statuses = Customer::STATUSES;
 
         // ランク欄選択肢
-        $ranks = ['A', 'B', 'C'];
+        $ranks = Customer::RANKS;
 
         // 担当者欄選択肢
         $users = User::all();
@@ -80,10 +80,10 @@ class CustomerController extends Controller
     public function edit(Customer $customer)
     {
         // ステータス選択肢
-        $statuses = ['prospect', 'negotiation', 'won', 'lost', 'inactive'];
+        $statuses = Customer::STATUSES;
 
         // ランク選択肢
-        $ranks = ['A', 'B', 'C'];
+        $ranks = Customer::RANKS;
 
         // 担当者選択肢
         $users = User::all();
