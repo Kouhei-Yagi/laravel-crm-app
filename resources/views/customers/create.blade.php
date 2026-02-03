@@ -151,9 +151,9 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
-                                @foreach ($statuses as $status)
-                                    <option value="{{ $status }}" @selected(old('status') == $status)>
-                                        {{ $status }}
+                                @foreach ($statuses as $key => $label)
+                                    <option value="{{ $key }}" @selected(old('status') == $key)>
+                                        {{ $label }}
                                     </option>
                                 @endforeach
                             </select>
@@ -168,9 +168,9 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
-                                @foreach ($ranks as $rank)
-                                    <option value="{{ $rank }}" @selected(old('rank') == $rank)>
-                                        {{ $rank }}
+                                @foreach ($ranks as $key => $label)
+                                    <option value="{{ $key }}" @selected(old('rank') == $key)>
+                                        {{ $label }}
                                     </option>
                                 @endforeach
                             </select>

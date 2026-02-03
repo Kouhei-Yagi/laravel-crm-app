@@ -23,10 +23,10 @@ class CustomerController extends Controller
     public function create()
     {
         // ステータス欄選択肢
-        $statuses = ['prospect', 'negotiation', 'won', 'lost', 'inactive'];
+        $statuses = Customer::STATUSES;
 
         // ランク欄選択肢
-        $ranks = ['A', 'B', 'C'];
+        $ranks = Customer::RANKS;
 
         // 担当者欄選択肢
         $users = User::all();
