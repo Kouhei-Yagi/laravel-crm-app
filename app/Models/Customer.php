@@ -19,6 +19,12 @@ class Customer extends Model
         'inactive' => '休眠',
     ];
 
+    public const RANKS = [
+        'A' => 'Ａ（重要顧客）',
+        'B' => 'Ｂ（通常顧客）',
+        'C' => 'Ｃ（優先度低め顧客）',
+    ];
+
     protected $fillable = [
         'name',
         'kana',
