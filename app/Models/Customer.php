@@ -11,6 +11,14 @@ class Customer extends Model
     use HasFactory;
     use SoftDeletes;
 
+    public const STATUSES = [
+        'prospect' => '見込み',
+        'negotiation' => '商談中',
+        'won' => '成約',
+        'lost' => '失注',
+        'inactive' => '休眠',
+    ];
+
     protected $fillable = [
         'name',
         'kana',
