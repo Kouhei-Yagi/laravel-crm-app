@@ -141,6 +141,8 @@ class ProjectController extends Controller
         $project->delete();
 
         // リダイレクト
-        return redirect()->route('projects.index');
+        return redirect()
+            ->route('projects.index')
+            ->with('success', '削除しました。');
     }
 }
