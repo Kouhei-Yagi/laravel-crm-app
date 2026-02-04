@@ -137,6 +137,12 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        // 削除処理
+        $project->delete();
+
+        // リダイレクト
+        return redirect()
+            ->route('projects.index')
+            ->with('success', '削除しました。');
     }
 }
