@@ -14,20 +14,20 @@ return new class extends Migration
         Schema::create('interactions', function (Blueprint $table) {
             $table->id();
 
-            // 顧客（必須）
+            // 顧客
             $table->foreignId('customer_id')
                 ->constrained()
                 ->nullOnDelete();
 
-            // 案件（任意）
+            // 案件
             $table->foreignId('project_id')
                 ->nullable()
                 ->constrained()
                 ->nullOnDelete();
 
-            // 担当者（必須）
-            $table->foreignId('user_id')
-                ->constrained()
+            // 担当者
+            $table->foreignId('assigned_user_id')
+                ->constrained('users')
                 ->nullOnDelete();
 
             // 対応種別
@@ -43,6 +43,9 @@ return new class extends Migration
 
             // 対応日時
             $table->dateTime('interacted_at');
+
+            // メモ
+            $table->text('memo')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
