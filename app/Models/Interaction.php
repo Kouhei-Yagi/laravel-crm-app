@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Interaction extends Model
 {
+    public const TYPE = [
+        'phone' => '電話',
+        'email' => 'メール',
+        'visit' => '訪問',
+        'meeting' => '打合せ',
+    ];
+
     protected $fillable = [
         'customer_id',
         'project_id',
@@ -15,6 +22,10 @@ class Interaction extends Model
         'content',
         'interacted_at',
         'memo',
+    ];
+
+    protected $casts = [
+        'interacted_at' => 'datetime',
     ];
 
     public function customer()

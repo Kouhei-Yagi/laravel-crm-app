@@ -28,15 +28,15 @@
         <tbody>
             @foreach ($interactions as $interaction)
                 <tr>
-                    <td>{{ $interaction->interacted_at }}</td>
-                    <td>{{ $interaction->type }}</td>
+                    <td>{{ $interaction->interacted_at->format('Y-m-d H:i') }}</td>
+                    <td>{{ App\Models\Interaction::TYPE[$interaction->type] }}</td>
                     <td>{{ $interaction->content }}</td>
-                    <td>{{ $interaction->project->title }}</td>
-                    <td>{{ $interaction->customer->name }}</td>
-                    <td>{{ $interaction->user->name }}</td>
+                    <td>{{ optional($interaction->project)->title }}</td>
+                    <td>{{ optional($interaction->customer)->name }}</td>
+                    <td>{{ optional($interaction->user)->name }}</td>
                     <td>{{ $interaction->memo }}</td>
-                    <td>{{ $interaction->created_at }}</td>
-                    <td>{{ $interaction->updated_at }}</td>
+                    <td>{{ $interaction->created_at->format('Y-m-d') }}</td>
+                    <td>{{ $interaction->updated_at->format('Y-m-d') }}</td>
                 </tr>
             @endforeach
         </tbody>
