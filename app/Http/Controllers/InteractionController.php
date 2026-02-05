@@ -14,8 +14,8 @@ class InteractionController extends Controller
      */
     public function index()
     {
-        // interactionsテーブルのデータ全件取得
-        $interactions = Interaction::all();
+        // interactionsテーブルのデータを対応日時順に20件ずつ表示
+        $interactions = Interaction::orderBy('interacted_at', 'desc')->paginate(20);
 
         // interactionsテーブルのデータをindexビューに渡す
         return view('interactions.index', compact('interactions'));

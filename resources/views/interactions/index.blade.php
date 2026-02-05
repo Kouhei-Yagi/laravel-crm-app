@@ -41,6 +41,8 @@
             @endforeach
         </tbody>
     </table>
+
+    {{ $interactions->links() }}
 </body>
 
 </html>
