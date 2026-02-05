@@ -31,9 +31,9 @@
                     <td>{{ $interaction->interacted_at }}</td>
                     <td>{{ $interaction->type }}</td>
                     <td>{{ $interaction->content }}</td>
-                    <td>{{ $interaction->project_id }}</td>
-                    <td>{{ $interaction->customer_id }}</td>
-                    <td>{{ $interaction->assigned_user_id }}</td>
+                    <td>{{ $interaction->project->title }}</td>
+                    <td>{{ $interaction->customer->name }}</td>
+                    <td>{{ $interaction->user->name }}</td>
                     <td>{{ $interaction->memo }}</td>
                     <td>{{ $interaction->created_at }}</td>
                     <td>{{ $interaction->updated_at }}</td>

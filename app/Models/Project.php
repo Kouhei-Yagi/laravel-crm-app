@@ -45,4 +45,9 @@ class Project extends Model
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
     }
+
+    public function interactions()
+    {
+        return $this->hasMany(Interaction::class, 'project_id');
+    }
 }
