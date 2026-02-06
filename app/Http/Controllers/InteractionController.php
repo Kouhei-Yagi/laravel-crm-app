@@ -38,11 +38,15 @@ class InteractionController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 案件履歴の詳細を表示する
+     *
+     * @param Interaction $interaction
+     * @return \Illuminate\Contracts\View\View
      */
     public function show(Interaction $interaction)
     {
-        //
+        // 選択されたinteractionsテーブルのデータをshowビューに渡す
+        return view('interactions.show', compact('interaction'));
     }
 
     /**
