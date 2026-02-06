@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\InteractionController;
 use App\Http\Controllers\ProjectController;
 
 Route::get('/', function () {
@@ -23,3 +24,4 @@ require __DIR__ . '/auth.php';
 
 Route::resource('customers', CustomerController::class);
 Route::resource('projects', ProjectController::class);
+Route::resource('interactions', InteractionController::class);

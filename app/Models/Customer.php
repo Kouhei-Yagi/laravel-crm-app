@@ -51,4 +51,9 @@ class Customer extends Model
     {
         return $this->hasMany(Project::class, 'customer_id');
     }
+
+    public function interactions()
+    {
+        return $this->hasMany(Interaction::class, 'customer_id');
+    }
 }

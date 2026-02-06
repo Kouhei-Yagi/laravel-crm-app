@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Project::class, 'assigned_user_id');
     }
+
+    public function interactions()
+    {
+        return $this->hasMany(Interaction::class, 'assigned_user_id');
+    }
 }
