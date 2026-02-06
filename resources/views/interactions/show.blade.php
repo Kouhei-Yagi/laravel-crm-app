@@ -14,12 +14,12 @@
         <tbody>
             <tr>
                 <th>対応日時</th>
-                <td>{{ $interaction->interacted_at }}</td>
+                <td>{{ $interaction->interacted_at->format('Y-m-d H:i') }}</td>
             </tr>
 
             <tr>
                 <th>対応種別</th>
-                <td>{{ $interaction->type }}</td>
+                <td>{{ App\Models\Interaction::TYPE[$interaction->type] }}</td>
             </tr>
 
             <tr>
@@ -28,33 +28,33 @@
             </tr>
 
             <tr>
-                <th>案件名</th>
-                <td>{{ $interaction->project_id }}</td>
-            </tr>
-
-            <tr>
-                <th>顧客名</th>
-                <td>{{ $interaction->customer_id }}</td>
-            </tr>
-
-            <tr>
-                <th>担当者</th>
-                <td>{{ $interaction->assigned_user_id }}</td>
-            </tr>
-
-            <tr>
                 <th>メモ</th>
                 <td>{{ $interaction->memo }}</td>
             </tr>
 
             <tr>
+                <th>案件名</th>
+                <td>{{ optional($interaction->project)->title ?? '未設定' }}</td>
+            </tr>
+
+            <tr>
+                <th>顧客名</th>
+                <td>{{ optional($interaction->customer)->name ?? '未設定' }}</td>
+            </tr>
+
+            <tr>
+                <th>担当者</th>
+                <td>{{ optional($interaction->user)->name ?? '未設定' }}</td>
+            </tr>
+
+            <tr>
                 <th>作成日</th>
-                <td>{{ $interaction->created_at }}</td>
+                <td>{{ $interaction->created_at->format('Y-m-d') }}</td>
             </tr>
 
             <tr>
                 <th>更新日</th>
-                <td>{{ $interaction->updated_at }}</td>
+                <td>{{ $interaction->updated_at->format('Y-m-d') }}</td>
             </tr>
         </tbody>
     </table>
