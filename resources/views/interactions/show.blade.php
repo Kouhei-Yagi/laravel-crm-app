@@ -1,63 +1,106 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            案件履歴詳細ページ
+        </h2>
+    </x-slot>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>案件履歴詳細ページ</title>
-</head>
+    <div class="py-6">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
 
-<body>
-    <h1>案件履歴詳細ページ</h1>
+                    <table class="w-full border border-gray-300 dark:border-gray-700 text-sm">
+                        <tbody>
 
-    <table border="1">
-        <tbody>
-            <tr>
-                <th>対応日時</th>
-                <td>{{ $interaction->interacted_at->format('Y-m-d H:i') }}</td>
-            </tr>
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border w-40">対応日時</th>
+                                <td class="px-3 py-2 border">
+                                    {{ $interaction->interacted_at->format('Y-m-d H:i') }}
+                                </td>
+                            </tr>
 
-            <tr>
-                <th>対応種別</th>
-                <td>{{ App\Models\Interaction::TYPE[$interaction->type] }}</td>
-            </tr>
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border">対応種別</th>
+                                <td class="px-3 py-2 border">
+                                    {{ App\Models\Interaction::TYPE[$interaction->type] }}
+                                </td>
+                            </tr>
 
-            <tr>
-                <th>内容</th>
-                <td>{{ $interaction->content }}</td>
-            </tr>
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border">内容</th>
+                                <td class="px-3 py-2 border whitespace-pre-line">{{ $interaction->content ?: '（なし）' }}
+                                </td>
+                            </tr>
 
-            <tr>
-                <th>メモ</th>
-                <td>{{ $interaction->memo }}</td>
-            </tr>
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border">メモ</th>
+                                <td class="px-3 py-2 border whitespace-pre-line">{{ $interaction->memo ?: '（なし）' }}</td>
+                            </tr>
 
-            <tr>
-                <th>案件名</th>
-                <td>{{ optional($interaction->project)->title ?? '未設定' }}</td>
-            </tr>
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border">案件名</th>
+                                <td class="px-3 py-2 border">
+                                    @if ($interaction->project)
+                                        <a href="{{ route('projects.show', $interaction->project) }}"
+                                            class="text-blue-600 hover:underline">
+                                            {{ $interaction->project->title }}
+                                        </a>
+                                    @else
+                                        <span class="text-gray-400">未設定</span>
+                                    @endif
+                                </td>
+                            </tr>
 
-            <tr>
-                <th>顧客名</th>
-                <td>{{ optional($interaction->customer)->name ?? '未設定' }}</td>
-            </tr>
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border">顧客名</th>
+                                <td class="px-3 py-2 border">
+                                    @if ($interaction->customer)
+                                        <a href="{{ route('customers.show', $interaction->customer) }}"
+                                            class="text-blue-600 hover:underline">
+                                            {{ $interaction->customer->name }}
+                                        </a>
+                                    @else
+                                        <span class="text-gray-400">未設定</span>
+                                    @endif
+                                </td>
+                            </tr>
 
-            <tr>
-                <th>担当者</th>
-                <td>{{ optional($interaction->user)->name ?? '未設定' }}</td>
-            </tr>
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border">担当者</th>
+                                <td class="px-3 py-2 border">
+                                    {{ optional($interaction->user)->name ?? '未設定' }}
+                                </td>
+                            </tr>
 
-            <tr>
-                <th>作成日</th>
-                <td>{{ $interaction->created_at->format('Y-m-d') }}</td>
-            </tr>
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border">作成日</th>
+                                <td class="px-3 py-2 border">
+                                    {{ $interaction->created_at->format('Y-m-d') }}
+                                </td>
+                            </tr>
 
-            <tr>
-                <th>更新日</th>
-                <td>{{ $interaction->updated_at->format('Y-m-d') }}</td>
-            </tr>
-        </tbody>
-    </table>
-</body>
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border">更新日</th>
+                                <td class="px-3 py-2 border">
+                                    {{ $interaction->updated_at->format('Y-m-d') }}
+                                </td>
+                            </tr>
 
-</html>
+                        </tbody>
+                    </table>
+
+                    {{-- ボタン --}}
+                    <div class="flex items-center gap-4 mt-6">
+                        <a href="{{ route('interactions.index') }}"
+                            class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
+                            一覧に戻る
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</x-app-layout>
