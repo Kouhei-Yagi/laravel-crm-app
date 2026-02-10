@@ -33,11 +33,26 @@ class InteractionController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 案件履歴新規登録処理
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        //
+        // 入力されたデータを取得・登録処理
+        Interaction::create([
+            'interacted_at' => $request->interacted_at,
+            'type' => $request->type,
+            'content' => $request->content,
+            'memo' => $request->memo,
+            'project_id' => $request->project_id,
+            'customer_id' => $request->customer_id,
+            'assigned_user_id' => $request->assigned_user_id,
+        ]);
+
+        // indexビューにリダイレクト
+        return redirect()->route('interactions.index');
     }
 
     /**
