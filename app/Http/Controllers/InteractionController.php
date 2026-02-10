@@ -51,8 +51,10 @@ class InteractionController extends Controller
             'assigned_user_id' => $request->assigned_user_id,
         ]);
 
-        // indexビューにリダイレクト
-        return redirect()->route('interactions.index');
+        // indexビューにリダイレクト・フラッシュメッセージ
+        return redirect()
+            ->route('interactions.index')
+            ->with('success', '登録しました。');
     }
 
     /**
