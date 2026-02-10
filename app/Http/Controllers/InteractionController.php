@@ -22,11 +22,14 @@ class InteractionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 案件履歴新規作成ページを表示
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
-        //
+        // createビューに遷移する
+        return view('interactions.create');
     }
 
     /**
