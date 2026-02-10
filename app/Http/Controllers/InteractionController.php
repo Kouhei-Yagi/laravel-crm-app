@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Interaction;
+use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class InteractionController extends Controller
@@ -28,8 +31,20 @@ class InteractionController extends Controller
      */
     public function create()
     {
+        // 対応種別の選択肢
+        $types = Interaction::TYPE;
+
+        // 案件名の選択肢
+        $projects = Project::all();
+
+        // 顧客名の選択肢
+        $customers = Customer::all();
+
+        // 担当者の選択肢
+        $users = User::all();
+
         // createビューに遷移する
-        return view('interactions.create');
+        return view('interactions.create', compact('types', 'projects', 'customers', 'users'));
     }
 
     /**

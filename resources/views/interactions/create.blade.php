@@ -20,7 +20,12 @@
 
         <p>
             <label for="type">対応種別</label><br>
-            <input type="text" id="type" name="type">
+            <select id="type" name="type">
+                @foreach ($types as $key => $label)
+                    <option value="{{ $key }}">
+                        {{ $label }}</option>
+                @endforeach
+            </select>
         </p>
 
         <p>
@@ -36,17 +41,35 @@
 
         <p>
             <label for="project_id">案件名</label><br>
-            <input type="number" id="project_id" name="project_id">
+            <select id="project_id" name="project_id">
+                @foreach ($projects as $project)
+                    <option value="{{ $project->id }}">
+                        {{ $project->title }}
+                    </option>
+                @endforeach
+            </select>
         </p>
 
         <p>
             <label for="customer_id">顧客名</label><br>
-            <input type="number" id="customer_id" name="customer_id">
+            <select id="customer_id" name="customer_id">
+                @foreach ($customers as $customer)
+                    <option value="{{ $customer->id }}">
+                        {{ $customer->name }}
+                    </option>
+                @endforeach
+            </select>
         </p>
 
         <p>
             <label for="assigned_user_id">担当者</label><br>
-            <input type="number" id="assigned_user_id" name="assigned_user_id">
+            <select id="assigned_user_id" name="assigned_user_id">
+                @foreach ($users as $user)
+                    <option value="{{ $user->id }}">
+                        {{ $user->name }}
+                    </option>
+                @endforeach
+            </select>
         </p>
 
         <button type="submit">登録</button>
