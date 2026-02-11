@@ -55,16 +55,19 @@ class InteractionController extends Controller
      */
     public function store(Request $request)
     {
-        // 入力されたデータを取得・登録処理
-        Interaction::create([
-            'interacted_at' => $request->interacted_at,
-            'type' => $request->type,
-            'content' => $request->content,
-            'memo' => $request->memo,
-            'project_id' => $request->project_id,
-            'customer_id' => $request->customer_id,
-            'assigned_user_id' => $request->assigned_user_id,
+        // 入力値をバリデーション
+        $validated = $request->validate([
+            'interacted_at' => 'required|date',
+            'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
+            'content' => 'nullable|string|max:2000',
+            'memo' => 'nullable|string|max:2000',
+            'project_id' => 'nullable|integer|exists:projects,id',
+            'customer_id' => 'required|integer|exists:customers,id',
+            'assigned_user_id' => 'required|integer|exists:users,id',
         ]);
+
+        // 登録処理
+        Interaction::create($validated);
 
         // indexビューにリダイレクト・フラッシュメッセージ
         return redirect()
