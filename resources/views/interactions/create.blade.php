@@ -1,108 +1,158 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            案件履歴新規作成
+        </h2>
+    </x-slot>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>案件履歴新規作成ページ</title>
-</head>
+    <div class="py-6">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
 
-<body>
-    <h1>案件履歴新規作成ページ</h1>
+                    <form action="{{ route('interactions.store') }}" method="post" class="space-y-6">
+                        @csrf
 
-    <form action="{{ route('interactions.store') }}" method="post">
-        @csrf
+                        {{-- 基本情報 --}}
+                        <h3 class="font-semibold text-lg">基本情報</h3>
 
-        <p>
-            <label for="interacted_at">対応日時</label><br>
-            <input type="datetime-local" id="interacted_at" name="interacted_at" value="{{ old('interacted_at') }}">
+                        {{-- 対応日時 --}}
+                        <div>
+                            <label for="interacted_at" class="block mb-1">対応日時</label>
+                            <input type="datetime-local" id="interacted_at" name="interacted_at"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                value="{{ old('interacted_at') }}">
 
-            @error('interacted_at')
-                {{ $message }}
-            @enderror
-        </p>
+                            @error('interacted_at')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-        <p>
-            <label for="type">対応種別</label><br>
-            <select id="type" name="type">
-                @foreach ($types as $key => $label)
-                    <option value="{{ $key }}" @selected(old('type') == $key)>
-                        {{ $label }}
-                    </option>
-                @endforeach
-            </select>
+                        {{-- 対応種別 --}}
+                        <div>
+                            <label for="type" class="block mb-1">対応種別</label>
+                            <select id="type" name="type"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">
+                                @foreach ($types as $key => $label)
+                                    <option value="{{ $key }}" @selected(old('type') == $key)>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
 
-            @error('type')
-                {{ $message }}
-            @enderror
-        </p>
+                            @error('type')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-        <p>
-            <label for="content">内容</label><br>
-            <textarea id="content" name="content">{{ old('content') }}</textarea>
+                        {{-- 内容 --}}
+                        <div>
+                            <label for="content" class="block mb-1">内容</label>
+                            <textarea id="content" name="content"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">{{ old('content') }}</textarea>
 
-            @error('content')
-                {{ $message }}
-            @enderror
-        </p>
+                            @error('content')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
+                        {{-- メモ --}}
+                        <div>
+                            <label for="memo" class="block mb-1">メモ</label>
+                            <textarea id="memo" name="memo"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700"
+                                placeholder="自由記述欄">{{ old('memo') }}</textarea>
 
-        <p>
-            <label for="memo">メモ</label><br>
-            <textarea id="memo" name="memo">{{ old('memo') }}</textarea>
+                            @error('memo')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-            @error('memo')
-                {{ $message }}
-            @enderror
-        </p>
+                        {{-- 関連情報 --}}
+                        <h3 class="font-semibold text-lg">関連情報</h3>
 
-        <p>
-            <label for="project_id">案件名</label><br>
-            <select id="project_id" name="project_id">
-                @foreach ($projects as $project)
-                    <option value="{{ $project->id }}" @selected(old('project_id') == $project->id)>
-                        {{ $project->title }}
-                    </option>
-                @endforeach
-            </select>
+                        {{-- 案件名 --}}
+                        <div>
+                            <label for="project_id" class="block mb-1">案件名</label>
+                            <select id="project_id" name="project_id"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">
+                                @foreach ($projects as $project)
+                                    <option value="{{ $project->id }}" @selected(old('project_id') == $project->id)>
+                                        {{ $project->title }}
+                                    </option>
+                                @endforeach
+                            </select>
 
-            @error('project_id')
-                {{ $message }}
-            @enderror
-        </p>
+                            @error('project_id')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-        <p>
-            <label for="customer_id">顧客名</label><br>
-            <select id="customer_id" name="customer_id">
-                @foreach ($customers as $customer)
-                    <option value="{{ $customer->id }}" @selected(old('customer_id') == $customer->id)>
-                        {{ $customer->name }}
-                    </option>
-                @endforeach
-            </select>
+                        {{-- 顧客名 --}}
+                        <div>
+                            <label for="customer_id" class="block mb-1">顧客名</label>
+                            <select id="customer_id" name="customer_id"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">
+                                @foreach ($customers as $customer)
+                                    <option value="{{ $customer->id }}" @selected(old('customer_id') == $customer->id)>
+                                        {{ $customer->name }}
+                                    </option>
+                                @endforeach
+                            </select>
 
-            @error('customer_id')
-                {{ $message }}
-            @enderror
-        </p>
+                            @error('customer_id')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-        <p>
-            <label for="assigned_user_id">担当者</label><br>
-            <select id="assigned_user_id" name="assigned_user_id">
-                @foreach ($users as $user)
-                    <option value="{{ $user->id }}" @selected(old('assigned_user_id') == $user->id)>
-                        {{ $user->name }}
-                    </option>
-                @endforeach
-            </select>
+                        {{-- 担当者 --}}
+                        <div>
+                            <label for="assigned_user_id" class="block mb-1">担当者</label>
+                            <select id="assigned_user_id" name="assigned_user_id"
+                                class="w-full border-gray-300 rounded-md shadow-sm
+                                       text-gray-900 dark:text-gray-100
+                                       bg-white dark:bg-gray-700">
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}" @selected(old('assigned_user_id') == $user->id)>
+                                        {{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
 
-            @error('assigned_user_id')
-                {{ $message }}
-            @enderror
-        </p>
+                            @error('assigned_user_id')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-        <button type="submit">登録</button>
-    </form>
-</body>
+                        {{-- ボタン --}}
+                        <div class="flex items-center gap-4 mt-6">
+                            <button type="submit"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                新規登録
+                            </button>
 
-</html>
+                            <a href="{{ route('interactions.index') }}"
+                                class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
+                                一覧に戻る
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>

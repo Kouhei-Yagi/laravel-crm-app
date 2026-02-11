@@ -1,9 +1,18 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            案件履歴一覧ページ
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                案件履歴一覧
+            </h2>
+
+            {{-- ボタン --}}
+            <a href="{{ route('interactions.create') }}"
+                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                新規作成
+            </a>
+        </div>
     </x-slot>
+
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
