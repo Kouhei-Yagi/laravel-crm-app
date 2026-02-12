@@ -88,11 +88,14 @@ class InteractionController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 案件履歴編集ページを表示する
+     *
+     * @param Interaction $interaction
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Interaction $interaction)
     {
-        //
+        return view('interactions.edit', compact('interaction'));
     }
 
     /**
