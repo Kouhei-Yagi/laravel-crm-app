@@ -95,15 +95,32 @@ class InteractionController extends Controller
      */
     public function edit(Interaction $interaction)
     {
+        // 選択されたinteractionsテーブルをeditビューに渡す
         return view('interactions.edit', compact('interaction'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * 案件履歴更新処理
+     *
+     * @param Request $request
+     * @param Interaction $interaction
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Interaction $interaction)
     {
-        //
+        // 入力されたデータを取得・更新
+        $interaction->update([
+            'interacted_at' => $request->interacted_at,
+            'type' => $request->type,
+            'content' => $request->content,
+            'memo' => $request->memo,
+            'project_id' => $request->project_id,
+            'customer_id' => $request->customer_id,
+            'assigned_user_id' => $request->assigned_user_id,
+        ]);
+
+        // showビューにリダイレクト
+        return redirect()->route('interactions.show', $interaction);
     }
 
     /**
