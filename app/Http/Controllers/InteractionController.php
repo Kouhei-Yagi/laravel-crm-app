@@ -119,8 +119,10 @@ class InteractionController extends Controller
             'assigned_user_id' => $request->assigned_user_id,
         ]);
 
-        // showビューにリダイレクト
-        return redirect()->route('interactions.show', $interaction);
+        // showビューにリダイレクト・フラッシュメッセージ
+        return redirect()
+            ->route('interactions.show', $interaction)
+            ->with('success', '更新しました。');
     }
 
     /**

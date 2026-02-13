@@ -10,6 +10,13 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
+                    @if (session('success'))
+                        <div
+                            class="mb-4 p-3 rounded-md bg-green-100 text-green-800 border border-green-300 dark:bg-green-900 dark:text-green-100 dark:border-green-700">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     <table class="w-full border border-gray-300 dark:border-gray-700 text-sm">
                         <tbody>
 
