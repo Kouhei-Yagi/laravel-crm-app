@@ -151,7 +151,9 @@ class InteractionController extends Controller
         // 削除処理（SoftDelete）
         $interaction->delete();
 
-        // indexビューにリダイレクト
-        return redirect()->route('interactions.index');
+        // indexビューにリダイレクト・フラッシュメッセージ
+        return redirect()
+            ->route('interactions.index')
+            ->with('success', '削除しました。');
     }
 }
