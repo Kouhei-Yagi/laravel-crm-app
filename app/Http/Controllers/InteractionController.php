@@ -141,10 +141,17 @@ class InteractionController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 案件履歴削除処理（SoftDelete）
+     *
+     * @param Interaction $interaction
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Interaction $interaction)
     {
-        //
+        // 削除処理（SoftDelete）
+        $interaction->delete();
+
+        // indexビューにリダイレクト
+        return redirect()->route('interactions.index');
     }
 }
