@@ -95,8 +95,20 @@ class InteractionController extends Controller
      */
     public function edit(Interaction $interaction)
     {
+        // 対応種別の選択肢を渡す
+        $types = Interaction::TYPE;
+
+        // 案件名の選択肢を渡す
+        $projects = Project::all();
+
+        // 顧客名の選択肢を渡す
+        $customers = Customer::all();
+
+        // 担当者の選択肢を渡す
+        $users = User::all();
+
         // 選択されたinteractionsテーブルをeditビューに渡す
-        return view('interactions.edit', compact('interaction'));
+        return view('interactions.edit', compact('interaction', 'types', 'projects', 'customers', 'users'));
     }
 
     /**
