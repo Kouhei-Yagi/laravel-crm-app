@@ -57,7 +57,7 @@ class InteractionController extends Controller
     {
         // 入力値をバリデーション
         $validated = $request->validate([
-            'interacted_at' => 'required|date',
+            'interacted_at' => 'required|date_format:Y-m-d\TH:i',
             'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
             'content' => 'nullable|string|max:2000',
             'memo' => 'nullable|string|max:2000',
@@ -88,19 +88,56 @@ class InteractionController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 案件履歴編集ページを表示する
+     *
+     * @param Interaction $interaction
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Interaction $interaction)
     {
-        //
+        // 対応種別の選択肢を渡す
+        $types = Interaction::TYPE;
+
+        // 案件名の選択肢を渡す
+        $projects = Project::all();
+
+        // 顧客名の選択肢を渡す
+        $customers = Customer::all();
+
+        // 担当者の選択肢を渡す
+        $users = User::all();
+
+        // 選択されたinteractionsテーブルをeditビューに渡す
+        return view('interactions.edit', compact('interaction', 'types', 'projects', 'customers', 'users'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * 案件履歴更新処理
+     *
+     * @param Request $request
+     * @param Interaction $interaction
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Interaction $interaction)
     {
-        //
+        // バリデーション処理
+        $validated = $request->validate([
+            'interacted_at' => 'required|date_format:Y-m-d\TH:i',
+            'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
+            'content' => 'nullable|string|max:2000',
+            'memo' => 'nullable|string|max:2000',
+            'project_id' => 'nullable|integer|exists:projects,id',
+            'customer_id' => 'required|integer|exists:customers,id',
+            'assigned_user_id' => 'required|integer|exists:users,id',
+        ]);
+
+        // 入力されたデータを取得・更新
+        $interaction->update($validated);
+
+        // showビューにリダイレクト・フラッシュメッセージ
+        return redirect()
+            ->route('interactions.show', $interaction)
+            ->with('success', '更新しました。');
     }
 
     /**
