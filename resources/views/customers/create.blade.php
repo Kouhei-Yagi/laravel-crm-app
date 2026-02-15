@@ -23,6 +23,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 placeholder="例：山田太郎" value="{{ old('name') }}">
+
                             @error('name')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -35,6 +36,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 placeholder="例：ヤマダタロウ" value="{{ old('kana') }}">
+
                             @error('kana')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -47,6 +49,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 placeholder="例：example@example.com" value="{{ old('email') }}">
+
                             @error('email')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -59,6 +62,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 placeholder="例：090-1234-5678" value="{{ old('phone') }}">
+
                             @error('phone')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -74,6 +78,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 placeholder="例：123-4567" value="{{ old('postal_code') }}">
+
                             @error('postal_code')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -86,6 +91,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 placeholder="例：福岡県福岡市〇〇" value="{{ old('address') }}">
+
                             @error('address')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -98,6 +104,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 placeholder="例：マンション名・部屋番号など" value="{{ old('address_detail') }}">
+
                             @error('address_detail')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -113,6 +120,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 placeholder="例：株式会社サンプル" value="{{ old('company_name') }}">
+
                             @error('company_name')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -125,6 +133,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 value="{{ old('department') }}">
+
                             @error('department')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -137,6 +146,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 value="{{ old('position') }}">
+
                             @error('position')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -157,6 +167,7 @@
                                     </option>
                                 @endforeach
                             </select>
+
                             @error('status')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -174,6 +185,7 @@
                                     </option>
                                 @endforeach
                             </select>
+
                             @error('rank')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -185,12 +197,13 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" @selected(old('assigned_user_id') == $user->id)>
-                                        {{ $user->name }}
+                                @foreach ($assignedUsers as $assignedUser)
+                                    <option value="{{ $assignedUser->id }}" @selected(old('assigned_user_id') == $assignedUser->id)>
+                                        {{ $assignedUser->name }}
                                     </option>
                                 @endforeach
                             </select>
+
                             @error('assigned_user_id')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -205,6 +218,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 placeholder="自由記述欄">{{ old('memo') }}</textarea>
+
                             @error('memo')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
