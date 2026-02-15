@@ -9,37 +9,48 @@ use Illuminate\Http\Request;
 class CustomerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 顧客一覧を表示する
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
+        // customersテーブルのデータを作成日順に20件ずつ表示
         $customers = Customer::orderBy('created_at', 'desc')->paginate(20);
+
+        // customersテーブルのデータをindexビューに渡す
         return view('customers.index', compact('customers'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 顧客新規作成ページを表示する
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
-        // ステータス欄選択肢
+        // ステータスの選択肢
         $statuses = Customer::STATUSES;
 
-        // ランク欄選択肢
+        // ランクの選択肢
         $ranks = Customer::RANKS;
 
-        // 担当者欄選択肢
-        $users = User::all();
+        // 担当者の選択肢
+        $assignedUsers = User::all();
 
-        return view('customers.create', compact('statuses', 'ranks', 'users'));
+        // 各選択肢の値を持ってcreateビューに遷移する
+        return view('customers.create', compact('statuses', 'ranks', 'assignedUsers'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 顧客新規登録処理
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        // バリデーション
+        // 入力値をバリデーション処理
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'kana' => 'nullable|string|max:255',
@@ -57,46 +68,58 @@ class CustomerController extends Controller
             'memo' => 'nullable|string',
         ]);
 
-        // 新規登録処理
+        // バリデーションされたデータを取得して登録
         Customer::create($validated);
 
-        // リダイレクト・フラッシュメッセージ
+        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('customers.index')
             ->with('success', '登録しました。');
     }
 
     /**
-     * Display the specified resource.
+     * 顧客詳細ページを表示する
+     *
+     * @param Customer $customer
+     * @return \Illuminate\Contracts\View\View
      */
     public function show(Customer $customer)
     {
+        // 選択されたcustomersテーブルのデータをshowビューに渡す
         return view('customers.show', compact('customer'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 顧客編集ページを表示する
+     *
+     * @param Customer $customer
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Customer $customer)
     {
-        // ステータス選択肢
+        // ステータスの選択肢
         $statuses = Customer::STATUSES;
 
-        // ランク選択肢
+        // ランクの選択肢
         $ranks = Customer::RANKS;
 
-        // 担当者選択肢
-        $users = User::all();
+        // 担当者の選択肢
+        $assignedUsers = User::all();
 
-        return view('customers.edit', compact('customer', 'statuses', 'ranks', 'users'));
+        // 各選択肢の値を持って選択されたcustomersテーブルのレコードをeditビューに渡す
+        return view('customers.edit', compact('customer', 'statuses', 'ranks', 'assignedUsers'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * 顧客更新処理
+     *
+     * @param Request $request
+     * @param Customer $customer
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Customer $customer)
     {
-        // バリデーション
+        // 入力値をバリデーション処理
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'kana' => 'nullable|string|max:255',
@@ -114,22 +137,27 @@ class CustomerController extends Controller
             'memo' => 'nullable|string',
         ]);
 
-        // 更新処理
+        // バリデーションされたデータを取得して更新
         $customer->update($validated);
 
-        // リダイレクト・フラッシュメッセージ
+        // showビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('customers.show', $customer)
             ->with('success', '更新しました。');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 顧客削除処理（SoftDelete）
+     *
+     * @param Customer $customer
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Customer $customer)
     {
+        // 削除処理（SoftDelete）
         $customer->delete();
 
+        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('customers.index')
             ->with('success', '削除しました。');
