@@ -23,59 +23,72 @@
                                 <th class="px-3 py-2 border w-40">顧客名</th>
                                 <td class="px-3 py-2 border">{{ $customer->name }}</td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">フリガナ</th>
                                 <td class="px-3 py-2 border">{{ $customer->kana }}</td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">メール</th>
                                 <td class="px-3 py-2 border">{{ $customer->email }}</td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">電話番号</th>
                                 <td class="px-3 py-2 border">{{ $customer->phone }}</td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">会社名</th>
                                 <td class="px-3 py-2 border">{{ $customer->company_name }}</td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">部署</th>
                                 <td class="px-3 py-2 border">{{ $customer->department }}</td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">役職</th>
                                 <td class="px-3 py-2 border">{{ $customer->position }}</td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">郵便番号</th>
                                 <td class="px-3 py-2 border whitespace-normal break-words">
                                     {{ $customer->postal_code }}
                                 </td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">住所</th>
                                 <td class="px-3 py-2 border whitespace-normal break-words">
                                     {{ $customer->address }} {{ $customer->address_detail }}
                                 </td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">ステータス</th>
                                 <td class="px-3 py-2 border">{{ App\Models\Customer::STATUSES[$customer->status] }}
                                 </td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">ランク</th>
                                 <td class="px-3 py-2 border">{{ App\Models\Customer::RANKS[$customer->rank] }}</td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">担当者</th>
-                                <td class="px-3 py-2 border">{{ optional($customer->user)->name }}</td>
+                                <td class="px-3 py-2 border">{{ optional($customer->assignedUser)->name }}</td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">作成日</th>
                                 <td class="px-3 py-2 border">{{ $customer->created_at->format('Y-m-d') }}</td>
                             </tr>
+
                             </tr>
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">メモ</th>
