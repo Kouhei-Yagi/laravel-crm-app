@@ -25,6 +25,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 value="{{ old('interacted_at', $interaction->interacted_at->format('Y-m-d\TH:i')) }}">
+
                             @error('interacted_at')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -43,6 +44,7 @@
                                     </option>
                                 @endforeach
                             </select>
+
                             @error('type')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -55,6 +57,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">{{ old('content', $interaction->content) }}</textarea>
+
                             @error('content')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -68,6 +71,7 @@
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
                                 placeholder="自由記述欄">{{ old('memo', $interaction->memo) }}</textarea>
+
                             @error('memo')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -89,6 +93,7 @@
                                     </option>
                                 @endforeach
                             </select>
+
                             @error('project_id')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -107,6 +112,7 @@
                                     </option>
                                 @endforeach
                             </select>
+
                             @error('customer_id')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -119,12 +125,13 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" @selected(old('assigned_user_id', $interaction->assigned_user_id) == $user->id)>
-                                        {{ $user->name }}
+                                @foreach ($assignedUsers as $assignedUser)
+                                    <option value="{{ $assignedUser->id }}" @selected(old('assigned_user_id', $interaction->assigned_user_id) == $assignedUser->id)>
+                                        {{ $assignedUser->name }}
                                     </option>
                                 @endforeach
                             </select>
+
                             @error('assigned_user_id')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
