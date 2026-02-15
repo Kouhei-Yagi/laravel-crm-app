@@ -187,9 +187,9 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" @selected(old('assigned_user_id', $customer->assigned_user_id) == $user->id)>
-                                        {{ $user->name }}
+                                @foreach ($assignedUsers as $assignedUser)
+                                    <option value="{{ $assignedUser->id }}" @selected(old('assigned_user_id', $customer->assigned_user_id) == $assignedUser->id)>
+                                        {{ $assignedUser->name }}
                                     </option>
                                 @endforeach
                             </select>

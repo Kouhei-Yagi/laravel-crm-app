@@ -10,14 +10,16 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
     /**
-     * 案件一覧ページを表示する
+     * 案件一覧を表示する
      *
      * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
+        // projectsテーブルのデータを作成日順に20件ずつ表示
         $projects = Project::orderBy('created_at', 'desc')->paginate(20);
 
+        // projectsテーブルのデータをindexビューに渡す
         return view('projects.index', compact('projects'));
     }
 
@@ -35,9 +37,10 @@ class ProjectController extends Controller
         $statuses = Project::STATUSES;
 
         // 担当者の選択肢
-        $users = User::all();
+        $assignedUsers = User::all();
 
-        return view('projects.create', compact('customers', 'statuses', 'users'));
+        // 各選択肢の値を持ってcreateビューに遷移する
+        return view('projects.create', compact('customers', 'statuses', 'assignedUsers'));
     }
 
     /**
@@ -48,7 +51,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        // バリデーション
+        // 入力値をバリデーション処理
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'customer_id' => 'required|integer|exists:customers,id',
@@ -61,10 +64,10 @@ class ProjectController extends Controller
             'memo' => 'nullable|string',
         ]);
 
-        // 登録処理
+        // バリデーションされたデータを取得して登録
         Project::create($validated);
 
-        // リダイレクトしてフラッシュメッセージを送信
+        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('projects.index')
             ->with('success', '登録しました。');
@@ -78,6 +81,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        // 選択されたprojectsテーブルのデータをshowビューに渡す
         return view('projects.show', compact('project'));
     }
 
@@ -96,9 +100,10 @@ class ProjectController extends Controller
         $statuses = Project::STATUSES;
 
         // 担当者の選択肢
-        $users = User::all();
+        $assignedUsers = User::all();
 
-        return view('projects.edit', compact('project', 'customers', 'statuses', 'users'));
+        // 各選択肢の値を持って選択されたprojextsテーブルのレコードをeditビューに渡す
+        return view('projects.edit', compact('project', 'customers', 'statuses', 'assignedUsers'));
     }
 
     /**
@@ -110,7 +115,7 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        // バリデーション
+        // 入力値をバリデーション処理
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'customer_id' => 'required|integer|exists:customers,id',
@@ -123,24 +128,27 @@ class ProjectController extends Controller
             'memo' => 'nullable|string',
         ]);
 
-        // 更新処理
+        // バリデーションされたデータを取得して更新
         $project->update($validated);
 
-        // リダイレクト・フラッシュメッセージ
+        // showビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('projects.show', $project)
             ->with('success', '更新しました。');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 案件削除処理（SoftDelete）
+     *
+     * @param Project $project
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Project $project)
     {
-        // 削除処理
+        // 削除処理（SoftDelete）
         $project->delete();
 
-        // リダイレクト
+        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('projects.index')
             ->with('success', '削除しました。');

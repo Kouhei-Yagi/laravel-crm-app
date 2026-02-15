@@ -80,7 +80,7 @@
                                     </td>
 
                                     <td class="px-3 py-2 border">
-                                        {{ optional($interaction->user)->name ?? '未設定' }}
+                                        {{ optional($interaction->assignedUser)->name ?? '未設定' }}
                                     </td>
                                 </tr>
                             @endforeach

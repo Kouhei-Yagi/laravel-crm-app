@@ -38,6 +38,7 @@
                                             {{ $project->title }}
                                         </a>
                                     </td>
+
                                     <td class="px-3 py-2 border">
                                         @if ($project->customer)
                                             <a href="{{ route('customers.show', $project->customer) }}"
@@ -48,15 +49,19 @@
                                             <span class="text-gray-400">未設定</span>
                                         @endif
                                     </td>
+
                                     <td class="px-3 py-2 border">
                                         {{ App\Models\Project::STATUSES[$project->status] }}
                                     </td>
+
                                     <td class="px-3 py-2 border">
                                         {{ number_format($project->amount) }}
                                     </td>
+
                                     <td class="px-3 py-2 border">
-                                        {{ optional($project->user)->name }}
+                                        {{ optional($project->assignedUser)->name }}
                                     </td>
+
                                     <td class="px-3 py-2 border">
                                         {{ $project->start_date->format('Y-m-d') }} ～
                                         {{ $project->end_date->format('Y-m-d') }}

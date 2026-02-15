@@ -41,7 +41,7 @@ class Project extends Model
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    public function user()
+    public function assignedUser()
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
     }
