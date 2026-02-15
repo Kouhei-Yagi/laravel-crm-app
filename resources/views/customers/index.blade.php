@@ -39,13 +39,30 @@
                                             {{ $customer->name }}
                                         </a>
                                     </td>
-                                    <td class="px-3 py-2 border">{{ $customer->email }}</td>
-                                    <td class="px-3 py-2 border">{{ $customer->phone }}</td>
-                                    <td class="px-3 py-2 border">{{ $customer->company_name }}</td>
-                                    <td class="px-3 py-2 border">{{ App\Models\Customer::STATUSES[$customer->status] }}
+
+                                    <td class="px-3 py-2 border">
+                                        {{ $customer->email }}
                                     </td>
-                                    <td class="px-3 py-2 border">{{ optional($customer->user)->name }}</td>
-                                    <td class="px-3 py-2 border">{{ $customer->created_at->format('Y-m-d') }}</td>
+
+                                    <td class="px-3 py-2 border">
+                                        {{ $customer->phone }}
+                                    </td>
+
+                                    <td class="px-3 py-2 border">
+                                        {{ $customer->company_name }}
+                                    </td>
+
+                                    <td class="px-3 py-2 border">
+                                        {{ App\Models\Customer::STATUSES[$customer->status] }}
+                                    </td>
+
+                                    <td class="px-3 py-2 border">
+                                        {{ optional($customer->assignedUser)->name }}
+                                    </td>
+
+                                    <td class="px-3 py-2 border">
+                                        {{ $customer->created_at->format('Y-m-d') }}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
