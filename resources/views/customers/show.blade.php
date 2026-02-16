@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            顧客詳細ページ
+            顧客詳細
         </h2>
     </x-slot>
 
@@ -81,7 +81,8 @@
 
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">担当者</th>
-                                <td class="px-3 py-2 border">{{ optional($customer->assignedUser)->name }}</td>
+                                <td class="px-3 py-2 border">{!! optional($customer->assignedUser)->name ?? '<span class="text-gray-400">未設定</span>' !!}
+                                </td>
                             </tr>
 
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
@@ -89,10 +90,15 @@
                                 <td class="px-3 py-2 border">{{ $customer->created_at->format('Y-m-d') }}</td>
                             </tr>
 
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border">更新日</th>
+                                <td class="px-3 py-2 border">{{ $customer->updated_at->format('Y-m-d') }}</td>
                             </tr>
+
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">メモ</th>
-                                <td class="px-3 py-2 border">{{ $customer->memo }}</td>
+                                <td class="px-3 py-2 border">{{ $customer->memo ?: '（なし）' }}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
