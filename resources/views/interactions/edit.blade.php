@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            案件履歴編集ページ
+            案件履歴編集
         </h2>
     </x-slot>
 
@@ -38,6 +38,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($types as $key => $label)
                                     <option value="{{ $key }}" @selected(old('type', $interaction->type) == $key)>
                                         {{ $label }}
@@ -53,10 +54,10 @@
                         {{-- 内容 --}}
                         <div>
                             <label for="content" class="block mb-1">内容</label>
-                            <textarea id="content" name="content"
+                            <textarea id="content" name="content" placeholder="例：電話で仕様確認を実施"
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700">{{ old('content', $interaction->content) }}</textarea>
+                                       bg-white dark:bg-gray-700 whitespace-pre-line">{{ old('content', $interaction->content) }}</textarea>
 
                             @error('content')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -69,7 +70,7 @@
                             <textarea id="memo" name="memo"
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700"
+                                       bg-white dark:bg-gray-700 whitespace-pre-line"
                                 placeholder="自由記述欄">{{ old('memo', $interaction->memo) }}</textarea>
 
                             @error('memo')
@@ -87,6 +88,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($projects as $project)
                                     <option value="{{ $project->id }}" @selected(old('project_id', $interaction->project_id) == $project->id)>
                                         {{ $project->title }}
@@ -106,6 +108,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($customers as $customer)
                                     <option value="{{ $customer->id }}" @selected(old('customer_id', $interaction->customer_id) == $customer->id)>
                                         {{ $customer->name }}
@@ -125,6 +128,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($assignedUsers as $assignedUser)
                                     <option value="{{ $assignedUser->id }}" @selected(old('assigned_user_id', $interaction->assigned_user_id) == $assignedUser->id)>
                                         {{ $assignedUser->name }}

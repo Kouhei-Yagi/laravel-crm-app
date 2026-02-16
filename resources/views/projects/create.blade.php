@@ -18,7 +18,7 @@
 
                         <div>
                             <label for="title" class="block mb-1">案件名</label>
-                            <input type="text" id="title" name="title"
+                            <input type="text" id="title" name="title" placeholder="例：ホームページ制作"
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
@@ -35,6 +35,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($customers as $customer)
                                     <option value="{{ $customer->id }}" @selected(old('customer_id') == $customer->id)>
                                         {{ $customer->name }}
@@ -49,10 +50,10 @@
 
                         <div>
                             <label for="description" class="block mb-1">案件内容</label>
-                            <textarea id="description" name="description"
+                            <textarea id="description" name="description" placeholder="例：要件の概要や依頼内容を入力してください"
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700">{{ old('description') }}</textarea>
+                                       bg-white dark:bg-gray-700 whitespace-pre-line">{{ old('description') }}</textarea>
 
                             @error('description')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -68,6 +69,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($statuses as $value => $label)
                                     <option value="{{ $value }}" @selected(old('status') == $value)>
                                         {{ $label }}
@@ -82,7 +84,7 @@
 
                         <div>
                             <label for="amount" class="block mb-1">税抜金額</label>
-                            <input type="number" id="amount" name="amount"
+                            <input type="number" id="amount" name="amount" placeholder="例：300000"
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
@@ -131,6 +133,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($assignedUsers as $assignedUser)
                                     <option value="{{ $assignedUser->id }}" @selected(old('assigned_user_id') == $assignedUser->id)>
                                         {{ $assignedUser->name }}
@@ -150,7 +153,7 @@
                             <textarea id="memo" name="memo"
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700"
+                                       bg-white dark:bg-gray-700 whitespace-pre-line"
                                 placeholder="自由記述欄">{{ old('memo') }}</textarea>
 
                             @error('memo')

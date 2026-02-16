@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            顧客編集ページ
+            顧客編集
         </h2>
     </x-slot>
 
@@ -122,7 +122,7 @@
 
                         <div>
                             <label for="department" class="block mb-1">部署</label>
-                            <input type="text" id="department" name="department"
+                            <input type="text" id="department" name="department" placeholder="例：営業部"
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
@@ -134,7 +134,7 @@
 
                         <div>
                             <label for="position" class="block mb-1">役職</label>
-                            <input type="text" id="position" name="position"
+                            <input type="text" id="position" name="position" placeholder="例：課長"
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700"
@@ -153,6 +153,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($statuses as $key => $label)
                                     <option value="{{ $key }}" @selected(old('status', $customer->status) == $key)>
                                         {{ $label }}
@@ -170,6 +171,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($ranks as $key => $label)
                                     <option value="{{ $key }}" @selected(old('rank', $customer->rank) == $key)>
                                         {{ $label }}
@@ -187,6 +189,7 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
                                        bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($assignedUsers as $assignedUser)
                                     <option value="{{ $assignedUser->id }}" @selected(old('assigned_user_id', $customer->assigned_user_id) == $assignedUser->id)>
                                         {{ $assignedUser->name }}
@@ -205,7 +208,7 @@
                             <textarea id="memo" name="memo"
                                 class="w-full border-gray-300 rounded-md shadow-sm
                                        text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700"
+                                       bg-white dark:bg-gray-700 whitespace-pre-line"
                                 placeholder="自由記述欄">{{ old('memo', $customer->memo) }}</textarea>
                             @error('memo')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>

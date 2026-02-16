@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            案件詳細ページ
+            案件詳細
         </h2>
     </x-slot>
 
@@ -61,7 +61,18 @@
 
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">担当者</th>
-                                <td class="px-3 py-2 border">{{ optional($project->assignedUser)->name ?: '未設定' }}</td>
+                                <td class="px-3 py-2 border">{!! optional($project->assignedUser)->name ?? '<span class="text-gray-400">未設定</span>' !!}
+                                </td>
+                            </tr>
+
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border">作成日</th>
+                                <td class="px-3 py-2 border">{{ $project->created_at->format('Y-m-d') }}</td>
+                            </tr>
+
+                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <th class="px-3 py-2 border">更新日</th>
+                                <td class="px-3 py-2 border">{{ $project->updated_at->format('Y-m-d') }}</td>
                             </tr>
 
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">

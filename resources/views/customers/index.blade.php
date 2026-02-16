@@ -1,8 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            顧客一覧ページ
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                顧客一覧
+            </h2>
+
+            {{-- ボタン --}}
+            <a href="{{ route('customers.create') }}"
+                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                新規作成
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-6">
@@ -35,7 +43,7 @@
                                 <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                     <td class="px-3 py-2 border">
                                         <a href="{{ route('customers.show', $customer) }}"
-                                            class="font-semibold text-blue-600 hover:underline">
+                                            class="text-blue-600 hover:underline">
                                             {{ $customer->name }}
                                         </a>
                                     </td>
@@ -57,7 +65,7 @@
                                     </td>
 
                                     <td class="px-3 py-2 border">
-                                        {{ optional($customer->assignedUser)->name }}
+                                        {!! optional($customer->assignedUser)->name ?? '<span class="text-gray-400">未設定</span>' !!}
                                     </td>
 
                                     <td class="px-3 py-2 border">
@@ -75,6 +83,5 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </x-app-layout>
