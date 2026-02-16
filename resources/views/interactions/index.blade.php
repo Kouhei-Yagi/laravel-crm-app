@@ -13,7 +13,6 @@
         </div>
     </x-slot>
 
-
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -80,7 +79,7 @@
                                     </td>
 
                                     <td class="px-3 py-2 border">
-                                        {{ optional($interaction->assignedUser)->name ?? '未設定' }}
+                                        {!! optional($interaction->assignedUser)->name ?? '<span class="text-gray-400">未設定</span>' !!}
                                     </td>
                                 </tr>
                             @endforeach
@@ -90,7 +89,7 @@
 
             </div>
 
-            <div class="mt-4 px-6 pb-6">
+            <div class="mt-4">
                 {{ $interactions->links() }}
             </div>
 

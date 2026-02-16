@@ -1,8 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            案件一覧ページ
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                案件一覧
+            </h2>
+
+            {{-- ボタン --}}
+            <a href="{{ route('projects.create') }}"
+                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                新規作成
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-6">
@@ -26,6 +34,7 @@
                                 <th class="px-3 py-2 border">税抜金額</th>
                                 <th class="px-3 py-2 border">担当者</th>
                                 <th class="px-3 py-2 border">期間</th>
+                                <th class="px-3 py-2 border">作成日</th>
                             </tr>
                         </thead>
 
@@ -59,12 +68,16 @@
                                     </td>
 
                                     <td class="px-3 py-2 border">
-                                        {{ optional($project->assignedUser)->name }}
+                                        {!! optional($project->assignedUser)->name ?? '<span class="text-gray-400">未設定</span>' !!}
                                     </td>
 
                                     <td class="px-3 py-2 border">
                                         {{ $project->start_date->format('Y-m-d') }} ～
                                         {{ $project->end_date->format('Y-m-d') }}
+                                    </td>
+
+                                    <td class="px-3 py-2 border">
+                                        {{ $project->created_at->format('Y-m-d') }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -78,6 +91,5 @@
 
             </div>
         </div>
-    </div>
     </div>
 </x-app-layout>
