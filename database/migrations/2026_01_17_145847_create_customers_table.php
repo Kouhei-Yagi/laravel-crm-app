@@ -48,9 +48,8 @@ return new class extends Migration
 
             // 担当者
             $table->foreignId('assigned_user_id')
-                ->nullable()
                 ->constrained('users')
-                ->nullOnDelete();
+                ->restrictOnDelete();
 
             // メモ
             $table->text('memo')->nullable();
