@@ -8,7 +8,7 @@ erDiagram
     users ||--o{ interactions : "logs"
 
     customers {
-        int id PK
+        int id PK "UNIQUE - AUTO_INCREMENT"
         string name
         string kana "nullable"
         string email "nullable"
@@ -21,7 +21,7 @@ erDiagram
         string address_detail "nullable"
         enum status "prospect / negotiation / won / lost / inactive"
         enum rank "A / B / C - nullable"
-        int assigned_user_id FK "nullable"
+        int assigned_user_id FK
         text memo "nullable"
         datetime created_at
         datetime updated_at
@@ -29,7 +29,7 @@ erDiagram
     }
 
     projects {
-        int id PK
+        int id PK "UNIQUE - AUTO_INCREMENT"
         int customer_id FK
         string title
         text description "nullable"
@@ -37,7 +37,7 @@ erDiagram
         int amount "nullable"
         date start_date "nullable"
         date end_date "nullable"
-        int assigned_user_id FK "nullable"
+        int assigned_user_id FK
         text memo "nullable"
         datetime created_at
         datetime updated_at
@@ -45,10 +45,10 @@ erDiagram
     }
 
     interactions {
-        int id PK
+        int id PK "UNIQUE - AUTO_INCREMENT"
         int customer_id FK
         int project_id FK "nullable"
-        int user_id FK
+        int assigned_user_id FK
         enum type "phone / email / visit / meeting"
         text content "nullable"
         datetime interacted_at
@@ -59,12 +59,12 @@ erDiagram
     }
 
     users {
-        int id PK
+        int id PK "UNIQUE - AUTO_INCREMENT"
         string name
-        string email
+        string email "UNIQUE"
         datetime email_verified_at "nullable"
         string password
-        string remember_token "nullable"
+        string remember_token
         datetime created_at
         datetime updated_at
     }
