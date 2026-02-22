@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -35,11 +34,8 @@ class CustomerController extends Controller
         // ランクの選択肢
         $ranks = Customer::RANKS;
 
-        // 担当者の選択肢
-        $assignedUsers = User::all();
-
         // 各選択肢の値を持ってcreateビューに遷移する
-        return view('customers.create', compact('statuses', 'ranks', 'assignedUsers'));
+        return view('customers.create', compact('statuses', 'ranks'));
     }
 
     /**
@@ -55,18 +51,20 @@ class CustomerController extends Controller
             'name' => 'required|string|max:255',
             'kana' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:255',
+            'phone' => 'nullable|regex:/^[0-9\-]+$/|max:20',
             'company_name' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
-            'postal_code' => 'nullable|string|max:7',
+            'postal_code' => 'nullable|digits:7',
             'address' => 'nullable|string|max:255',
             'address_detail' => 'nullable|string|max:255',
-            'status' => 'required|in:prospect,negotiation,won,lost,inactive',
-            'rank' => 'nullable|in:A,B,C',
-            'assigned_user_id' => 'nullable|integer|exists:users,id',
-            'memo' => 'nullable|string',
+            'status' => 'required|in:' . implode(',', array_keys(Customer::STATUSES)),
+            'rank' => 'required|in:' . implode(',', array_keys(Customer::RANKS)),
+            'memo' => 'nullable|string|max:2000',
         ]);
+
+        // 担当者はログインユーザーに固定
+        $validated['assigned_user_id'] = auth()->id();
 
         // バリデーションされたデータを取得して登録
         Customer::create($validated);
@@ -103,11 +101,8 @@ class CustomerController extends Controller
         // ランクの選択肢
         $ranks = Customer::RANKS;
 
-        // 担当者の選択肢
-        $assignedUsers = User::all();
-
         // 各選択肢の値を持って選択されたcustomersテーブルのレコードをeditビューに渡す
-        return view('customers.edit', compact('customer', 'statuses', 'ranks', 'assignedUsers'));
+        return view('customers.edit', compact('customer', 'statuses', 'ranks'));
     }
 
     /**
@@ -124,18 +119,20 @@ class CustomerController extends Controller
             'name' => 'required|string|max:255',
             'kana' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:255',
+            'phone' => 'nullable|regex:/^[0-9\-]+$/|max:20',
             'company_name' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
-            'postal_code' => 'nullable|string|max:7',
+            'postal_code' => 'nullable|digits:7',
             'address' => 'nullable|string|max:255',
             'address_detail' => 'nullable|string|max:255',
-            'status' => 'required|in:prospect,negotiation,won,lost,inactive',
-            'rank' => 'nullable|in:A,B,C',
-            'assigned_user_id' => 'nullable|integer|exists:users,id',
-            'memo' => 'nullable|string',
+            'status' => 'required|in:' . implode(',', array_keys(Customer::STATUSES)),
+            'rank' => 'required|in:' . implode(',', array_keys(Customer::RANKS)),
+            'memo' => 'nullable|string|max:2000',
         ]);
+
+        // 担当者は変更不可
+        $validated['assigned_user_id'] = $customer->assigned_user_id;
 
         // バリデーションされたデータを取得して更新
         $customer->update($validated);
