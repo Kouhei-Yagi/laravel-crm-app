@@ -39,7 +39,7 @@ return new class extends Migration
             ]);
 
             // 内容
-            $table->text('content')->nullable();
+            $table->text('content');
 
             // 対応日時
             $table->dateTime('interacted_at');
