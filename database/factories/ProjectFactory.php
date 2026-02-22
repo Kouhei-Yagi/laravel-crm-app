@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Customer;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,14 +19,16 @@ class ProjectFactory extends Factory
     {
         return [
             'customer_id' => Customer::factory(),
-            'title' => fake()->word(),
-            'description' => fake()->text(),
+            'title' => fake()->realText(15),
+            'description' => fake()->realText(80),
             'status' => fake()->randomElement(['estimating', 'proposing', 'contracted', 'lost', 'on_hold']),
             'amount' => fake()->numberBetween(10000, 500000),
-            'start_date' => fake()->date(),
-            'end_date' => fake()->date(),
-            'assigned_user_id' => User::factory(),
-            'memo' => fake()->text(),
+            'start_date' => fake()->optional()->date(),
+            'end_date' => fake()->optional()->date(),
+            'assigned_user_id' => function (array $attributes) {
+                return Customer::find($attributes['customer_id'])->assigned_user_id;
+            },
+            'memo' => fake()->realText(50),
         ];
     }
 }

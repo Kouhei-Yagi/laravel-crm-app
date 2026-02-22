@@ -49,15 +49,15 @@
                                     </td>
 
                                     <td class="px-3 py-2 border">
-                                        {{ $customer->email }}
+                                        {{ $customer->email ?: '未設定' }}
                                     </td>
 
                                     <td class="px-3 py-2 border">
-                                        {{ $customer->phone }}
+                                        {{ $customer->phone ?: '未設定' }}
                                     </td>
 
                                     <td class="px-3 py-2 border">
-                                        {{ $customer->company_name }}
+                                        {{ $customer->company_name ?: '未設定' }}
                                     </td>
 
                                     <td class="px-3 py-2 border">
@@ -65,7 +65,7 @@
                                     </td>
 
                                     <td class="px-3 py-2 border">
-                                        {!! optional($customer->assignedUser)->name ?? '<span class="text-gray-400">未設定</span>' !!}
+                                        {{ $customer->assignedUser->name }}
                                     </td>
 
                                     <td class="px-3 py-2 border">

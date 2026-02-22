@@ -115,7 +115,7 @@ erDiagram
         string address "nullable"
         string address_detail "nullable"
         enum status "prospect / negotiation / won / lost / inactive"
-        enum rank "A / B / C - nullable"
+        enum rank "A / B / C"
         int assigned_user_id FK
         text memo "nullable"
         datetime created_at
@@ -145,7 +145,7 @@ erDiagram
         int project_id FK "nullable"
         int assigned_user_id FK
         enum type "phone / email / visit / meeting"
-        text content "nullable"
+        text content
         datetime interacted_at
         text memo "nullable"
         datetime created_at
