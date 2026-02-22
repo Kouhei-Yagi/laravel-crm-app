@@ -4,20 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
     /**
-     * 案件一覧ページを表示する
+     * 案件一覧を表示する
      *
      * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
+        // projectsテーブルのデータを作成日順に20件ずつ表示
         $projects = Project::orderBy('created_at', 'desc')->paginate(20);
 
+        // projectsテーブルのデータをindexビューに渡す
         return view('projects.index', compact('projects'));
     }
 
@@ -28,16 +29,14 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        // 顧客名の選択肢
-        $customers = Customer::all();
+        // 顧客名の選択肢をログインユーザーが担当している顧客のみにする
+        $customers = Customer::where('assigned_user_id', auth()->id())->get();
 
         // ステータスの選択肢
         $statuses = Project::STATUSES;
 
-        // 担当者の選択肢
-        $users = User::all();
-
-        return view('projects.create', compact('customers', 'statuses', 'users'));
+        // 各選択肢の値を持ってcreateビューに遷移する
+        return view('projects.create', compact('customers', 'statuses'));
     }
 
     /**
@@ -48,23 +47,25 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        // バリデーション
+        // 入力値をバリデーション処理
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'customer_id' => 'required|integer|exists:customers,id',
-            'description' => 'nullable|string',
-            'status' => 'required|in:estimating,proposing,contracted,lost,on_hold',
+            'description' => 'nullable|string|max:2000',
+            'status' => 'required|in:' . implode(',', array_keys(Project::STATUSES)),
             'amount' => 'nullable|integer|min:0',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'assigned_user_id' => 'nullable|integer|exists:users,id',
-            'memo' => 'nullable|string',
+            'memo' => 'nullable|string|max:2000',
         ]);
 
-        // 登録処理
+        // 担当者はログインユーザーに固定
+        $validated['assigned_user_id'] = auth()->id();
+
+        // バリデーションされたデータを取得して登録
         Project::create($validated);
 
-        // リダイレクトしてフラッシュメッセージを送信
+        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('projects.index')
             ->with('success', '登録しました。');
@@ -78,6 +79,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        // 選択されたprojectsテーブルのデータをshowビューに渡す
         return view('projects.show', compact('project'));
     }
 
@@ -89,16 +91,11 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        // 顧客名の選択肢
-        $customers = Customer::all();
-
         // 案件ステータスの選択肢
         $statuses = Project::STATUSES;
 
-        // 担当者の選択肢
-        $users = User::all();
-
-        return view('projects.edit', compact('project', 'customers', 'statuses', 'users'));
+        // 各選択肢の値を持って選択されたprojextsテーブルのレコードをeditビューに渡す
+        return view('projects.edit', compact('project', 'statuses'));
     }
 
     /**
@@ -110,37 +107,42 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        // バリデーション
+        // 入力値をバリデーション処理
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'customer_id' => 'required|integer|exists:customers,id',
-            'description' => 'nullable|string',
-            'status' => 'required|in:estimating,proposing,contracted,lost,on_hold',
+            'description' => 'nullable|string|max:2000',
+            'status' => 'required|in:' . implode(',', array_keys(Project::STATUSES)),
             'amount' => 'nullable|integer|min:0',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'assigned_user_id' => 'nullable|integer|exists:users,id',
-            'memo' => 'nullable|string',
+            'memo' => 'nullable|string|max:2000',
         ]);
 
-        // 更新処理
+        // 顧客及び担当者は変更不可
+        $validated['customer_id'] = $project->customer_id;
+        $validated['assigned_user_id'] = $project->assigned_user_id;
+
+        // バリデーションされたデータを取得して更新
         $project->update($validated);
 
-        // リダイレクト・フラッシュメッセージ
+        // showビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('projects.show', $project)
             ->with('success', '更新しました。');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 案件削除処理（SoftDelete）
+     *
+     * @param Project $project
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Project $project)
     {
-        // 削除処理
+        // 削除処理（SoftDelete）
         $project->delete();
 
-        // リダイレクト
+        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('projects.index')
             ->with('success', '削除しました。');

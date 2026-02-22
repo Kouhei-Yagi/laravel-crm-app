@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
 
-            // 担当者
+            // 顧客
             $table->string('name');
             $table->string('kana')->nullable();
 
-            // 担当者情報
+            // 顧客情報
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
 
@@ -43,14 +43,12 @@ return new class extends Migration
 
             // 顧客ランク
             $table->enum('rank', ['A', 'B', 'C'])
-                ->default('C')
-                ->nullable();
+                ->default('C');
 
             // 担当者
             $table->foreignId('assigned_user_id')
-                ->nullable()
                 ->constrained('users')
-                ->nullOnDelete();
+                ->restrictOnDelete();
 
             // メモ
             $table->text('memo')->nullable();

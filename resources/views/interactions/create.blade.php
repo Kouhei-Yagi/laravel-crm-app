@@ -10,6 +10,10 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
+                    <p class="text-sm text-gray-800 dark:text-gray-200 mb-4">
+                        <span class="text-red-500">*</span> は入力必須項目です。
+                    </p>
+
                     <form action="{{ route('interactions.store') }}" method="post" class="space-y-6">
                         @csrf
 
@@ -18,11 +22,14 @@
 
                         {{-- 対応日時 --}}
                         <div>
-                            <label for="interacted_at" class="block mb-1">対応日時</label>
+                            <label for="interacted_at" class="block mb-1">
+                                対応日時 <span class="text-red-500">*</span>
+                            </label>
+
                             <input type="datetime-local" id="interacted_at" name="interacted_at"
                                 class="w-full border-gray-300 rounded-md shadow-sm
-                                       text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700"
+                                text-gray-900 dark:text-gray-100
+                                bg-white dark:bg-gray-700"
                                 value="{{ old('interacted_at') }}">
 
                             @error('interacted_at')
@@ -32,11 +39,15 @@
 
                         {{-- 対応種別 --}}
                         <div>
-                            <label for="type" class="block mb-1">対応種別</label>
+                            <label for="type" class="block mb-1">
+                                対応種別 <span class="text-red-500">*</span>
+                            </label>
+
                             <select id="type" name="type"
                                 class="w-full border-gray-300 rounded-md shadow-sm
-                                       text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700">
+                                text-gray-900 dark:text-gray-100
+                                bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($types as $key => $label)
                                     <option value="{{ $key }}" @selected(old('type') == $key)>
                                         {{ $label }}
@@ -51,11 +62,14 @@
 
                         {{-- 内容 --}}
                         <div>
-                            <label for="content" class="block mb-1">内容</label>
-                            <textarea id="content" name="content"
+                            <label for="content" class="block mb-1">
+                                内容 <span class="text-red-500">*</span>
+                            </label>
+
+                            <textarea id="content" name="content" placeholder="例：電話で仕様確認を実施"
                                 class="w-full border-gray-300 rounded-md shadow-sm
-                                       text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700">{{ old('content') }}</textarea>
+                                text-gray-900 dark:text-gray-100
+                                bg-white dark:bg-gray-700 whitespace-pre-line">{{ old('content') }}</textarea>
 
                             @error('content')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -65,10 +79,11 @@
                         {{-- メモ --}}
                         <div>
                             <label for="memo" class="block mb-1">メモ</label>
+
                             <textarea id="memo" name="memo"
                                 class="w-full border-gray-300 rounded-md shadow-sm
-                                       text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700"
+                                text-gray-900 dark:text-gray-100
+                                bg-white dark:bg-gray-700 whitespace-pre-line"
                                 placeholder="自由記述欄">{{ old('memo') }}</textarea>
 
                             @error('memo')
@@ -82,10 +97,12 @@
                         {{-- 案件名 --}}
                         <div>
                             <label for="project_id" class="block mb-1">案件名</label>
+
                             <select id="project_id" name="project_id"
                                 class="w-full border-gray-300 rounded-md shadow-sm
-                                       text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700">
+                                text-gray-900 dark:text-gray-100
+                                bg-white dark:bg-gray-700">
+                                <option value="">案件未設定（単発対応）</option>
                                 @foreach ($projects as $project)
                                     <option value="{{ $project->id }}" @selected(old('project_id') == $project->id)>
                                         {{ $project->title }}
@@ -100,11 +117,15 @@
 
                         {{-- 顧客名 --}}
                         <div>
-                            <label for="customer_id" class="block mb-1">顧客名</label>
+                            <label for="customer_id" class="block mb-1">
+                                顧客名 <span class="text-red-500">*</span>
+                            </label>
+
                             <select id="customer_id" name="customer_id"
                                 class="w-full border-gray-300 rounded-md shadow-sm
-                                       text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700">
+                                text-gray-900 dark:text-gray-100
+                                bg-white dark:bg-gray-700">
+                                <option value="">選択してください</option>
                                 @foreach ($customers as $customer)
                                     <option value="{{ $customer->id }}" @selected(old('customer_id') == $customer->id)>
                                         {{ $customer->name }}
@@ -113,25 +134,6 @@
                             </select>
 
                             @error('customer_id')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        {{-- 担当者 --}}
-                        <div>
-                            <label for="assigned_user_id" class="block mb-1">担当者</label>
-                            <select id="assigned_user_id" name="assigned_user_id"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                       text-gray-900 dark:text-gray-100
-                                       bg-white dark:bg-gray-700">
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" @selected(old('assigned_user_id') == $user->id)>
-                                        {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('assigned_user_id')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>

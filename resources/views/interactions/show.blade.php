@@ -36,13 +36,13 @@
 
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">内容</th>
-                                <td class="px-3 py-2 border whitespace-pre-line">{{ $interaction->content ?: '（なし）' }}
+                                <td class="px-3 py-2 border whitespace-pre-line">{{ $interaction->content }}
                                 </td>
                             </tr>
 
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">メモ</th>
-                                <td class="px-3 py-2 border whitespace-pre-line">{{ $interaction->memo ?: '（なし）' }}</td>
+                                <td class="px-3 py-2 border whitespace-pre-line">{{ $interaction->memo ?: '未設定' }}</td>
                             </tr>
 
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
@@ -54,7 +54,7 @@
                                             {{ $interaction->project->title }}
                                         </a>
                                     @else
-                                        <span class="text-gray-400">未設定</span>
+                                        未設定
                                     @endif
                                 </td>
                             </tr>
@@ -62,21 +62,17 @@
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">顧客名</th>
                                 <td class="px-3 py-2 border">
-                                    @if ($interaction->customer)
-                                        <a href="{{ route('customers.show', $interaction->customer) }}"
-                                            class="text-blue-600 hover:underline">
-                                            {{ $interaction->customer->name }}
-                                        </a>
-                                    @else
-                                        <span class="text-gray-400">未設定</span>
-                                    @endif
+                                    <a href="{{ route('customers.show', $interaction->customer) }}"
+                                        class="text-blue-600 hover:underline">
+                                        {{ $interaction->customer->name }}
+                                    </a>
                                 </td>
                             </tr>
 
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">担当者</th>
                                 <td class="px-3 py-2 border">
-                                    {{ optional($interaction->user)->name ?? '未設定' }}
+                                    {{ $interaction->assignedUser->name }}
                                 </td>
                             </tr>
 

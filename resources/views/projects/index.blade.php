@@ -1,8 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            案件一覧ページ
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                案件一覧
+            </h2>
+
+            {{-- ボタン --}}
+            <a href="{{ route('projects.create') }}"
+                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                新規作成
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-6">
@@ -26,6 +34,7 @@
                                 <th class="px-3 py-2 border">税抜金額</th>
                                 <th class="px-3 py-2 border">担当者</th>
                                 <th class="px-3 py-2 border">期間</th>
+                                <th class="px-3 py-2 border">作成日</th>
                             </tr>
                         </thead>
 
@@ -38,28 +47,33 @@
                                             {{ $project->title }}
                                         </a>
                                     </td>
+
                                     <td class="px-3 py-2 border">
-                                        @if ($project->customer)
-                                            <a href="{{ route('customers.show', $project->customer) }}"
-                                                class="text-blue-600 hover:underline">
-                                                {{ optional($project->customer)->name }}
-                                            </a>
-                                        @else
-                                            <span class="text-gray-400">未設定</span>
-                                        @endif
+                                        <a href="{{ route('customers.show', $project->customer) }}"
+                                            class="text-blue-600 hover:underline">
+                                            {{ $project->customer->name }}
+                                        </a>
                                     </td>
+
                                     <td class="px-3 py-2 border">
                                         {{ App\Models\Project::STATUSES[$project->status] }}
                                     </td>
+
                                     <td class="px-3 py-2 border">
-                                        {{ number_format($project->amount) }}
+                                        {{ number_format($project->amount) ?: '未設定' }}
                                     </td>
+
                                     <td class="px-3 py-2 border">
-                                        {{ optional($project->user)->name }}
+                                        {{ $project->assignedUser->name }}
                                     </td>
+
                                     <td class="px-3 py-2 border">
-                                        {{ $project->start_date->format('Y-m-d') }} ～
-                                        {{ $project->end_date->format('Y-m-d') }}
+                                        {{ $project->start_date ? $project->start_date->format('Y-m-d') : '未設定' }} ～
+                                        {{ $project->end_date ? $project->end_date->format('Y-m-d') : '未設定' }}
+                                    </td>
+
+                                    <td class="px-3 py-2 border">
+                                        {{ $project->created_at->format('Y-m-d') }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -73,6 +87,5 @@
 
             </div>
         </div>
-    </div>
     </div>
 </x-app-layout>

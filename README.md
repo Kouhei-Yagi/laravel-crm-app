@@ -2,7 +2,7 @@
 
 このアプリは、中小企業向けの業務システム開発を想定した、シンプルで拡張性の高い顧客管理（CRM）アプリです。
 Laravel Breeze を用いた認証機能をベースに、顧客情報・案件情報・対応履歴を一元管理できる仕組みを構築します。
-実務でよく使われる CRM の最小構成を再現し、業務システム開発の理解を深めることを目的として作成しています。
+実務でよく使われる CRM の最小構成を再現し、業務システム開発の理解を深めることを目的としています。
 
 ---
 
@@ -103,7 +103,7 @@ erDiagram
     users ||--o{ interactions : "logs"
 
     customers {
-        int id PK
+        int id PK "UNIQUE - AUTO_INCREMENT"
         string name
         string kana "nullable"
         string email "nullable"
@@ -115,8 +115,8 @@ erDiagram
         string address "nullable"
         string address_detail "nullable"
         enum status "prospect / negotiation / won / lost / inactive"
-        enum rank "A / B / C - nullable"
-        int assigned_user_id FK "nullable"
+        enum rank "A / B / C"
+        int assigned_user_id FK
         text memo "nullable"
         datetime created_at
         datetime updated_at
@@ -124,7 +124,7 @@ erDiagram
     }
 
     projects {
-        int id PK
+        int id PK "UNIQUE - AUTO_INCREMENT"
         int customer_id FK
         string title
         text description "nullable"
@@ -132,7 +132,7 @@ erDiagram
         int amount "nullable"
         date start_date "nullable"
         date end_date "nullable"
-        int assigned_user_id FK "nullable"
+        int assigned_user_id FK
         text memo "nullable"
         datetime created_at
         datetime updated_at
@@ -140,12 +140,12 @@ erDiagram
     }
 
     interactions {
-        int id PK
+        int id PK "UNIQUE - AUTO_INCREMENT"
         int customer_id FK
         int project_id FK "nullable"
-        int user_id FK
+        int assigned_user_id FK
         enum type "phone / email / visit / meeting"
-        text content "nullable"
+        text content
         datetime interacted_at
         text memo "nullable"
         datetime created_at
@@ -154,12 +154,12 @@ erDiagram
     }
 
     users {
-        int id PK
+        int id PK "UNIQUE - AUTO_INCREMENT"
         string name
-        string email
+        string email "UNIQUE"
         datetime email_verified_at "nullable"
         string password
-        string remember_token "nullable"
+        string remember_token
         datetime created_at
         datetime updated_at
     }
@@ -167,7 +167,7 @@ erDiagram
 
 ---
 
-## ディレクトリ構成（予定）
+## ディレクトリ構成
 
 ```
 customer-manager/
@@ -177,7 +177,7 @@ customer-manager/
 │ │ ├── Controllers/ # 顧客・案件・対応履歴のコントローラ
 │ │ └── Requests/ # バリデーション（FormRequest）
 ├── database/
-│ ├── migrations/ # マイグレーション（後で追加）
+│ ├── migrations/ # マイグレーション
 │ ├── seeders/ # テストデータ生成
 │ └── factories/ # Factory
 ├── docs/
@@ -313,9 +313,9 @@ remove: 未使用のコンポーネントを削除
 3. Breeze 導入（完了）
 4. 日本語化（完了）
 5. マイグレーションファイルの作成（完了）
-6. 顧客 CRUD の実装
-7. 案件 CRUD の実装
-8. 対応履歴 CRUD の実装
+6. 顧客 CRUD の実装（完了）
+7. 案件 CRUD の実装（完了）
+8. 対応履歴 CRUD の実装（完了）
 9. 検索・絞り込み・ソートの実装
 10. 権限管理（Policy）
 11. CSV エクスポート

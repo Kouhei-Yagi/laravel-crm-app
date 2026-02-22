@@ -13,7 +13,6 @@
         </div>
     </x-slot>
 
-
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -64,23 +63,19 @@
                                                 {{ $interaction->project->title }}
                                             </a>
                                         @else
-                                            <span class="text-gray-400">未設定</span>
+                                            未設定
                                         @endif
                                     </td>
 
                                     <td class="px-3 py-2 border">
-                                        @if ($interaction->customer)
-                                            <a href="{{ route('customers.show', $interaction->customer) }}"
-                                                class="text-blue-600 hover:underline">
-                                                {{ $interaction->customer->name }}
-                                            </a>
-                                        @else
-                                            <span class="text-gray-400">未設定</span>
-                                        @endif
+                                        <a href="{{ route('customers.show', $interaction->customer) }}"
+                                            class="text-blue-600 hover:underline">
+                                            {{ $interaction->customer->name }}
+                                        </a>
                                     </td>
 
                                     <td class="px-3 py-2 border">
-                                        {{ optional($interaction->user)->name ?? '未設定' }}
+                                        {{ $interaction->assignedUser->name }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -90,7 +85,7 @@
 
             </div>
 
-            <div class="mt-4 px-6 pb-6">
+            <div class="mt-4">
                 {{ $interactions->links() }}
             </div>
 

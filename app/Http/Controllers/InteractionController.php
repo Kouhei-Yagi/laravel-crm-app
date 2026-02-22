@@ -5,13 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Interaction;
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class InteractionController extends Controller
 {
     /**
-     * 案件履歴の一覧を表示する
+     * 案件履歴一覧を表示する
      *
      * @return \Illuminate\Contracts\View\View
      */
@@ -25,7 +24,7 @@ class InteractionController extends Controller
     }
 
     /**
-     * 案件履歴新規作成ページを表示
+     * 案件履歴新規作成ページを表示する
      *
      * @return \Illuminate\Contracts\View\View
      */
@@ -35,16 +34,13 @@ class InteractionController extends Controller
         $types = Interaction::TYPE;
 
         // 案件名の選択肢
-        $projects = Project::all();
+        $projects = Project::where('id', auth()->id())->get();
 
-        // 顧客名の選択肢
-        $customers = Customer::all();
+        // 顧客名の選択肢をログインユーザーが担当している顧客のみにする
+        $customers = Customer::where('assigned_user_id', auth()->id())->get();
 
-        // 担当者の選択肢
-        $users = User::all();
-
-        // createビューに遷移する
-        return view('interactions.create', compact('types', 'projects', 'customers', 'users'));
+        // 各選択肢の値を持ってcreateビューに遷移する
+        return view('interactions.create', compact('types', 'projects', 'customers'));
     }
 
     /**
@@ -55,21 +51,22 @@ class InteractionController extends Controller
      */
     public function store(Request $request)
     {
-        // 入力値をバリデーション
+        // 入力値をバリデーション処理
         $validated = $request->validate([
             'interacted_at' => 'required|date_format:Y-m-d\TH:i',
             'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
-            'content' => 'nullable|string|max:2000',
+            'content' => 'required|string|max:2000',
             'memo' => 'nullable|string|max:2000',
             'project_id' => 'nullable|integer|exists:projects,id',
             'customer_id' => 'required|integer|exists:customers,id',
-            'assigned_user_id' => 'required|integer|exists:users,id',
         ]);
+        // 担当者はログインユーザーに固定
+        $validated['assigned_user_id'] = auth()->id();
 
-        // 登録処理
+        // バリデーションされたデータを取得して登録
         Interaction::create($validated);
 
-        // indexビューにリダイレクト・フラッシュメッセージ
+        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('interactions.index')
             ->with('success', '登録しました。');
@@ -98,17 +95,8 @@ class InteractionController extends Controller
         // 対応種別の選択肢を渡す
         $types = Interaction::TYPE;
 
-        // 案件名の選択肢を渡す
-        $projects = Project::all();
-
-        // 顧客名の選択肢を渡す
-        $customers = Customer::all();
-
-        // 担当者の選択肢を渡す
-        $users = User::all();
-
-        // 選択されたinteractionsテーブルをeditビューに渡す
-        return view('interactions.edit', compact('interaction', 'types', 'projects', 'customers', 'users'));
+        // 各選択肢の値を持って選択されたinteractionsテーブルのレコードをeditビューに渡す
+        return view('interactions.edit', compact('interaction', 'types'));
     }
 
     /**
@@ -120,21 +108,22 @@ class InteractionController extends Controller
      */
     public function update(Request $request, Interaction $interaction)
     {
-        // バリデーション処理
+        // 入力値をバリデーション処理
         $validated = $request->validate([
             'interacted_at' => 'required|date_format:Y-m-d\TH:i',
             'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
-            'content' => 'nullable|string|max:2000',
+            'content' => 'required|string|max:2000',
             'memo' => 'nullable|string|max:2000',
-            'project_id' => 'nullable|integer|exists:projects,id',
-            'customer_id' => 'required|integer|exists:customers,id',
-            'assigned_user_id' => 'required|integer|exists:users,id',
         ]);
+        // 顧客ID・案件ID・担当者は変更不可
+        $validated['customer_id'] = $interaction->customer_id;
+        $validated['project_id'] = $interaction->project_id;
+        $validated['assigned_user_id'] = $interaction->assigned_user_id;
 
-        // 入力されたデータを取得・更新
+        // バリデーションされたデータを取得して更新
         $interaction->update($validated);
 
-        // showビューにリダイレクト・フラッシュメッセージ
+        // showビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('interactions.show', $interaction)
             ->with('success', '更新しました。');
@@ -151,7 +140,7 @@ class InteractionController extends Controller
         // 削除処理（SoftDelete）
         $interaction->delete();
 
-        // indexビューにリダイレクト・フラッシュメッセージ
+        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('interactions.index')
             ->with('success', '削除しました。');

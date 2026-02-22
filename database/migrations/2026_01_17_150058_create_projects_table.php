@@ -17,7 +17,7 @@ return new class extends Migration
             // 顧客
             $table->foreignId('customer_id')
                 ->constrained()
-                ->nullOnDelete();
+                ->restrictOnDelete();
 
             // 案件
             $table->string('title');
@@ -41,9 +41,8 @@ return new class extends Migration
 
             // 担当者
             $table->foreignId('assigned_user_id')
-                ->nullable()
                 ->constrained('users')
-                ->nullOnDelete();
+                ->restrictOnDelete();
 
             // メモ
             $table->text('memo')->nullable();
