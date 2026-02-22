@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Interaction;
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class InteractionController extends Controller
@@ -35,16 +34,13 @@ class InteractionController extends Controller
         $types = Interaction::TYPE;
 
         // 案件名の選択肢
-        $projects = Project::all();
+        $projects = Project::where('id', auth()->id())->get();
 
-        // 顧客名の選択肢
-        $customers = Customer::all();
-
-        // 担当者の選択肢
-        $assignedUsers = User::all();
+        // 顧客名の選択肢をログインユーザーが担当している顧客のみにする
+        $customers = Customer::where('assigned_user_id', auth()->id())->get();
 
         // 各選択肢の値を持ってcreateビューに遷移する
-        return view('interactions.create', compact('types', 'projects', 'customers', 'assignedUsers'));
+        return view('interactions.create', compact('types', 'projects', 'customers'));
     }
 
     /**
@@ -59,12 +55,13 @@ class InteractionController extends Controller
         $validated = $request->validate([
             'interacted_at' => 'required|date_format:Y-m-d\TH:i',
             'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
-            'content' => 'nullable|string|max:2000',
+            'content' => 'required|string|max:2000',
             'memo' => 'nullable|string|max:2000',
             'project_id' => 'nullable|integer|exists:projects,id',
             'customer_id' => 'required|integer|exists:customers,id',
-            'assigned_user_id' => 'required|integer|exists:users,id',
         ]);
+        // 担当者はログインユーザーに固定
+        $validated['assigned_user_id'] = auth()->id();
 
         // バリデーションされたデータを取得して登録
         Interaction::create($validated);
@@ -98,17 +95,8 @@ class InteractionController extends Controller
         // 対応種別の選択肢を渡す
         $types = Interaction::TYPE;
 
-        // 案件名の選択肢を渡す
-        $projects = Project::all();
-
-        // 顧客名の選択肢を渡す
-        $customers = Customer::all();
-
-        // 担当者の選択肢を渡す
-        $assignedUsers = User::all();
-
         // 各選択肢の値を持って選択されたinteractionsテーブルのレコードをeditビューに渡す
-        return view('interactions.edit', compact('interaction', 'types', 'projects', 'customers', 'assignedUsers'));
+        return view('interactions.edit', compact('interaction', 'types'));
     }
 
     /**
@@ -124,12 +112,13 @@ class InteractionController extends Controller
         $validated = $request->validate([
             'interacted_at' => 'required|date_format:Y-m-d\TH:i',
             'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
-            'content' => 'nullable|string|max:2000',
+            'content' => 'required|string|max:2000',
             'memo' => 'nullable|string|max:2000',
-            'project_id' => 'nullable|integer|exists:projects,id',
-            'customer_id' => 'required|integer|exists:customers,id',
-            'assigned_user_id' => 'required|integer|exists:users,id',
         ]);
+        // 顧客ID・案件ID・担当者は変更不可
+        $validated['customer_id'] = $interaction->customer_id;
+        $validated['project_id'] = $interaction->project_id;
+        $validated['assigned_user_id'] = $interaction->assigned_user_id;
 
         // バリデーションされたデータを取得して更新
         $interaction->update($validated);
