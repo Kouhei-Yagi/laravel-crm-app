@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -30,17 +29,14 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        // 顧客名の選択肢
-        $customers = Customer::all();
+        // 顧客名の選択肢をログインユーザーが担当している顧客のみにする
+        $customers = Customer::where('assigned_user_id', auth()->id())->get();
 
         // ステータスの選択肢
         $statuses = Project::STATUSES;
 
-        // 担当者の選択肢
-        $assignedUsers = User::all();
-
         // 各選択肢の値を持ってcreateビューに遷移する
-        return view('projects.create', compact('customers', 'statuses', 'assignedUsers'));
+        return view('projects.create', compact('customers', 'statuses'));
     }
 
     /**
@@ -55,14 +51,16 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'customer_id' => 'required|integer|exists:customers,id',
-            'description' => 'nullable|string',
-            'status' => 'required|in:estimating,proposing,contracted,lost,on_hold',
+            'description' => 'nullable|string|max:2000',
+            'status' => 'required|in:' . implode(',', array_keys(Project::STATUSES)),
             'amount' => 'nullable|integer|min:0',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'assigned_user_id' => 'nullable|integer|exists:users,id',
-            'memo' => 'nullable|string',
+            'memo' => 'nullable|string|max:2000',
         ]);
+
+        // 担当者はログインユーザーに固定
+        $validated['assigned_user_id'] = auth()->id();
 
         // バリデーションされたデータを取得して登録
         Project::create($validated);
@@ -93,17 +91,11 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        // 顧客名の選択肢
-        $customers = Customer::all();
-
         // 案件ステータスの選択肢
         $statuses = Project::STATUSES;
 
-        // 担当者の選択肢
-        $assignedUsers = User::all();
-
         // 各選択肢の値を持って選択されたprojextsテーブルのレコードをeditビューに渡す
-        return view('projects.edit', compact('project', 'customers', 'statuses', 'assignedUsers'));
+        return view('projects.edit', compact('project', 'statuses'));
     }
 
     /**
@@ -118,15 +110,17 @@ class ProjectController extends Controller
         // 入力値をバリデーション処理
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'customer_id' => 'required|integer|exists:customers,id',
-            'description' => 'nullable|string',
-            'status' => 'required|in:estimating,proposing,contracted,lost,on_hold',
+            'description' => 'nullable|string|max:2000',
+            'status' => 'required|in:' . implode(',', array_keys(Project::STATUSES)),
             'amount' => 'nullable|integer|min:0',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'assigned_user_id' => 'nullable|integer|exists:users,id',
-            'memo' => 'nullable|string',
+            'memo' => 'nullable|string|max:2000',
         ]);
+
+        // 顧客及び担当者は変更不可
+        $validated['customer_id'] = $project->customer_id;
+        $validated['assigned_user_id'] = $project->assigned_user_id;
 
         // バリデーションされたデータを取得して更新
         $project->update($validated);
