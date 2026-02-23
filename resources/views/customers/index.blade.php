@@ -18,13 +18,35 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
+                    {{-- フラッシュメッセージ --}}
                     @if (session('success'))
                         <div
-                            class="mb-4 p-3 rounded-md bg-green-100 text-green-800 border border-green-300 dark:bg-green-900 dark:text-green-100 dark:border-green-700">
+                            class="mb-4 p-3 rounded-md bg-green-100 text-green-800 border border-green-300
+                            dark:bg-green-900 dark:text-green-100 dark:border-green-700">
                             {{ session('success') }}
                         </div>
                     @endif
 
+                    {{-- 検索フォーム --}}
+                    <form action="{{ route('customers.index') }}" method="get" class="mb-4">
+                        <div class="flex items-center gap-2">
+
+                            <input type="text" name="keyword" id="keyword" value="{{ request('keyword') }}"
+                                placeholder="顧客名で検索"
+                                class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
+                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+
+                            <button type="submit"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700
+                                dark:bg-blue-500 dark:hover:bg-blue-600">
+                                検索
+                            </button>
+
+                        </div>
+                    </form>
+
+                    {{-- 一覧データ --}}
                     <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
