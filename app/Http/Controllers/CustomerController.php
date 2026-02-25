@@ -21,7 +21,10 @@ class CustomerController extends Controller
         // キーワードが入力されていれば部分一致検索を適用
         if ($request->filled('keyword')) {
             $keyword = trim($request->keyword);
-            $query->where('name', 'like', "%{$keyword}%");
+            $query->where('name', 'like', "%{$keyword}%")
+                ->orWhere('email', 'like', "%{$keyword}%")
+                ->orWhere('phone', 'like', "%{$keyword}%")
+                ->orWhere('company_name', 'like', "%{$keyword}%");
         }
 
         // 作成日の新しい順に並べて20件ずつ取得
