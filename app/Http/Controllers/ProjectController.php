@@ -13,10 +13,19 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        // projectsテーブルのデータを作成日順に20件ずつ表示
-        $projects = Project::orderBy('created_at', 'desc')->paginate(20);
+        // 案件一覧取得用のクエリを準備
+        $query = Project::query();
+
+        // キーワードが入力されていれば部分一致検索を適用
+        if ($request->filled('keyword')) {
+            $keyword = trim($request->keyword);
+            $query->where('title', 'like', "%{$keyword}%");
+        }
+
+        // 作成日の新しい順に並べて20件ずつ取得
+        $projects = $query->orderBy('created_at', 'desc')->paginate(20);
 
         // projectsテーブルのデータをindexビューに渡す
         return view('projects.index', compact('projects'));
