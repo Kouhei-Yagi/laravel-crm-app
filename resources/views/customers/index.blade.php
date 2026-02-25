@@ -98,8 +98,9 @@
                         </tbody>
                     </table>
 
+                    {{-- ページネーション（検索条件を保持） --}}
                     <div class="mt-4">
-                        {{ $customers->links() }}
+                        {{ $customers->appends(request()->query())->links() }}
                     </div>
 
                 </div>
