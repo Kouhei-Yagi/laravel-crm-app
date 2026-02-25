@@ -32,7 +32,7 @@
                         <div class="flex items-center gap-2">
 
                             <input type="text" name="keyword" id="keyword" value="{{ request('keyword') }}"
-                                placeholder="顧客名で検索"
+                                placeholder="顧客名・メール・電話番号・会社名で検索"
                                 class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
                                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                                 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
@@ -98,8 +98,9 @@
                         </tbody>
                     </table>
 
+                    {{-- ページネーション（検索条件を保持） --}}
                     <div class="mt-4">
-                        {{ $customers->links() }}
+                        {{ $customers->appends(request()->query())->links() }}
                     </div>
 
                 </div>
