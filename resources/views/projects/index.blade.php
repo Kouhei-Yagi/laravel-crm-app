@@ -101,9 +101,9 @@
                     </table>
                 </div>
 
-                {{-- ページネーション --}}
+                {{-- ページネーション（検索条件の保持） --}}
                 <div class="mt-4">
-                    {{ $projects->links() }}
+                    {{ $projects->appends(request()->query())->links() }}
                 </div>
 
             </div>
