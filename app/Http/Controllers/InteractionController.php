@@ -12,12 +12,22 @@ class InteractionController extends Controller
     /**
      * 案件履歴一覧を表示する
      *
+     * @param mixed $request
      * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        // interactionsテーブルのデータを対応日時順に20件ずつ表示
-        $interactions = Interaction::orderBy('interacted_at', 'desc')->paginate(20);
+        // 案件履歴一覧取得用のクエリを準備
+        $query = Interaction::query();
+
+        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('keyword')) {
+            $keyword = trim($request->keyword);
+            $query->where('content', 'like', "%{$keyword}%");
+        }
+
+        // 作成日の新しい順に並べて20件ずつ取得
+        $interactions = $query->orderBy('interacted_at', 'desc')->paginate(20);
 
         // interactionsテーブルのデータをindexビューに渡す
         return view('interactions.index', compact('interactions'));
