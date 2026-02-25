@@ -106,8 +106,9 @@
 
             </div>
 
+            {{-- ページネーション（検索条件の保持） --}}
             <div class="mt-4">
-                {{ $interactions->links() }}
+                {{ $interactions->appends(request()->query())->links() }}
             </div>
 
         </div>
