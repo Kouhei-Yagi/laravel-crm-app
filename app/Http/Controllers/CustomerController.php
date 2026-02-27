@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -15,10 +16,16 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
+        // ステータスの選択肢
+        $statuses = Customer::STATUSES;
+
+        // 担当者の選択肢
+        $assignedUsers = User::all();
+
         // 顧客一覧取得用のクエリを準備
         $query = Customer::query();
 
-        // キーワードが入力されていれば部分一致検索を適用
+        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
         if ($request->filled('keyword')) {
             $keyword = trim($request->keyword);
             $query->where(function ($q) use ($keyword) {
@@ -29,11 +36,36 @@ class CustomerController extends Controller
             });
         }
 
+        // ステータス検索が選択されている場合のみ絞り込み検索を追加（空検索では全件表示にするため）
+        if ($request->filled('status')) {
+            $query->where('status', '=', $request->status);
+        }
+
+        // 担当者検索が選択されている場合のみ絞り込み検索を追加（空検索では全件表示にするため）
+        if ($request->filled('assigned_user_id')) {
+            $query->where('assigned_user_id', '=', $request->assigned_user_id);
+        }
+
+        // 作成日検索が選択されている場合のみ絞り込み検索を追加（空検索では全件表示にするため）
+        $from = $request->created_from;
+        $to = $request->created_to;
+        // 検索範囲終了日が検索範囲開始日より前の日付の場合、終了日と開始日を入れ替える
+        if ($from && $to && $from > $to) {
+            [$from, $to] = [$to, $from];
+        }
+        // 作成日による絞り込み検索
+        if ($from) {
+            $query->whereDate('created_at', '>=', $from);
+        }
+        if ($to) {
+            $query->whereDate('created_at', '<=', $to);
+        }
+
         // 作成日の新しい順に並べて20件ずつ取得
         $customers = $query->orderBy('created_at', 'desc')->paginate(20);
 
         // $customers のデータをindexビューに渡す
-        return view('customers.index', compact('customers'));
+        return view('customers.index', compact('statuses', 'assignedUsers', 'customers'));
     }
 
     /**
