@@ -16,6 +16,12 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
+        // 作成日検索用バリデーション
+        $request->validate([
+            'created_from' => 'nullable|date',
+            'created_to' => 'nullable|date',
+        ]);
+
         // ステータスの選択肢
         $statuses = Customer::STATUSES;
 
