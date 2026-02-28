@@ -15,7 +15,7 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white dark:bg-gray-800 overfmin-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
                     {{-- フラッシュメッセージ --}}
@@ -74,6 +74,19 @@
                                     </option>
                                 @endforeach
                             </select>
+
+                            {{-- 税抜金額 --}}
+                            <input type="number" name="amount_min" value="{{ request('amount_min') }}" min="0"
+                                class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
+                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+
+                            ～
+
+                            <input type="number" name="amount_max" value="{{ request('amount_max') }}"
+                                class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
+                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
 
                             {{-- ボタン --}}
                             <button type="submit"

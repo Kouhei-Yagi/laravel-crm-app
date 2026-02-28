@@ -50,6 +50,21 @@ class ProjectController extends Controller
             $query->where('assigned_user_id', '=', $request->assigned_user_id);
         }
 
+        // 税抜金額が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        $min = $request->amount_min;
+        $max = $request->amount_max;
+        // 検索範囲に「最高金額～最低金額」と入力されている場合、最高金額と最低金額を入れ替える
+        if ($min && $max && $min > $max) {
+            [$min, $max] = [$max, $min];
+        }
+        // 税抜金額による絞り込み検索
+        if ($min) {
+            $query->where('amount', '>=', $min);
+        }
+        if ($max) {
+            $query->where('amount', '<=', $max);
+        }
+
         // 作成日の新しい順に並べて20件ずつ取得
         $projects = $query->orderBy('created_at', 'desc')->paginate(20);
 
