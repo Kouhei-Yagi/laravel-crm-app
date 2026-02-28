@@ -11,24 +11,33 @@ class ProjectController extends Controller
     /**
      * 案件一覧を表示する
      *
+     * @param mixed $request
      * @return \Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
+        // 顧客名の選択肢
+        $customers = Customer::orderBy('kana')->get();
+
         // 案件一覧取得用のクエリを準備
         $query = Project::query();
 
-        // キーワードが入力されていれば部分一致検索を適用
+        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
         if ($request->filled('keyword')) {
             $keyword = trim($request->keyword);
             $query->where('title', 'like', "%{$keyword}%");
+        }
+
+        // 顧客名が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', '=', $request->customer_id);
         }
 
         // 作成日の新しい順に並べて20件ずつ取得
         $projects = $query->orderBy('created_at', 'desc')->paginate(20);
 
         // projectsテーブルのデータをindexビューに渡す
-        return view('projects.index', compact('projects'));
+        return view('projects.index', compact('customers', 'projects'));
     }
 
     /**
