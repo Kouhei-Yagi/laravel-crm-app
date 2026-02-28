@@ -19,6 +19,9 @@ class ProjectController extends Controller
         // 顧客名の選択肢
         $customers = Customer::orderBy('kana')->get();
 
+        // ステータスの選択肢
+        $statuses = Project::STATUSES;
+
         // 案件一覧取得用のクエリを準備
         $query = Project::query();
 
@@ -33,11 +36,16 @@ class ProjectController extends Controller
             $query->where('customer_id', '=', $request->customer_id);
         }
 
+        // ステータスが選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('status')) {
+            $query->where('status', '=', $request->status);
+        }
+
         // 作成日の新しい順に並べて20件ずつ取得
         $projects = $query->orderBy('created_at', 'desc')->paginate(20);
 
         // projectsテーブルのデータをindexビューに渡す
-        return view('projects.index', compact('customers', 'projects'));
+        return view('projects.index', compact('statuses', 'customers', 'projects'));
     }
 
     /**
