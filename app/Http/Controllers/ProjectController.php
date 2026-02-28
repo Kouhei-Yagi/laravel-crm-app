@@ -50,7 +50,7 @@ class ProjectController extends Controller
             $query->where('assigned_user_id', '=', $request->assigned_user_id);
         }
 
-        // 税抜金額が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        // 税抜金額が入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
         $min = $request->amount_min;
         $max = $request->amount_max;
         // 検索範囲に「最高金額～最低金額」と入力されている場合、最高金額と最低金額を入れ替える
@@ -63,6 +63,21 @@ class ProjectController extends Controller
         }
         if ($max) {
             $query->where('amount', '<=', $max);
+        }
+
+        // 期間が入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        $start_from = $request->start_from;
+        $end_to = $request->end_to;
+        // 検索範囲に「終了日～開始日」と入力されている場合、終了日と開始日を入れ替える
+        if ($start_from && $end_to && $start_from > $end_to) {
+            [$start_from, $end_to] = [$end_to, $start_from];
+        }
+        // 期間による絞り込み検索
+        if ($start_from) {
+            $query->whereDate('end_date', '>=', $start_from);
+        }
+        if ($end_to) {
+            $query->whereDate('end_date', '<=', $end_to);
         }
 
         // 作成日の新しい順に並べて20件ずつ取得
