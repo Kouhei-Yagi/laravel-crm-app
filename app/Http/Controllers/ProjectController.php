@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -21,6 +22,9 @@ class ProjectController extends Controller
 
         // ステータスの選択肢
         $statuses = Project::STATUSES;
+
+        // 担当者の選択肢
+        $users = User::orderBy('name')->get();
 
         // 案件一覧取得用のクエリを準備
         $query = Project::query();
@@ -41,11 +45,16 @@ class ProjectController extends Controller
             $query->where('status', '=', $request->status);
         }
 
+        // 担当者が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('assigned_user_id')) {
+            $query->where('assigned_user_id', '=', $request->assigned_user_id);
+        }
+
         // 作成日の新しい順に並べて20件ずつ取得
         $projects = $query->orderBy('created_at', 'desc')->paginate(20);
 
         // projectsテーブルのデータをindexビューに渡す
-        return view('projects.index', compact('statuses', 'customers', 'projects'));
+        return view('projects.index', compact('customers', 'statuses', 'users', 'projects'));
     }
 
     /**
