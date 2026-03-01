@@ -21,6 +21,21 @@ class InteractionController extends Controller
         $query = Interaction::query();
 
         // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        $interacted_from = $request->interacted_from;
+        $interacted_to = $request->interacted_to;
+        // 検索範囲に「終了日～開始日」と入力されている場合、終了日と開始日を入れ替える
+        if ($interacted_from && $interacted_to && $interacted_from > $interacted_to) {
+            [$interacted_from, $interacted_to] = [$interacted_to, $interacted_from];
+        }
+        // 対応日時によう絞り込み検索
+        if ($interacted_from) {
+            $query->where('interacted_at', '>=', $interacted_from);
+        }
+        if ($interacted_to) {
+            $query->where('interacted_at', '<=', $interacted_to);
+        }
+
+        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
         if ($request->filled('keyword')) {
             $keyword = trim($request->keyword);
             $query->where('content', 'like', "%{$keyword}%");
