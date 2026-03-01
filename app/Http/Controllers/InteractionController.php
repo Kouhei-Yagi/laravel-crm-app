@@ -20,6 +20,9 @@ class InteractionController extends Controller
         // 対応種別の選択肢
         $types = Interaction::TYPE;
 
+        // 顧客名の選択肢
+        $customers = Customer::orderBy('kana')->get();
+
         // 案件履歴一覧取得用のクエリを準備
         $query = Interaction::query();
 
@@ -57,11 +60,16 @@ class InteractionController extends Controller
             });
         }
 
+        // 顧客名が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', '=', $request->customer_id);
+        }
+
         // 作成日の新しい順に並べて20件ずつ取得
         $interactions = $query->orderBy('interacted_at', 'desc')->paginate(20);
 
         // interactionsテーブルのデータをindexビューに渡す
-        return view('interactions.index', compact('types', 'interactions'));
+        return view('interactions.index', compact('types', 'customers', 'interactions'));
     }
 
     /**
