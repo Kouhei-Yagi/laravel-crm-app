@@ -77,7 +77,22 @@ class ProjectController extends Controller
             $query->whereDate('end_date', '>=', $start_from);
         }
         if ($end_to) {
-            $query->whereDate('end_date', '<=', $end_to);
+            $query->whereDate('start_date', '<=', $end_to);
+        }
+
+        // 期間が入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        $created_from = $request->created_from;
+        $created_to = $request->created_to;
+        // 検索範囲に「終了日～開始日」と入力されている場合、終了日と開始日を入れ替える
+        if ($created_from && $created_to && $created_from > $created_to) {
+            [$created_from, $created_to] = [$created_to, $created_from];
+        }
+        // 作成日による絞り込み検索
+        if ($created_from) {
+            $query->whereDate('created_at', '>=', $created_from);
+        }
+        if ($created_to) {
+            $query->whereDate('created_at', '<=', $created_to);
         }
 
         // 作成日の新しい順に並べて20件ずつ取得

@@ -101,6 +101,19 @@
                                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                                 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
 
+                            {{-- 作成日 --}}
+                            <input type="date" name="created_from" value="{{ request('created_from') }}"
+                                class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
+                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+
+                            ～
+
+                            <input type="date" name="created_to" value="{{ request('created_to') }}"
+                                class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
+                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+
                             {{-- ボタン --}}
                             <button type="submit"
                                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700
