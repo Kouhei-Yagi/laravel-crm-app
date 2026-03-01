@@ -55,7 +55,14 @@
                                 @endforeach
                             </select>
 
-                            <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="内容で検索"
+                            <input type="text" name="content_keyword" value="{{ request('content_keyword') }}"
+                                placeholder="内容で検索"
+                                class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
+                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+
+                            <input type="text" name="project_keyword" value="{{ request('project_keyword') }}"
+                                placeholder="案件名で検索"
                                 class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
                                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                                 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">

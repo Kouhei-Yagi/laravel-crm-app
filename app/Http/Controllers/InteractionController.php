@@ -44,9 +44,17 @@ class InteractionController extends Controller
         }
 
         // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
-        if ($request->filled('keyword')) {
-            $keyword = trim($request->keyword);
-            $query->where('content', 'like', "%{$keyword}%");
+        if ($request->filled('content_keyword')) {
+            $content_keyword = trim($request->content_keyword);
+            $query->where('content', 'like', "%{$content_keyword}%");
+        }
+
+        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('project_keyword')) {
+            $project_keyword = trim($request->project_keyword);
+            $query->whereHas('project', function ($q) use ($project_keyword) {
+                $q->where('title', 'like', "%{$project_keyword}%");
+            });
         }
 
         // 作成日の新しい順に並べて20件ずつ取得
