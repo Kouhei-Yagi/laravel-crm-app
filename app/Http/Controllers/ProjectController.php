@@ -17,6 +17,14 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
+        // 期間・作成日用検索バリデーション
+        $request->validate([
+            'start_from' => 'nullable|date',
+            'end_to' => 'nullable|date',
+            'created_from' => 'nullable|date',
+            'created_to' => 'nullable|date',
+        ]);
+
         // 顧客名の選択肢
         $customers = Customer::orderBy('kana')->get();
 
