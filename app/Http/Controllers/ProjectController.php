@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -11,24 +12,102 @@ class ProjectController extends Controller
     /**
      * 案件一覧を表示する
      *
+     * @param mixed $request
      * @return \Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
+        // 期間・作成日用検索バリデーション
+        $request->validate([
+            'start_from' => 'nullable|date',
+            'end_to' => 'nullable|date',
+            'created_from' => 'nullable|date',
+            'created_to' => 'nullable|date',
+        ]);
+
+        // 顧客名の選択肢
+        $customers = Customer::orderBy('kana')->get();
+
+        // ステータスの選択肢
+        $statuses = Project::STATUSES;
+
+        // 担当者の選択肢
+        $users = User::orderBy('name')->get();
+
         // 案件一覧取得用のクエリを準備
         $query = Project::query();
 
-        // キーワードが入力されていれば部分一致検索を適用
+        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
         if ($request->filled('keyword')) {
             $keyword = trim($request->keyword);
             $query->where('title', 'like', "%{$keyword}%");
+        }
+
+        // 顧客名が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', '=', $request->customer_id);
+        }
+
+        // ステータスが選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('status')) {
+            $query->where('status', '=', $request->status);
+        }
+
+        // 担当者が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('assigned_user_id')) {
+            $query->where('assigned_user_id', '=', $request->assigned_user_id);
+        }
+
+        // 税抜金額が入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        $min = $request->amount_min;
+        $max = $request->amount_max;
+        // 検索範囲に「最高金額～最低金額」と入力されている場合、最高金額と最低金額を入れ替える
+        if ($min && $max && $min > $max) {
+            [$min, $max] = [$max, $min];
+        }
+        // 税抜金額による絞り込み検索
+        if ($min) {
+            $query->where('amount', '>=', $min);
+        }
+        if ($max) {
+            $query->where('amount', '<=', $max);
+        }
+
+        // 期間が入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        $start_from = $request->start_from;
+        $end_to = $request->end_to;
+        // 検索範囲に「終了日～開始日」と入力されている場合、終了日と開始日を入れ替える
+        if ($start_from && $end_to && $start_from > $end_to) {
+            [$start_from, $end_to] = [$end_to, $start_from];
+        }
+        // 期間による絞り込み検索
+        if ($start_from) {
+            $query->whereDate('end_date', '>=', $start_from);
+        }
+        if ($end_to) {
+            $query->whereDate('start_date', '<=', $end_to);
+        }
+
+        // 期間が入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        $created_from = $request->created_from;
+        $created_to = $request->created_to;
+        // 検索範囲に「終了日～開始日」と入力されている場合、終了日と開始日を入れ替える
+        if ($created_from && $created_to && $created_from > $created_to) {
+            [$created_from, $created_to] = [$created_to, $created_from];
+        }
+        // 作成日による絞り込み検索
+        if ($created_from) {
+            $query->whereDate('created_at', '>=', $created_from);
+        }
+        if ($created_to) {
+            $query->whereDate('created_at', '<=', $created_to);
         }
 
         // 作成日の新しい順に並べて20件ずつ取得
         $projects = $query->orderBy('created_at', 'desc')->paginate(20);
 
         // projectsテーブルのデータをindexビューに渡す
-        return view('projects.index', compact('projects'));
+        return view('projects.index', compact('customers', 'statuses', 'users', 'projects'));
     }
 
     /**
