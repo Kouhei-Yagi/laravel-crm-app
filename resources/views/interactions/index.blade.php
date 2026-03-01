@@ -43,6 +43,18 @@
                                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                                 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
 
+                            <select name="type"
+                                class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
+                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+                                <option value="">未選択</option>
+                                @foreach ($types as $key => $label)
+                                    <option value="{{ $key }}" @selected(request('type') == $key)>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+
                             <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="内容で検索"
                                 class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
                                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
