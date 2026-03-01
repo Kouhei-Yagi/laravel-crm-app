@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Interaction;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class InteractionController extends Controller
@@ -22,6 +23,9 @@ class InteractionController extends Controller
 
         // 顧客名の選択肢
         $customers = Customer::orderBy('kana')->get();
+
+        // 担当者の選択肢
+        $assignedUsers = User::orderBy('name')->get();
 
         // 案件履歴一覧取得用のクエリを準備
         $query = Interaction::query();
@@ -65,11 +69,16 @@ class InteractionController extends Controller
             $query->where('customer_id', '=', $request->customer_id);
         }
 
+        // 担当者が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('assigned_user_id')) {
+            $query->where('assigned_user_id', '=', $request->assigned_user_id);
+        }
+
         // 作成日の新しい順に並べて20件ずつ取得
         $interactions = $query->orderBy('interacted_at', 'desc')->paginate(20);
 
         // interactionsテーブルのデータをindexビューに渡す
-        return view('interactions.index', compact('types', 'customers', 'interactions'));
+        return view('interactions.index', compact('types', 'customers', 'assignedUsers', 'interactions'));
     }
 
     /**

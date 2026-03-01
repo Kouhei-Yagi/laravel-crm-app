@@ -79,6 +79,18 @@
                                 @endforeach
                             </select>
 
+                            <select name="assigned_user_id"
+                                class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
+                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+                                <option value="">未選択</option>
+                                @foreach ($assignedUsers as $assignedUser)
+                                    <option value="{{ $assignedUser->id }}" @selected(request('assigned_user_id') == $assignedUser->id)>
+                                        {{ $assignedUser->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+
                             <button type="submit"
                                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700
                                 dark:bg-blue-500 dark:hover:bg-blue-600">
