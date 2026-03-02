@@ -28,19 +28,137 @@
                     @endif
 
                     {{-- 検索フォーム --}}
-                    <form action="{{ route('interactions.index') }}" method="get" class="mb-4">
-                        <div class="flex items-center gap-2">
+                    <form action="{{ route('interactions.index') }}" method="get" class="mb-6">
+                        <div
+                            class="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-gray-50 dark:bg-gray-700">
 
-                            <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="内容で検索"
-                                class="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md
-                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                                dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+                            {{-- タイトル --}}
+                            <div class="mb-3 pb-2 border-b border-gray-300 dark:border-gray-600">
+                                <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">検索条件</span>
+                            </div>
 
-                            <button type="submit"
-                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700
-                                dark:bg-blue-500 dark:hover:bg-blue-600">
-                                検索
-                            </button>
+                            {{-- 検索項目 --}}
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                                {{-- 対応日時（from/to） --}}
+                                <div>
+                                    <label for="interacted_from" class="block text-sm font-medium mb-1">
+                                        対応日時
+                                    </label>
+
+                                    <div class="flex items-center gap-2">
+                                        <input type="date" name="interacted_from" id="interacted_from"
+                                            value="{{ request('interacted_from') }}"
+                                            class="w-40 px-3 py-2 border border-gray-300 rounded-md
+                                            dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+
+                                        <span class="text-gray-600 dark:text-gray-300">〜</span>
+
+                                        <input type="date" name="interacted_to" id="interacted_to"
+                                            value="{{ request('interacted_to') }}"
+                                            class="w-40 px-3 py-2 border border-gray-300 rounded-md
+                                            dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                                    </div>
+                                </div>
+
+                                {{-- 対応種別 --}}
+                                <div>
+                                    <label for="type" class="block text-sm font-medium mb-1">
+                                        対応種別
+                                    </label>
+
+                                    <select name="type" id="type"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md
+                                        dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                                        <option value="">未選択</option>
+                                        @foreach ($types as $key => $label)
+                                            <option value="{{ $key }}" @selected(request('type') == $key)>
+                                                {{ $label }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                {{-- 内容 --}}
+                                <div>
+                                    <label for="content_keyword" class="block text-sm font-medium mb-1">
+                                        内容
+                                    </label>
+
+                                    <input type="text" name="content_keyword" id="content_keyword"
+                                        value="{{ request('content_keyword') }}" placeholder="内容で検索"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md
+                                        dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                                </div>
+
+                                {{-- 案件名 --}}
+                                <div>
+                                    <label for="project_keyword" class="block text-sm font-medium mb-1">
+                                        案件名
+                                    </label>
+
+                                    <input type="text" name="project_keyword" id="project_keyword"
+                                        value="{{ request('project_keyword') }}" placeholder="案件名で検索"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md
+                                        dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                                </div>
+
+                                {{-- 顧客名 --}}
+                                <div>
+                                    <label for="customer_id" class="block text-sm font-medium mb-1">
+                                        顧客名
+                                    </label>
+
+                                    <select name="customer_id" id="customer_id"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md
+                                        dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                                        <option value="">未選択</option>
+                                        @foreach ($customers as $customer)
+                                            <option value="{{ $customer->id }}" @selected(request('customer_id') == $customer->id)>
+                                                {{ $customer->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                {{-- 担当者 --}}
+                                <div>
+                                    <label for="assigned_user_id" class="block text-sm font-medium mb-1">
+                                        担当者
+                                    </label>
+
+                                    <select name="assigned_user_id" id="assigned_user_id"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md
+                                        dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                                        <option value="">未選択</option>
+                                        @foreach ($assignedUsers as $assignedUser)
+                                            <option value="{{ $assignedUser->id }}" @selected(request('assigned_user_id') == $assignedUser->id)>
+                                                {{ $assignedUser->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            {{-- ボタン --}}
+                            <div class="mt-4 flex justify-end gap-3">
+
+                                {{-- クリアボタン --}}
+                                <a href="{{ route('interactions.index') }}"
+                                    class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400
+                                    dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-500">
+                                    クリア
+                                </a>
+
+                                {{-- 検索ボタン --}}
+                                <button type="submit"
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700
+                                    dark:bg-blue-500 dark:hover:bg-blue-600">
+                                    検索
+                                </button>
+
+                            </div>
 
                         </div>
                     </form>

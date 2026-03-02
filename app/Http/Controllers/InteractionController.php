@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Interaction;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class InteractionController extends Controller
@@ -17,20 +18,73 @@ class InteractionController extends Controller
      */
     public function index(Request $request)
     {
+        // 対応日時用バリデーション
+        $request->validate([
+            'interacted_from' => 'nullable|date',
+            'interacted_to' => 'nullable|date',
+        ]);
+
+        // 対応種別の選択肢
+        $types = Interaction::TYPE;
+
+        // 顧客名の選択肢
+        $customers = Customer::orderBy('kana')->get();
+
+        // 担当者の選択肢
+        $assignedUsers = User::orderBy('name')->get();
+
         // 案件履歴一覧取得用のクエリを準備
         $query = Interaction::query();
 
         // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
-        if ($request->filled('keyword')) {
-            $keyword = trim($request->keyword);
-            $query->where('content', 'like', "%{$keyword}%");
+        $interacted_from = $request->interacted_from;
+        $interacted_to = $request->interacted_to;
+        // 検索範囲に「終了日～開始日」と入力されている場合、終了日と開始日を入れ替える
+        if ($interacted_from && $interacted_to && $interacted_from > $interacted_to) {
+            [$interacted_from, $interacted_to] = [$interacted_to, $interacted_from];
+        }
+        // 対応日時によう絞り込み検索
+        if ($interacted_from) {
+            $query->where('interacted_at', '>=', $interacted_from);
+        }
+        if ($interacted_to) {
+            $query->where('interacted_at', '<=', $interacted_to);
+        }
+
+        // 対応種別が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('type')) {
+            $query->where('type', '=', $request->type);
+        }
+
+        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('content_keyword')) {
+            $content_keyword = trim($request->content_keyword);
+            $query->where('content', 'like', "%{$content_keyword}%");
+        }
+
+        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('project_keyword')) {
+            $project_keyword = trim($request->project_keyword);
+            $query->whereHas('project', function ($q) use ($project_keyword) {
+                $q->where('title', 'like', "%{$project_keyword}%");
+            });
+        }
+
+        // 顧客名が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', '=', $request->customer_id);
+        }
+
+        // 担当者が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        if ($request->filled('assigned_user_id')) {
+            $query->where('assigned_user_id', '=', $request->assigned_user_id);
         }
 
         // 作成日の新しい順に並べて20件ずつ取得
         $interactions = $query->orderBy('interacted_at', 'desc')->paginate(20);
 
         // interactionsテーブルのデータをindexビューに渡す
-        return view('interactions.index', compact('interactions'));
+        return view('interactions.index', compact('types', 'customers', 'assignedUsers', 'interactions'));
     }
 
     /**
