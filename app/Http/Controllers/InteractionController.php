@@ -18,6 +18,12 @@ class InteractionController extends Controller
      */
     public function index(Request $request)
     {
+        // 対応日時用バリデーション
+        $request->validate([
+            'interacted_from' => 'nullable|date',
+            'interacted_to' => 'nullable|date',
+        ]);
+
         // 対応種別の選択肢
         $types = Interaction::TYPE;
 
