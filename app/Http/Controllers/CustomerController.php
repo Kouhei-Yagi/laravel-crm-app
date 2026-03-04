@@ -31,7 +31,8 @@ class CustomerController extends Controller
         // 顧客一覧取得用のクエリを準備
         $query = Customer::query();
 
-        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        // ＜検索条件処理＞
+        // キーワード検索
         if ($request->filled('keyword')) {
             $keyword = trim($request->keyword);
             $query->where(function ($q) use ($keyword) {
@@ -42,24 +43,24 @@ class CustomerController extends Controller
             });
         }
 
-        // ステータス検索が選択されている場合のみ絞り込み検索を追加（空検索では全件表示にするため）
+        // ステータス検索
         if ($request->filled('status')) {
             $query->where('status', '=', $request->status);
         }
 
-        // 担当者検索が選択されている場合のみ絞り込み検索を追加（空検索では全件表示にするため）
+        // 担当者検索
         if ($request->filled('assigned_user_id')) {
             $query->where('assigned_user_id', '=', $request->assigned_user_id);
         }
 
-        // 作成日検索が選択されている場合のみ絞り込み検索を追加（空検索では全件表示にするため）
+        // 作成日検索
         $from = $request->created_from;
         $to = $request->created_to;
-        // 検索範囲終了日が検索範囲開始日より前の日付の場合、終了日と開始日を入れ替える
+        // 検索範囲の終了日と開始日を入れ替え処理
         if ($from && $to && $from > $to) {
             [$from, $to] = [$to, $from];
         }
-        // 作成日による絞り込み検索
+        // 作成日検索追加
         if ($from) {
             $query->whereDate('created_at', '>=', $from);
         }
@@ -67,19 +68,24 @@ class CustomerController extends Controller
             $query->whereDate('created_at', '<=', $to);
         }
 
-        // クエリパラメーターが sort=name の場合は顧客名でソートする
-        if ($request->get('sort') === 'name') {
-            $direction = $request->get('direction') === 'asc' ? 'asc' : 'desc';
-            $query->orderBy('name', $direction);
+        // ＜ソート処理＞
+        // ソート対象のホワイトリスト
+        $sortable = ['name'];
+
+        $sort = $request->get('sort');
+        $direction = $request->get('direction') === 'asc' ? 'asc' : 'desc';
+
+        // ソート処理追加
+        if (in_array($sort, $sortable, true)) {
+            $query->orderBy($sort, $direction);
         } else {
-            // デフォルトでは作成日の新しい順でソートする
-            $query->orderBy('created_at', 'desc');
+            $query->orderBy('created_at', 'desc'); // デフォルト
         }
 
-        // 20件ずつ取得して、検索・ソート条件（クエリパラメーター）を保持する
+        // 20件ずつ取得して、検索・ソート条件（クエリパラメーター）を保持
         $customers = $query->paginate(20)->appends(request()->query());
 
-        // $customers のデータをindexビューに渡す
+        // 各種データをindexビューに渡す
         return view('customers.index', compact('statuses', 'assignedUsers', 'customers'));
     }
 
