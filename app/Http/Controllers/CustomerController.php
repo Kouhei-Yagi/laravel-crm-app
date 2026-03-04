@@ -67,8 +67,16 @@ class CustomerController extends Controller
             $query->whereDate('created_at', '<=', $to);
         }
 
-        // 作成日の新しい順に並べて20件ずつ取得
-        $customers = $query->orderBy('created_at', 'desc')->paginate(20);
+        // クエリパラメーターが sort=name の場合は顧客名でソートする
+        if ($request->get('sort') == 'name') {
+            $query->orderBy('name', $request->get('direction'));
+        } else {
+            // デフォルトでは作成日の新しい順でソートする
+            $query->orderBy('created_at', 'desc');
+        }
+
+        // 20件ずつ取得して、検索・ソート条件（クエリパラメーター）を保持する
+        $customers = $query->paginate(20)->appends(request()->query());
 
         // $customers のデータをindexビューに渡す
         return view('customers.index', compact('statuses', 'assignedUsers', 'customers'));

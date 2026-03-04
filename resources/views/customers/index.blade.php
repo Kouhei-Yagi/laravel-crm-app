@@ -129,7 +129,12 @@
                     <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th class="px-3 py-2 border">顧客名</th>
+                                <th class="px-3 py-2 border">
+                                    <a href="{{ route('customers.index', ['sort' => 'name', 'direction' => 'asc']) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        顧客名
+                                    </a>
+                                </th>
                                 <th class="px-3 py-2 border">メール</th>
                                 <th class="px-3 py-2 border">電話番号</th>
                                 <th class="px-3 py-2 border">会社名</th>
@@ -142,6 +147,8 @@
                         <tbody>
                             @foreach ($customers as $customer)
                                 <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+
+                                    {{-- 顧客名 --}}
                                     <td class="px-3 py-2 border">
                                         <a href="{{ route('customers.show', $customer) }}"
                                             class="text-blue-600 hover:underline">
@@ -149,26 +156,32 @@
                                         </a>
                                     </td>
 
+                                    {{-- メール --}}
                                     <td class="px-3 py-2 border">
                                         {{ $customer->email ?: '未設定' }}
                                     </td>
 
+                                    {{-- 電話番号 --}}
                                     <td class="px-3 py-2 border">
                                         {{ $customer->phone ?: '未設定' }}
                                     </td>
 
+                                    {{-- 会社名 --}}
                                     <td class="px-3 py-2 border">
                                         {{ $customer->company_name ?: '未設定' }}
                                     </td>
 
+                                    {{-- ステータス --}}
                                     <td class="px-3 py-2 border">
                                         {{ App\Models\Customer::STATUSES[$customer->status] }}
                                     </td>
 
+                                    {{-- 担当者 --}}
                                     <td class="px-3 py-2 border">
                                         {{ $customer->assignedUser->name }}
                                     </td>
 
+                                    {{-- 作成日 --}}
                                     <td class="px-3 py-2 border">
                                         {{ $customer->created_at->format('Y-m-d') }}
                                     </td>
@@ -177,9 +190,9 @@
                         </tbody>
                     </table>
 
-                    {{-- ページネーション（検索条件を保持） --}}
+                    {{-- ページネーション --}}
                     <div class="mt-4">
-                        {{ $customers->appends(request()->query())->links() }}
+                        {{ $customers->links() }}
                     </div>
 
                 </div>
