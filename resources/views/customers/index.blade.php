@@ -1,6 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
+
+            {{-- タイトル --}}
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 顧客一覧
             </h2>
@@ -127,23 +129,50 @@
 
                     {{-- 一覧データ --}}
                     <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
+
+                        {{-- 項目名 --}}
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
+                                {{-- 顧客名 --}}
                                 <th class="px-3 py-2 border">
-                                    <a href="{{ route('customers.index', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
+                                    <a href="{{ route('customers.index', [
+                                        'sort' => 'name',
+                                        'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
+                                    ]) }}"
                                         class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
                                         顧客名
                                     </a>
+
+                                    @if (request('sort') === 'name')
+                                        @if (request('direction') === 'asc')
+                                            <span class="text-xs">▲</span>
+                                        @elseif (request('direction') === 'desc')
+                                            <span class="text-xs">▼</span>
+                                        @endif
+                                    @endif
                                 </th>
+
+                                {{-- メール --}}
                                 <th class="px-3 py-2 border">メール</th>
+
+                                {{-- 電話番号 --}}
                                 <th class="px-3 py-2 border">電話番号</th>
+
+                                {{-- 会社名 --}}
                                 <th class="px-3 py-2 border">会社名</th>
+
+                                {{-- ステータス --}}
                                 <th class="px-3 py-2 border">ステータス</th>
+
+                                {{-- 担当者 --}}
                                 <th class="px-3 py-2 border">担当者</th>
+
+                                {{-- 作成日 --}}
                                 <th class="px-3 py-2 border">作成日</th>
                             </tr>
                         </thead>
 
+                        {{-- レコード --}}
                         <tbody>
                             @foreach ($customers as $customer)
                                 <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
