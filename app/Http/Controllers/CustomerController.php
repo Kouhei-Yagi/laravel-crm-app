@@ -68,8 +68,9 @@ class CustomerController extends Controller
         }
 
         // クエリパラメーターが sort=name の場合は顧客名でソートする
-        if ($request->get('sort') == 'name') {
-            $query->orderBy('name', $request->get('direction'));
+        if ($request->get('sort') === 'name') {
+            $direction = $request->get('direction') === 'asc' ? 'asc' : 'desc';
+            $query->orderBy('name', $direction);
         } else {
             // デフォルトでは作成日の新しい順でソートする
             $query->orderBy('created_at', 'desc');
