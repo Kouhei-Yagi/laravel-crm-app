@@ -157,7 +157,15 @@
                                 </th>
 
                                 {{-- メール --}}
-                                <th class="px-3 py-2 border">メール</th>
+                                <th class="px-3 py-2 border">
+                                    <a href="{{ route('customers.index', [
+                                        'sort' => 'email',
+                                        'direction' => 'asc',
+                                    ]) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        メール
+                                    </a>
+                                </th>
 
                                 {{-- 電話番号 --}}
                                 <th class="px-3 py-2 border">電話番号</th>
