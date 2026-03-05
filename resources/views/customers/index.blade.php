@@ -212,7 +212,15 @@
                                 <th class="px-3 py-2 border">担当者</th>
 
                                 {{-- 作成日 --}}
-                                <th class="px-3 py-2 border">作成日</th>
+                                <th class="px-3 py-2 border">
+                                    <a href="{{ route('customers.index', [
+                                        'sort' => 'created_at',
+                                        'direction' => 'asc',
+                                    ]) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        作成日
+                                    </a>
+                                </th>
                             </tr>
                         </thead>
 
