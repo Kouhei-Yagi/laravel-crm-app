@@ -213,10 +213,14 @@
 
                                 {{-- 作成日 --}}
                                 <th class="px-3 py-2 border">
-                                    <a href="{{ route('customers.index', [
-                                        'sort' => 'created_at',
-                                        'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
-                                    ]) }}"
+                                    {{-- 検索条件保持ソート機能 --}}
+                                    <a href="{{ route(
+                                        'customers.index',
+                                        array_merge(request()->query(), [
+                                            'sort' => 'created_at',
+                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
+                                        ]),
+                                    ) }}"
                                         class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
                                         作成日
                                     </a>
