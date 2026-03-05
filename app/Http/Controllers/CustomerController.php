@@ -70,7 +70,7 @@ class CustomerController extends Controller
 
         // ＜ソート処理＞
         // ソート可能なカラム一覧（ホワイトリスト）
-        $sortable = ['name', 'email'];
+        $sortable = ['name', 'email', 'company_name'];
 
         $sort = $request->get('sort');
         $direction = $request->get('direction') === 'asc' ? 'asc' : 'desc';

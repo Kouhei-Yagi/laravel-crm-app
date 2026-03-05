@@ -183,7 +183,15 @@
                                 <th class="px-3 py-2 border">電話番号</th>
 
                                 {{-- 会社名 --}}
-                                <th class="px-3 py-2 border">会社名</th>
+                                <th class="px-3 py-2 border">
+                                    <a href="{{ route('customers.index', [
+                                        'sort' => 'company_name',
+                                        'direction' => 'asc',
+                                    ]) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        会社名
+                                    </a>
+                                </th>
 
                                 {{-- ステータス --}}
                                 <th class="px-3 py-2 border">ステータス</th>
