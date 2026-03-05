@@ -220,6 +220,14 @@
                                         class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
                                         作成日
                                     </a>
+
+                                    @if (request('sort') === 'created_at')
+                                        @if (request('direction') === 'asc')
+                                            <span class="text-xs">▲</span>
+                                        @elseif (request('direction') === 'desc')
+                                            <span class="text-xs">▼</span>
+                                        @endif
+                                    @endif
                                 </th>
                             </tr>
                         </thead>
