@@ -105,8 +105,8 @@ class ProjectController extends Controller
         }
 
         // ＜ソート処理＞
-        $sort = request()->get('sort');
-        $direction = request()->get('direction');
+        $sort = $request->get('sort');
+        $direction = $request->get('direction');
 
         // ソート処理の追加
         if ($sort === 'title') {
@@ -116,7 +116,7 @@ class ProjectController extends Controller
         }
 
         // 20件ずつ取得して、検索・ソート条件（クエリパラメーター）を保持
-        $projects = $query->paginate(20)->appends(request()->query());
+        $projects = $query->paginate(20)->appends($request->query());
 
         // projectsテーブルのデータをindexビューに渡す
         return view('projects.index', compact('customers', 'statuses', 'users', 'projects'));
