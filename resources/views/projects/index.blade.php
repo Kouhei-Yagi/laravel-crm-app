@@ -225,7 +225,15 @@
                                 <th class="px-3 py-2 border">ステータス</th>
 
                                 {{-- 税抜金額 --}}
-                                <th class="px-3 py-2 border">税抜金額</th>
+                                <th class="px-3 py-2 border">
+                                    <a href="{{ route('projects.index', [
+                                        'sort' => 'amount',
+                                        'direction' => 'asc',
+                                    ]) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        税抜金額
+                                    </a>
+                                </th>
 
                                 {{-- 担当者 --}}
                                 <th class="px-3 py-2 border">担当者</th>

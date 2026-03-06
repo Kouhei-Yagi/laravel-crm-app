@@ -106,7 +106,7 @@ class ProjectController extends Controller
 
         // ＜ソート処理＞
         // ソート対象カラム一覧（ホワイトリスト、SQL インジェクション対策）
-        $sortable = ['title'];
+        $sortable = ['title', 'amount'];
 
         // クエリパラメータの値を取得（値がなければデフォルト値を使用）
         $sort = $request->get('sort', 'created_at');
