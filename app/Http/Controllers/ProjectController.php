@@ -105,8 +105,12 @@ class ProjectController extends Controller
         }
 
         // ＜ソート処理＞
+        // テーブル結合・取得カラム選択（外部テーブルのカラムでソートするため）
+        $query->leftJoin('customers', 'projects.customer_id', '=', 'customers.id')
+            ->select('projects.*', 'customers.kana as customer_kana');
+
         // ソート対象カラム一覧（ホワイトリスト、SQL インジェクション対策）
-        $sortable = ['title', 'amount', 'created_at'];
+        $sortable = ['title', 'amount', 'created_at', 'customer_kana'];
 
         // クエリパラメータの値を取得（値がなければデフォルト値を使用）
         $sort = $request->get('sort', 'created_at');
