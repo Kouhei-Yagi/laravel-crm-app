@@ -233,6 +233,14 @@
                                         class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
                                         税抜金額
                                     </a>
+
+                                    @if (request('sort') === 'amount')
+                                        @if (request('direction') === 'asc')
+                                            <span class="text-xs">▲</span>
+                                        @elseif (request('direction') === 'desc')
+                                            <span class="text-xs">▼</span>
+                                        @endif
+                                    @endif
                                 </th>
 
                                 {{-- 担当者 --}}
