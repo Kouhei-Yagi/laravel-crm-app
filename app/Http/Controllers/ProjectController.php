@@ -105,14 +105,16 @@ class ProjectController extends Controller
         }
 
         // ＜ソート処理＞
-        $sort = $request->get('sort');
-        $direction = $request->get('direction');
+        // ソート対象カラム一覧（ホワイトリスト、SQL インジェクション対策）
+        $sortable = ['title'];
 
-        // ソート処理の追加
-        if ($sort === 'title') {
+        // クエリパラメータの値を取得（値がなければデフォルト値を使用）
+        $sort = $request->get('sort', 'created_at');
+        $direction = $request->get('direction', 'desc');
+
+        // ソート対象カラムの場合、クエリにソート処理の追加
+        if (in_array($sort, $sortable, true)) {
             $query->orderBy($sort, $direction);
-        } else {
-            $query->orderBy('created_at', 'desc'); // デフォルト
         }
 
         // 20件ずつ取得して、検索・ソート条件（クエリパラメーター）を保持
