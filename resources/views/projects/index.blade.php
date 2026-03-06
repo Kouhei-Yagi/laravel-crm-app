@@ -256,7 +256,7 @@
                                 <th class="px-3 py-2 border">
                                     <a href="{{ route('projects.index', [
                                         'sort' => 'created_at',
-                                        'direction' => 'asc',
+                                        'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
                                     ]) }}"
                                         class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
                                         作成日
