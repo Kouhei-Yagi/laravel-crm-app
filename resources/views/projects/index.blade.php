@@ -1,6 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
+
+            {{-- タイトル --}}
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 案件一覧
             </h2>
@@ -190,21 +192,119 @@
 
                     {{-- 一覧データ --}}
                     <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
+
+                        {{-- 項目名 --}}
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th class="px-3 py-2 border">案件名</th>
-                                <th class="px-3 py-2 border">顧客名</th>
+                                {{-- 案件名 --}}
+                                <th class="px-3 py-2 border">
+                                    {{-- 検索条件保持ソート機能 --}}
+                                    <a href="{{ route(
+                                        'projects.index',
+                                        array_merge(request()->query(), [
+                                            'sort' => 'title',
+                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
+                                        ]),
+                                    ) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        案件名
+                                    </a>
+
+                                    @if (request('sort') === 'title')
+                                        @if (request('direction') === 'asc')
+                                            <span class="text-xs">▲</span>
+                                        @elseif (request('direction') === 'desc')
+                                            <span class="text-xs">▼</span>
+                                        @endif
+                                    @endif
+                                </th>
+
+                                {{-- 顧客名 --}}
+                                <th class="px-3 py-2 border">
+                                    {{-- 検索条件保持ソート機能 --}}
+                                    <a href="{{ route(
+                                        'projects.index',
+                                        array_merge(request()->query(), [
+                                            'sort' => 'customer_kana',
+                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
+                                        ]),
+                                    ) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        顧客名
+                                    </a>
+
+                                    @if (request('sort') === 'customer_kana')
+                                        @if (request('direction') === 'asc')
+                                            <span class="text-xs">▲</span>
+                                        @elseif (request('direction') === 'desc')
+                                            <span class="text-xs">▼</span>
+                                        @endif
+                                    @endif
+                                </th>
+
+                                {{-- ステータス --}}
                                 <th class="px-3 py-2 border">ステータス</th>
-                                <th class="px-3 py-2 border">税抜金額</th>
+
+                                {{-- 税抜金額 --}}
+                                <th class="px-3 py-2 border">
+                                    {{-- 検索条件保持ソート機能 --}}
+                                    <a href="{{ route(
+                                        'projects.index',
+                                        array_merge(request()->query(), [
+                                            'sort' => 'amount',
+                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
+                                        ]),
+                                    ) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        税抜金額
+                                    </a>
+
+                                    @if (request('sort') === 'amount')
+                                        @if (request('direction') === 'asc')
+                                            <span class="text-xs">▲</span>
+                                        @elseif (request('direction') === 'desc')
+                                            <span class="text-xs">▼</span>
+                                        @endif
+                                    @endif
+                                </th>
+
+                                {{-- 担当者 --}}
                                 <th class="px-3 py-2 border">担当者</th>
+
+                                {{-- 期間 --}}
                                 <th class="px-3 py-2 border">期間</th>
-                                <th class="px-3 py-2 border">作成日</th>
+
+                                {{-- 作成日 --}}
+                                <th class="px-3 py-2 border">
+                                    {{-- 検索条件保持ソート機能 --}}
+                                    <a href="{{ route(
+                                        'projects.index',
+                                        array_merge(request()->query(), [
+                                            'sort' => 'created_at',
+                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
+                                        ]),
+                                    ) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        作成日
+                                    </a>
+
+                                    @if (request('sort') === 'created_at')
+                                        @if (request('direction') === 'asc')
+                                            <span class="text-xs">▲</span>
+                                        @elseif (request('direction') === 'desc')
+                                            <span class="text-xs">▼</span>
+                                        @endif
+                                    @endif
+                                </th>
                             </tr>
                         </thead>
 
+                        {{-- レコード --}}
                         <tbody>
                             @foreach ($projects as $project)
                                 <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+
+                                    {{-- 案件名 --}}
                                     <td class="px-3 py-2 border">
                                         <a href="{{ route('projects.show', $project) }}"
                                             class="text-blue-600 hover:underline">
@@ -212,6 +312,7 @@
                                         </a>
                                     </td>
 
+                                    {{-- 顧客名 --}}
                                     <td class="px-3 py-2 border">
                                         <a href="{{ route('customers.show', $project->customer) }}"
                                             class="text-blue-600 hover:underline">
@@ -219,23 +320,28 @@
                                         </a>
                                     </td>
 
+                                    {{-- ステータス --}}
                                     <td class="px-3 py-2 border">
                                         {{ App\Models\Project::STATUSES[$project->status] }}
                                     </td>
 
+                                    {{-- 税抜金額 --}}
                                     <td class="px-3 py-2 border">
                                         {{ number_format($project->amount) ?: '未設定' }}
                                     </td>
 
+                                    {{-- 担当者 --}}
                                     <td class="px-3 py-2 border">
                                         {{ $project->assignedUser->name }}
                                     </td>
 
+                                    {{-- 期間 --}}
                                     <td class="px-3 py-2 border">
                                         {{ $project->start_date ? $project->start_date->format('Y-m-d') : '未設定' }} ～
                                         {{ $project->end_date ? $project->end_date->format('Y-m-d') : '未設定' }}
                                     </td>
 
+                                    {{-- 作成日 --}}
                                     <td class="px-3 py-2 border">
                                         {{ $project->created_at->format('Y-m-d') }}
                                     </td>
@@ -245,9 +351,9 @@
                     </table>
                 </div>
 
-                {{-- ページネーション（検索条件の保持） --}}
+                {{-- ページネーション --}}
                 <div class="mt-4">
-                    {{ $projects->appends(request()->query())->links() }}
+                    {{ $projects->links() }}
                 </div>
 
             </div>
