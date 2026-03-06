@@ -41,22 +41,22 @@ class ProjectController extends Controller
         // 案件名キーワード検索
         if ($request->filled('keyword')) {
             $keyword = trim($request->keyword);
-            $query->where('title', 'like', "%{$keyword}%");
+            $query->where('projects.title', 'like', "%{$keyword}%");
         }
 
         // 顧客名検索
         if ($request->filled('customer_id')) {
-            $query->where('customer_id', '=', $request->customer_id);
+            $query->where('projects.customer_id', '=', $request->customer_id);
         }
 
         // ステータス検索
         if ($request->filled('status')) {
-            $query->where('status', '=', $request->status);
+            $query->where('projects.status', '=', $request->status);
         }
 
         // 担当者検索
         if ($request->filled('assigned_user_id')) {
-            $query->where('assigned_user_id', '=', $request->assigned_user_id);
+            $query->where('projects.assigned_user_id', '=', $request->assigned_user_id);
         }
 
         // 税抜金額検索
@@ -68,10 +68,10 @@ class ProjectController extends Controller
         }
         // 税抜金額検索の追加
         if ($min) {
-            $query->where('amount', '>=', $min);
+            $query->where('projects.amount', '>=', $min);
         }
         if ($max) {
-            $query->where('amount', '<=', $max);
+            $query->where('projects.amount', '<=', $max);
         }
 
         // 期間検索
@@ -83,10 +83,10 @@ class ProjectController extends Controller
         }
         // 期間検索の追加
         if ($start_from) {
-            $query->whereDate('end_date', '>=', $start_from);
+            $query->whereDate('projects.end_date', '>=', $start_from);
         }
         if ($end_to) {
-            $query->whereDate('start_date', '<=', $end_to);
+            $query->whereDate('projects.start_date', '<=', $end_to);
         }
 
         // 作成日検索
@@ -98,23 +98,25 @@ class ProjectController extends Controller
         }
         // 作成日検索の追加
         if ($created_from) {
-            $query->whereDate('created_at', '>=', $created_from);
+            $query->whereDate('projects.created_at', '>=', $created_from);
         }
         if ($created_to) {
-            $query->whereDate('created_at', '<=', $created_to);
+            $query->whereDate('projects.created_at', '<=', $created_to);
         }
 
         // ＜ソート処理＞
-        // テーブル結合・取得カラム選択（外部テーブルのカラムでソートするため）
-        $query->leftJoin('customers', 'projects.customer_id', '=', 'customers.id')
-            ->select('projects.*', 'customers.kana as customer_kana');
-
         // ソート対象カラム一覧（ホワイトリスト、SQL インジェクション対策）
         $sortable = ['title', 'amount', 'created_at', 'customer_kana'];
 
         // クエリパラメータの値を取得（値がなければデフォルト値を使用）
         $sort = $request->get('sort', 'created_at');
         $direction = $request->get('direction', 'desc');
+
+        // テーブル結合・取得カラム選択（外部テーブルのカラムでソートするため）
+        if ($sort === 'customer_kana') {
+            $query->leftJoin('customers', 'projects.customer_id', '=', 'customers.id')
+                ->select('projects.*', 'customers.kana as customer_kana');
+        }
 
         // ソート対象カラムの場合、クエリにソート処理の追加
         if (in_array($sort, $sortable, true)) {

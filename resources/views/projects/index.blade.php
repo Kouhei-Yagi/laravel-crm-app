@@ -198,6 +198,7 @@
                             <tr>
                                 {{-- 案件名 --}}
                                 <th class="px-3 py-2 border">
+                                    {{-- 検索条件保持ソート機能 --}}
                                     <a href="{{ route(
                                         'projects.index',
                                         array_merge(request()->query(), [
@@ -220,10 +221,14 @@
 
                                 {{-- 顧客名 --}}
                                 <th class="px-3 py-2 border">
-                                    <a href="{{ route('projects.index', [
-                                        'sort' => 'customer_kana',
-                                        'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
-                                    ]) }}"
+                                    {{-- 検索条件保持ソート機能 --}}
+                                    <a href="{{ route(
+                                        'projects.index',
+                                        array_merge(request()->query(), [
+                                            'sort' => 'customer_kana',
+                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
+                                        ]),
+                                    ) }}"
                                         class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
                                         顧客名
                                     </a>
@@ -242,6 +247,7 @@
 
                                 {{-- 税抜金額 --}}
                                 <th class="px-3 py-2 border">
+                                    {{-- 検索条件保持ソート機能 --}}
                                     <a href="{{ route(
                                         'projects.index',
                                         array_merge(request()->query(), [
@@ -270,6 +276,7 @@
 
                                 {{-- 作成日 --}}
                                 <th class="px-3 py-2 border">
+                                    {{-- 検索条件保持ソート機能 --}}
                                     <a href="{{ route(
                                         'projects.index',
                                         array_merge(request()->query(), [
