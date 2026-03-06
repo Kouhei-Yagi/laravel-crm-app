@@ -253,7 +253,15 @@
                                 <th class="px-3 py-2 border">期間</th>
 
                                 {{-- 作成日 --}}
-                                <th class="px-3 py-2 border">作成日</th>
+                                <th class="px-3 py-2 border">
+                                    <a href="{{ route('projects.index', [
+                                        'sort' => 'created_at',
+                                        'direction' => 'asc',
+                                    ]) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        作成日
+                                    </a>
+                                </th>
                             </tr>
                         </thead>
 
