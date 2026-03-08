@@ -173,10 +173,13 @@
                             <tr>
                                 {{-- 対応日時 --}}
                                 <th class="px-3 py-2 border">
-                                    <a href="{{ route('interactions.index', [
-                                        'sort' => 'interacted_at',
-                                        'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
-                                    ]) }}"
+                                    <a href="{{ route(
+                                        'interactions.index',
+                                        array_merge(request()->query(), [
+                                            'sort' => 'interacted_at',
+                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
+                                        ]),
+                                    ) }}"
                                         class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
                                         対応日時
                                     </a>
