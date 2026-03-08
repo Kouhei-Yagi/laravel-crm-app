@@ -86,8 +86,12 @@ class InteractionController extends Controller
         $sort = $request->get('sort', 'interacted_at');
         $direction = $request->get('direction', 'desc');
 
+        // ソート対象カラムと direction のホワイトリスト（SQL インジェクション対策）
+        $sortable = ['interacted_at'];
+        $direction = $direction === 'asc' ? 'asc' : 'desc'; // asc と desc のみ許可
+
         // ソート対象カラムの場合、クエリにソート処理の追加
-        if ($sort === 'interacted_at') {
+        if (in_array($sort, $sortable, true)) {
             $query->orderBy($sort, $direction);
         }
 
