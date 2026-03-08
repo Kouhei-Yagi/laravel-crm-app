@@ -1,6 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
+
+            {{-- タイトル --}}
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 案件履歴一覧
             </h2>
@@ -165,20 +167,44 @@
 
                     {{-- 一覧データ --}}
                     <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
+
+                        {{-- 項目名 --}}
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th class="px-3 py-2 border">対応日時</th>
+                                {{-- 対応日時 --}}
+                                <th class="px-3 py-2 border">
+                                    <a href="{{ route('interactions.index', [
+                                        'sort' => 'interacted_at',
+                                        'direction' => 'asc',
+                                    ]) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        対応日時
+                                    </a>
+                                </th>
+
+                                {{-- 対応種別 --}}
                                 <th class="px-3 py-2 border">対応種別</th>
+
+                                {{-- 内容 --}}
                                 <th class="px-3 py-2 border">内容</th>
+
+                                {{-- 案件名 --}}
                                 <th class="px-3 py-2 border">案件名</th>
+
+                                {{-- 顧客名 --}}
                                 <th class="px-3 py-2 border">顧客名</th>
+
+                                {{-- 担当者 --}}
                                 <th class="px-3 py-2 border">担当者</th>
                             </tr>
                         </thead>
 
+                        {{-- レコード --}}
                         <tbody>
                             @foreach ($interactions as $interaction)
                                 <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+
+                                    {{-- 対応日時 --}}
                                     <td class="px-3 py-2 border">
                                         <a href="{{ route('interactions.show', $interaction) }}"
                                             class="text-blue-600 hover:underline">
@@ -186,14 +212,17 @@
                                         </a>
                                     </td>
 
+                                    {{-- 対応種別 --}}
                                     <td class="px-3 py-2 border">
                                         {{ App\Models\Interaction::TYPE[$interaction->type] }}
                                     </td>
 
+                                    {{-- 内容 --}}
                                     <td class="px-3 py-2 border">
                                         {{ Str::limit($interaction->content, 30) }}
                                     </td>
 
+                                    {{-- 案件名 --}}
                                     <td class="px-3 py-2 border">
                                         @if ($interaction->project)
                                             <a href="{{ route('projects.show', $interaction->project) }}"
@@ -205,6 +234,7 @@
                                         @endif
                                     </td>
 
+                                    {{-- 顧客名 --}}
                                     <td class="px-3 py-2 border">
                                         <a href="{{ route('customers.show', $interaction->customer) }}"
                                             class="text-blue-600 hover:underline">
@@ -212,7 +242,7 @@
                                         </a>
                                     </td>
 
-                                    {{-- ページネーション --}}
+                                    {{-- 担当者 --}}
                                     <td class="px-3 py-2 border">
                                         {{ $interaction->assignedUser->name }}
                                     </td>
@@ -224,9 +254,9 @@
 
             </div>
 
-            {{-- ページネーション（検索条件の保持） --}}
+            {{-- ページネーション --}}
             <div class="mt-4">
-                {{ $interactions->appends(request()->query())->links() }}
+                {{ $interactions->links() }}
             </div>
 
         </div>
