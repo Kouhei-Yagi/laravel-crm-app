@@ -180,6 +180,14 @@
                                         class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
                                         対応日時
                                     </a>
+
+                                    @if (request('sort') === 'interacted_at')
+                                        @if (request('direction') === 'asc')
+                                            <span class="text-xs">▲</span>
+                                        @elseif(request('direction') === 'desc')
+                                            <span class="text-xs">▼</span>
+                                        @endif
+                                    @endif
                                 </th>
 
                                 {{-- 対応種別 --}}
