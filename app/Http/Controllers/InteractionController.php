@@ -46,39 +46,39 @@ class InteractionController extends Controller
         }
         // 対応日時検索を追加
         if ($interacted_from) {
-            $query->where('interacted_at', '>=', $interacted_from);
+            $query->where('interactions.interacted_at', '>=', $interacted_from);
         }
         if ($interacted_to) {
-            $query->where('interacted_at', '<=', $interacted_to);
+            $query->where('interactions.interacted_at', '<=', $interacted_to);
         }
 
         // 対応種別検索
         if ($request->filled('type')) {
-            $query->where('type', '=', $request->type);
+            $query->where('interactions.type', '=', $request->type);
         }
 
         // 内容キーワード検索
         if ($request->filled('content_keyword')) {
             $content_keyword = trim($request->content_keyword);
-            $query->where('content', 'like', "%{$content_keyword}%");
+            $query->where('interactions.content', 'like', "%{$content_keyword}%");
         }
 
         // 案件名キーワード検索
         if ($request->filled('project_keyword')) {
             $project_keyword = trim($request->project_keyword);
-            $query->whereHas('project', function ($q) use ($project_keyword) {
+            $query->whereHas('interactions.project', function ($q) use ($project_keyword) {
                 $q->where('title', 'like', "%{$project_keyword}%");
             });
         }
 
         // 顧客名検索
         if ($request->filled('customer_id')) {
-            $query->where('customer_id', '=', $request->customer_id);
+            $query->where('interactions.customer_id', '=', $request->customer_id);
         }
 
         // 担当者検索
         if ($request->filled('assigned_user_id')) {
-            $query->where('assigned_user_id', '=', $request->assigned_user_id);
+            $query->where('interactions.assigned_user_id', '=', $request->assigned_user_id);
         }
 
         // ＜ソート処理＞
@@ -87,8 +87,14 @@ class InteractionController extends Controller
         $direction = $request->get('direction', 'desc');
 
         // ソート対象カラムと direction のホワイトリスト（SQL インジェクション対策）
-        $sortable = ['interacted_at'];
+        $sortable = ['interacted_at', 'customer_kana'];
         $direction = $direction === 'asc' ? 'asc' : 'desc'; // asc と desc のみ許可
+
+        // テーブル結合・取得カラム選択（外部テーブルのカラムでソートするため）
+        if ($sort === 'customer_kana') {
+            $query->leftJoin('customers', 'interactions.customer_id', '=', 'customers.id')
+                ->select('interactions.*', 'customers.kana as customer_kana');
+        }
 
         // ソート対象カラムの場合、クエリにソート処理の追加
         if (in_array($sort, $sortable, true)) {

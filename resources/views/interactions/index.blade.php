@@ -203,7 +203,15 @@
                                 <th class="px-3 py-2 border">案件名</th>
 
                                 {{-- 顧客名 --}}
-                                <th class="px-3 py-2 border">顧客名</th>
+                                <th class="px-3 py-2 border">
+                                    <a href="{{ route('interactions.index', [
+                                        'sort' => 'customer_kana',
+                                        'direction' => 'asc',
+                                    ]) }}"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                        顧客名
+                                    </a>
+                                </th>
 
                                 {{-- 担当者 --}}
                                 <th class="px-3 py-2 border">担当者</th>
