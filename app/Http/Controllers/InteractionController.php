@@ -66,7 +66,7 @@ class InteractionController extends Controller
         // 案件名キーワード検索
         if ($request->filled('project_keyword')) {
             $project_keyword = trim($request->project_keyword);
-            $query->whereHas('interactions.project', function ($q) use ($project_keyword) {
+            $query->whereHas('project', function ($q) use ($project_keyword) {
                 $q->where('title', 'like', "%{$project_keyword}%");
             });
         }

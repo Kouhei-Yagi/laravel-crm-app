@@ -173,6 +173,7 @@
                             <tr>
                                 {{-- 対応日時 --}}
                                 <th class="px-3 py-2 border">
+                                    {{-- 検索条件保持ソート機能 --}}
                                     <a href="{{ route(
                                         'interactions.index',
                                         array_merge(request()->query(), [
@@ -204,10 +205,14 @@
 
                                 {{-- 顧客名 --}}
                                 <th class="px-3 py-2 border">
-                                    <a href="{{ route('interactions.index', [
-                                        'sort' => 'customer_kana',
-                                        'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
-                                    ]) }}"
+                                    {{-- 検索条件保持ソート機能 --}}
+                                    <a href="{{ route(
+                                        'interactions.index',
+                                        array_merge(request()->query(), [
+                                            'sort' => 'customer_kana',
+                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
+                                        ]),
+                                    ) }}"
                                         class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
                                         顧客名
                                     </a>
