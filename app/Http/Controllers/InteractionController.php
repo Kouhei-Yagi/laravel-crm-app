@@ -36,33 +36,34 @@ class InteractionController extends Controller
         // 案件履歴一覧取得用のクエリを準備
         $query = Interaction::query();
 
-        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        // ＜検索条件処理＞
+        // 対応日時検索
         $interacted_from = $request->interacted_from;
         $interacted_to = $request->interacted_to;
-        // 検索範囲に「終了日～開始日」と入力されている場合、終了日と開始日を入れ替える
+        // 検索範囲の終了日と開始日を入れ替える処理
         if ($interacted_from && $interacted_to && $interacted_from > $interacted_to) {
             [$interacted_from, $interacted_to] = [$interacted_to, $interacted_from];
         }
-        // 対応日時によう絞り込み検索
+        // 対応日時検索を追加
         if ($interacted_from) {
-            $query->where('interacted_at', '>=', $interacted_from);
+            $query->where('interactions.interacted_at', '>=', $interacted_from);
         }
         if ($interacted_to) {
-            $query->where('interacted_at', '<=', $interacted_to);
+            $query->where('interactions.interacted_at', '<=', $interacted_to);
         }
 
-        // 対応種別が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        // 対応種別検索
         if ($request->filled('type')) {
-            $query->where('type', '=', $request->type);
+            $query->where('interactions.type', '=', $request->type);
         }
 
-        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        // 内容キーワード検索
         if ($request->filled('content_keyword')) {
             $content_keyword = trim($request->content_keyword);
-            $query->where('content', 'like', "%{$content_keyword}%");
+            $query->where('interactions.content', 'like', "%{$content_keyword}%");
         }
 
-        // キーワードが入力されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        // 案件名キーワード検索
         if ($request->filled('project_keyword')) {
             $project_keyword = trim($request->project_keyword);
             $query->whereHas('project', function ($q) use ($project_keyword) {
@@ -70,18 +71,38 @@ class InteractionController extends Controller
             });
         }
 
-        // 顧客名が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        // 顧客名検索
         if ($request->filled('customer_id')) {
-            $query->where('customer_id', '=', $request->customer_id);
+            $query->where('interactions.customer_id', '=', $request->customer_id);
         }
 
-        // 担当者が選択されている場合のみ検索条件を追加（空検索では全件表示にするため）
+        // 担当者検索
         if ($request->filled('assigned_user_id')) {
-            $query->where('assigned_user_id', '=', $request->assigned_user_id);
+            $query->where('interactions.assigned_user_id', '=', $request->assigned_user_id);
         }
 
-        // 作成日の新しい順に並べて20件ずつ取得
-        $interactions = $query->orderBy('interacted_at', 'desc')->paginate(20);
+        // ＜ソート処理＞
+        // クエリパラメータの値を取得（値がなければデフォルト値を使用）
+        $sort = $request->get('sort', 'interacted_at');
+        $direction = $request->get('direction', 'desc');
+
+        // ソート対象カラムと direction のホワイトリスト（SQL インジェクション対策）
+        $sortable = ['interacted_at', 'customer_kana'];
+        $direction = $direction === 'asc' ? 'asc' : 'desc'; // asc と desc のみ許可
+
+        // テーブル結合・取得カラム選択（外部テーブルのカラムでソートするため）
+        if ($sort === 'customer_kana') {
+            $query->leftJoin('customers', 'interactions.customer_id', '=', 'customers.id')
+                ->select('interactions.*', 'customers.kana as customer_kana');
+        }
+
+        // ソート対象カラムの場合、クエリにソート処理の追加
+        if (in_array($sort, $sortable, true)) {
+            $query->orderBy($sort, $direction);
+        }
+
+        // 20件ずつ取得して、検索・ソート条件（クエリパラメーター）を保持
+        $interactions = $query->paginate(20)->appends(request()->query());
 
         // interactionsテーブルのデータをindexビューに渡す
         return view('interactions.index', compact('types', 'customers', 'assignedUsers', 'interactions'));
