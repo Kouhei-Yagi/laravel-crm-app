@@ -69,4 +69,25 @@ class Project extends Model
             ->period($request->start_from, $request->end_to)
             ->createdRange($request->created_from, $request->created_to);
     }
+
+    /**
+     * キーワード検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $keyword
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeKeyword($query, $keyword)
+    {
+        // 検索フォームにキーワード欄に入力がない場合は何もしない
+        if (!$keyword) {
+            return $query;
+        }
+
+        $keyword = trim($keyword);
+
+        // 検索フォームに入力がある場合
+        // キーワード検索の条件をクエリに追加
+        return $query->where('title', 'like', "%{$keyword}%");
+    }
 }
