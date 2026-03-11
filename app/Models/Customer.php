@@ -89,6 +89,7 @@ class Customer extends Model
 
         $keyword = trim($keyword);
 
+        // 検索フォームのキーワード欄に入力がある場合
         // キーワード検索の条件をクエリに追加
         return $query->where(function ($q) use ($keyword) {
             $q->where('name', 'like', "%{$keyword}%")
@@ -112,6 +113,7 @@ class Customer extends Model
             return $query;
         }
 
+        // 検索フォームのステータス欄が「未選択」以外の場合
         // ステータス検索の条件をクエリに追加
         return $query->where('status', $status);
     }
@@ -130,7 +132,38 @@ class Customer extends Model
             return $query;
         }
 
+        // 検索フォームの担当者欄が「未選択」以外の場合
         // 担当者検索の条件をクエリに追加
         $query->where('assigned_user_id', $userId);
+    }
+
+    /**
+     * 作成日検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param date|null $from
+     * @param date|null $to
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedRange($query, $from, $to)
+    {
+        // 検索フォームの作成日欄が空の場合は何もしない
+        if (!$from && !$to) {
+            return $query;
+        }
+
+        // 検索フォームの作成欄に入力がある場合
+        // 検索範囲の終了日と開始日を入れ替え処理
+        if ($from && $to && $from > $to) {
+            [$from, $to] = [$to, $from];
+        }
+        // 作成日検索の条件をクエリに追加
+        if ($from) {
+            $query->where('created_at', '>=', $from);
+        }
+        if ($to) {
+            $query->where('created_at', '<=', $to);
+        }
+        return $query;
     }
 }
