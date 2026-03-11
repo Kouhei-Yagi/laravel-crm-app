@@ -90,4 +90,23 @@ class Project extends Model
         // キーワード検索の条件をクエリに追加
         return $query->where('title', 'like', "%{$keyword}%");
     }
+
+    /**
+     * 顧客名検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param integer|null $customer_id
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCustomer($query, $customerId)
+    {
+        // 検索フォームの顧客名欄が「未選択」の場合は何もしない
+        if (!$customerId) {
+            return $query;
+        }
+
+        // 検索フォームの顧客名欄が「未選択」以外の場合
+        // 顧客名検索の条件をクエリに追加
+        return $query->where('customer_id', $customerId);
+    }
 }
