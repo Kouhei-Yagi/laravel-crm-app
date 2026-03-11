@@ -72,4 +72,29 @@ class Customer extends Model
             ->assignedUser($request->assigned_user_id)
             ->createdRange($request->created_from, $request->created_to);
     }
+
+    /**
+     * キーワード検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $keyword
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeKeyword($query, $keyword)
+    {
+        // 検索フォームのキーワード欄が空の場合は何もしない
+        if (!$keyword) {
+            return $query;
+        }
+
+        $keyword = trim($keyword);
+
+        // キーワード検索の条件を追加
+        return $query->where(function ($q) use ($keyword) {
+            $q->where('name', 'like', "%{$keyword}%")
+                ->orWhere('email', 'like',  "%{$keyword}%")
+                ->orWhere('phone', 'like',  "%{$keyword}%")
+                ->orWhere('company_name', 'like',  "%{$keyword}%");
+        });
+    }
 }
