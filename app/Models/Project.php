@@ -95,7 +95,7 @@ class Project extends Model
      * 顧客名検索スコープ
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param integer|null $customer_id
+     * @param int|null $customer_id
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeCustomer($query, $customerId)
@@ -127,5 +127,24 @@ class Project extends Model
         // 検索フォームのステータス欄が「未選択」以外の場合
         // ステータス検索の条件をクエリに追加
         return $query->where('status', $status);
+    }
+
+    /**
+     * 担当者検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int|null $userId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAssignedUser($query, $userId)
+    {
+        // 検索フォームの担当者欄が「未選択」の場合は何もしない
+        if (!$userId) {
+            return $query;
+        }
+
+        // 検索フォームの担当者欄が「未選択」以外の場合
+        // 担当者検索の条件をクエリに追加
+        return $query->where('assigned_user_id', $userId);
     }
 }
