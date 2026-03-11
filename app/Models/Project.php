@@ -147,4 +147,34 @@ class Project extends Model
         // 担当者検索の条件をクエリに追加
         return $query->where('assigned_user_id', $userId);
     }
+
+    /**
+     * 税抜金額検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int|null $amountMin
+     * @param int|null $amountMax
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAmountRange($query, $amountMin, $amountMax)
+    {
+        // 検索フォームの税抜金額欄が未入力の場合は何もしない
+        if (!$amountMin && !$amountMax) {
+            return $query;
+        }
+
+        // 検索フォームの税抜金額欄に入力がある場合
+        // 検索範囲の最高金額と最低金額を入れ替え処理
+        if ($amountMin && $amountMax && $amountMin > $amountMax) {
+            [$amountMin, $amountMax] = [$amountMax, $amountMin];
+        }
+        // 税抜金額の検索条件をクエリに追加
+        if ($amountMin) {
+            $query->where('amount', '>=', $amountMin);
+        }
+        if ($amountMax) {
+            $query->where('amount', '<=', $amountMax);
+        }
+        return $query;
+    }
 }
