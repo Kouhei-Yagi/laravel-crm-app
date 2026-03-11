@@ -109,4 +109,23 @@ class Project extends Model
         // 顧客名検索の条件をクエリに追加
         return $query->where('customer_id', $customerId);
     }
+
+    /**
+     * ステータス検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $status
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeStatus($query, $status)
+    {
+        // 検索フォームのステータス欄が「未選択」の場合は何もしない
+        if (!$status) {
+            return $query;
+        }
+
+        // 検索フォームのステータス欄が「未選択」以外の場合
+        // ステータス検索の条件をクエリに追加
+        return $query->where('status', $status);
+    }
 }
