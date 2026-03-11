@@ -56,4 +56,20 @@ class Customer extends Model
     {
         return $this->hasMany(Interaction::class, 'customer_id');
     }
+
+    /**
+     * 顧客一覧の検索条件をまとめて適用するスコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilter($query, $request)
+    {
+        return $query
+            ->keyword($request->keyword)
+            ->status($request->status)
+            ->assignedUser($request->assigned_user_id)
+            ->createdRange($request->created_from, $request->created_to);
+    }
 }
