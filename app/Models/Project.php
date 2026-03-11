@@ -177,4 +177,34 @@ class Project extends Model
         }
         return $query;
     }
+
+    /**
+     * 期間検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $from
+     * @param string|null $to
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePeriod($query, $from, $to)
+    {
+        // 検索フォームの期間欄が未入力の場合は何もしない
+        if (!$from && !$to) {
+            return $query;
+        }
+
+        // 検索フォームの期間欄に入力がある場合
+        // 検索範囲の終了日と開始日を入れ替える処理
+        if ($from && $to && $from > $to) {
+            [$from, $to] = [$to, $from];
+        }
+        // 期間検索の条件をクエリに追加
+        if ($from) {
+            $query->where('end_date', '>=', $from);
+        }
+        if ($to) {
+            $query->where('start_date', '<=', $to);
+        }
+        return $query;
+    }
 }
