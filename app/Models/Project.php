@@ -207,4 +207,34 @@ class Project extends Model
         }
         return $query;
     }
+
+    /**
+     * 作成日検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $from
+     * @param string|null $to
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedRange($query, $from, $to)
+    {
+        // 検索フォームの作成日欄が未入力の場合は何もしない
+        if (!$from && !$to) {
+            return $query;
+        }
+
+        // 検索フォームの作成日欄に入力がある場合
+        // 検索範囲の終了日と開始日を入れ替える処理
+        if ($from && $to && $from > $to) {
+            [$from, $to] = [$to, $from];
+        }
+        // 作成日検索の条件をクエリに追加
+        if ($from) {
+            $query->whereDate('created_at', '>=', $from);
+        }
+        if ($to) {
+            $query->whereDate('created_at', '<=', $to);
+        }
+        return $query;
+    }
 }
