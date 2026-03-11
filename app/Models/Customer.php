@@ -89,7 +89,7 @@ class Customer extends Model
 
         $keyword = trim($keyword);
 
-        // キーワード検索の条件を追加
+        // キーワード検索の条件をクエリに追加
         return $query->where(function ($q) use ($keyword) {
             $q->where('name', 'like', "%{$keyword}%")
                 ->orWhere('email', 'like',  "%{$keyword}%")
@@ -112,7 +112,25 @@ class Customer extends Model
             return $query;
         }
 
-        // ステータス検索の条件を追加
+        // ステータス検索の条件をクエリに追加
         return $query->where('status', $status);
+    }
+
+    /**
+     * 担当者検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $userId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAssignedUser($query, $userId)
+    {
+        // 検索フォームの担当者欄が「未選択」の場合は何もしない
+        if (!$userId) {
+            return $query;
+        }
+
+        // 担当者検索の条件をクエリに追加
+        $query->where('assigned_user_id', $userId);
     }
 }
