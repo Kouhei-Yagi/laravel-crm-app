@@ -50,4 +50,23 @@ class Project extends Model
     {
         return $this->hasMany(Interaction::class, 'project_id');
     }
+
+    /**
+     * 案件一覧の検索条件をまとめて適用するスコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilter($query, $request)
+    {
+        return $query
+            ->keyword($request->keyword)
+            ->customer($request->customer_id)
+            ->status($request->status)
+            ->assignedUser($request->assigned_user_id)
+            ->amountRange($request->amount)
+            ->period($request->start_from, $request->end_to)
+            ->createdRange($request->created_from, $request->created_to);
+    }
 }
