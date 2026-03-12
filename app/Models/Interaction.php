@@ -46,4 +46,22 @@ class Interaction extends Model
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
     }
+
+    /**
+     * 案件履歴一覧の検索条件をまとめて適用するスコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilter($query, $request)
+    {
+        return $query
+            ->interactedAtRange($request->interacted_from, $request->interacted_to)
+            ->interactionType($request->type)
+            ->content($request->content_keyword)
+            ->projectTitle($request->project_keyword)
+            ->customer($request->customer_id)
+            ->assignedUser($request->assigned_user_id);
+    }
 }
