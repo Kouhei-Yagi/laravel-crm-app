@@ -73,7 +73,7 @@ class Interaction extends Model
      * @param string|null $to
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function interactedAtRange($query, $from, $to)
+    public function scopeInteractedAtRange($query, $from, $to)
     {
         // 検索フォームの対応日時欄に入力がない場合は何もしない
         if (!$from && !$to) {
@@ -102,7 +102,7 @@ class Interaction extends Model
      * @param string|null $type
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function interactionType($query, $type)
+    public function scopeInteractionType($query, $type)
     {
         // 検索フォームの対応種別欄が「未選択」の場合は何もしない
         if (!$type) {
@@ -112,5 +112,25 @@ class Interaction extends Model
         // 検索フォームの対応種別欄が「未選択」以外の場合
         // 対応種別の検索条件をクエリに追加
         return $query->where('type', $type);
+    }
+
+    /**
+     * 内容検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $keyword
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeContent($query, $keyword)
+    {
+        // 検索フォームの内容検索欄が未入力の場合は何もしない
+        if (!$keyword) {
+            return $query;
+        }
+
+        // 検索フォームの内容検索欄に入力がある場合
+        $keyword = trim($keyword);
+        // 内容検索の条件をクエリに追加
+        return $query->where('content', 'like', "%{$keyword}%");
     }
 }
