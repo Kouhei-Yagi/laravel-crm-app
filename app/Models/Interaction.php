@@ -94,4 +94,23 @@ class Interaction extends Model
         }
         return $query;
     }
+
+    /**
+     * 対応種別検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function interactionType($query, $type)
+    {
+        // 検索フォームの対応種別欄が「未選択」の場合は何もしない
+        if (!$type) {
+            return $query;
+        }
+
+        // 検索フォームの対応種別欄が「未選択」以外の場合
+        // 対応種別の検索条件をクエリに追加
+        return $query->where('type', $type);
+    }
 }
