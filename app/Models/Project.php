@@ -65,7 +65,7 @@ class Project extends Model
             ->customer($request->customer_id)
             ->status($request->status)
             ->assignedUser($request->assigned_user_id)
-            ->amountRange($request->amount)
+            ->amountRange($request->amount_min, $request->amount_max)
             ->period($request->start_from, $request->end_to)
             ->createdRange($request->created_from, $request->created_to);
     }
@@ -95,7 +95,7 @@ class Project extends Model
      * 顧客名検索スコープ
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int|null $customer_id
+     * @param string|null $customer_id
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeCustomer($query, $customerId)
@@ -133,7 +133,7 @@ class Project extends Model
      * 担当者検索スコープ
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int|null $userId
+     * @param string|null $userId
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeAssignedUser($query, $userId)
@@ -152,8 +152,8 @@ class Project extends Model
      * 税抜金額検索スコープ
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int|null $amountMin
-     * @param int|null $amountMax
+     * @param string|null $amountMin
+     * @param string|null $amountMax
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeAmountRange($query, $amountMin, $amountMax)
