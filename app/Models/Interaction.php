@@ -64,4 +64,34 @@ class Interaction extends Model
             ->customer($request->customer_id)
             ->assignedUser($request->assigned_user_id);
     }
+
+    /**
+     * 対応日時検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $from
+     * @param string|null $to
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function interactedAtRange($query, $from, $to)
+    {
+        // 検索フォームの対応日時欄に入力がない場合は何もしない
+        if (!$from && !$to) {
+            return $query;
+        }
+
+        // 検索フォームの対応日時欄に入力がある場合
+        // 検索範囲の終了日と開始日を入れ替える処理
+        if ($from && $to && $from > $to) {
+            [$from, $to] = [$to, $from];
+        }
+        // 対応日時の検索条件をクエリに追加
+        if ($from) {
+            $query->where('interacted_at', '>=', $from);
+        }
+        if ($to) {
+            $query->where('interacted_at', '<=', $to);
+        }
+        return $query;
+    }
 }
