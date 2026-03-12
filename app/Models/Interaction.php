@@ -133,4 +133,24 @@ class Interaction extends Model
         // 内容検索の条件をクエリに追加
         return $query->where('content', 'like', "%{$keyword}%");
     }
+
+    /**
+     * 案件名検索スコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $keyword
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeProjectTitle($query, $keyword)
+    {
+        // 検索フォームの案件名欄が未入力の場合は何もしない
+        if (!$keyword) {
+            return $query;
+        }
+
+        // 検索フォームの案件名欄に入力がある場合
+        $keyword = trim($keyword);
+        // 案件名検索の条件をクエリに追加
+        return $query->where('title', 'like', "%{$keyword}%");
+    }
 }
