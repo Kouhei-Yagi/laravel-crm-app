@@ -168,4 +168,22 @@ class Interaction extends Model
         // 顧客名欄が「未選択」以外場合、その顧客に紐づく案件履歴に絞り込むための条件を追加
         return $query->where('customer_id', $customerId);
     }
+
+    /**
+     * 担当者絞り込みスコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $userId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAssignedUser($query, $userId)
+    {
+        // 担当者欄が「未選択」の場合、絞り込み条件が成立しないため、そのまま返す
+        if (!$userId) {
+            return $query;
+        }
+
+        // 担当者欄が「未選択」以外の場合、その担当者に紐づく案件履歴に絞り込むための条件を追加
+        return $query->where('assigned_user_id', $userId);
+    }
 }
