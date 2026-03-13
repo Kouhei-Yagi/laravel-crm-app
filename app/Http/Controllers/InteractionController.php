@@ -18,68 +18,20 @@ class InteractionController extends Controller
      */
     public function index(Request $request)
     {
-        // 対応日時用バリデーション
+        // 不正な日付入力による検索エラーを防ぐため、対応日時の形式をチェックする
         $request->validate([
             'interacted_from' => 'nullable|date',
             'interacted_to' => 'nullable|date',
         ]);
 
-        // 対応種別の選択肢
+        // 画面で選択肢として表示するため、対応種別・顧客名・担当者のデータを取得する
         $types = Interaction::TYPE;
-
-        // 顧客名の選択肢
         $customers = Customer::orderBy('kana')->get();
-
-        // 担当者の選択肢
         $assignedUsers = User::orderBy('name')->get();
 
-        // 案件履歴一覧取得用のクエリを準備
-        $query = Interaction::query();
-
-        // ＜検索条件処理＞
-        // 対応日時検索
-        $interacted_from = $request->interacted_from;
-        $interacted_to = $request->interacted_to;
-        // 検索範囲の終了日と開始日を入れ替える処理
-        if ($interacted_from && $interacted_to && $interacted_from > $interacted_to) {
-            [$interacted_from, $interacted_to] = [$interacted_to, $interacted_from];
-        }
-        // 対応日時検索を追加
-        if ($interacted_from) {
-            $query->where('interactions.interacted_at', '>=', $interacted_from);
-        }
-        if ($interacted_to) {
-            $query->where('interactions.interacted_at', '<=', $interacted_to);
-        }
-
-        // 対応種別検索
-        if ($request->filled('type')) {
-            $query->where('interactions.type', '=', $request->type);
-        }
-
-        // 内容キーワード検索
-        if ($request->filled('content_keyword')) {
-            $content_keyword = trim($request->content_keyword);
-            $query->where('interactions.content', 'like', "%{$content_keyword}%");
-        }
-
-        // 案件名キーワード検索
-        if ($request->filled('project_keyword')) {
-            $project_keyword = trim($request->project_keyword);
-            $query->whereHas('project', function ($q) use ($project_keyword) {
-                $q->where('title', 'like', "%{$project_keyword}%");
-            });
-        }
-
-        // 顧客名検索
-        if ($request->filled('customer_id')) {
-            $query->where('interactions.customer_id', '=', $request->customer_id);
-        }
-
-        // 担当者検索
-        if ($request->filled('assigned_user_id')) {
-            $query->where('interactions.assigned_user_id', '=', $request->assigned_user_id);
-        }
+        // 検索条件をモデル側に集約し、コントローラーの責務を軽くするためにスコープを適用する
+        $query = Interaction::query()
+            ->Filter($request);
 
         // ＜ソート処理＞
         // クエリパラメータの値を取得（値がなければデフォルト値を使用）
@@ -101,10 +53,10 @@ class InteractionController extends Controller
             $query->orderBy($sort, $direction);
         }
 
-        // 20件ずつ取得して、検索・ソート条件（クエリパラメーター）を保持
+        // ページ移動時に検索条件が失われないよう、クエリパラメータを引き継いでページングする
         $interactions = $query->paginate(20)->appends(request()->query());
 
-        // interactionsテーブルのデータをindexビューに渡す
+        // 一覧表示に必要なデータをビューへ渡す
         return view('interactions.index', compact('types', 'customers', 'assignedUsers', 'interactions'));
     }
 

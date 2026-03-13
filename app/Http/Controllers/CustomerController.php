@@ -28,45 +28,9 @@ class CustomerController extends Controller
         // 担当者の選択肢
         $assignedUsers = User::all();
 
-        // 顧客一覧取得用のクエリを準備
-        $query = Customer::query();
-
-        // ＜検索条件処理＞
-        // キーワード検索
-        if ($request->filled('keyword')) {
-            $keyword = trim($request->keyword);
-            $query->where(function ($q) use ($keyword) {
-                $q->where('name', 'like', "%{$keyword}%")
-                    ->orWhere('email', 'like', "%{$keyword}%")
-                    ->orWhere('phone', 'like', "%{$keyword}%")
-                    ->orWhere('company_name', 'like', "%{$keyword}%");
-            });
-        }
-
-        // ステータス検索
-        if ($request->filled('status')) {
-            $query->where('status', '=', $request->status);
-        }
-
-        // 担当者検索
-        if ($request->filled('assigned_user_id')) {
-            $query->where('assigned_user_id', '=', $request->assigned_user_id);
-        }
-
-        // 作成日検索
-        $from = $request->created_from;
-        $to = $request->created_to;
-        // 検索範囲の終了日と開始日を入れ替え処理
-        if ($from && $to && $from > $to) {
-            [$from, $to] = [$to, $from];
-        }
-        // 作成日検索追加
-        if ($from) {
-            $query->whereDate('created_at', '>=', $from);
-        }
-        if ($to) {
-            $query->whereDate('created_at', '<=', $to);
-        }
+        // 顧客一覧取得用のクエリを準備して、検索条件（scope）を適用
+        $query = Customer::query()
+            ->filter($request);
 
         // ＜ソート処理＞
         // ソート可能なカラム一覧（ホワイトリスト）

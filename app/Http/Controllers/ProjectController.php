@@ -34,75 +34,9 @@ class ProjectController extends Controller
         // 担当者の選択肢
         $users = User::orderBy('name')->get();
 
-        // 案件一覧取得用のクエリを準備
-        $query = Project::query();
-
-        // ＜検索条件処理＞
-        // 案件名キーワード検索
-        if ($request->filled('keyword')) {
-            $keyword = trim($request->keyword);
-            $query->where('projects.title', 'like', "%{$keyword}%");
-        }
-
-        // 顧客名検索
-        if ($request->filled('customer_id')) {
-            $query->where('projects.customer_id', '=', $request->customer_id);
-        }
-
-        // ステータス検索
-        if ($request->filled('status')) {
-            $query->where('projects.status', '=', $request->status);
-        }
-
-        // 担当者検索
-        if ($request->filled('assigned_user_id')) {
-            $query->where('projects.assigned_user_id', '=', $request->assigned_user_id);
-        }
-
-        // 税抜金額検索
-        $min = $request->amount_min;
-        $max = $request->amount_max;
-        // 検索範囲の最高金額と最低金額を入れ替える処理
-        if ($min && $max && $min > $max) {
-            [$min, $max] = [$max, $min];
-        }
-        // 税抜金額検索の追加
-        if ($min) {
-            $query->where('projects.amount', '>=', $min);
-        }
-        if ($max) {
-            $query->where('projects.amount', '<=', $max);
-        }
-
-        // 期間検索
-        $start_from = $request->start_from;
-        $end_to = $request->end_to;
-        // 検索範囲の終了日と開始日を入れ替える処理
-        if ($start_from && $end_to && $start_from > $end_to) {
-            [$start_from, $end_to] = [$end_to, $start_from];
-        }
-        // 期間検索の追加
-        if ($start_from) {
-            $query->whereDate('projects.end_date', '>=', $start_from);
-        }
-        if ($end_to) {
-            $query->whereDate('projects.start_date', '<=', $end_to);
-        }
-
-        // 作成日検索
-        $created_from = $request->created_from;
-        $created_to = $request->created_to;
-        // 検索範囲の終了日と開始日を入れ替える処理
-        if ($created_from && $created_to && $created_from > $created_to) {
-            [$created_from, $created_to] = [$created_to, $created_from];
-        }
-        // 作成日検索の追加
-        if ($created_from) {
-            $query->whereDate('projects.created_at', '>=', $created_from);
-        }
-        if ($created_to) {
-            $query->whereDate('projects.created_at', '<=', $created_to);
-        }
+        // 案件一覧取得用のクエリを準備して、検索条件（scope）を適用
+        $query = Project::query()
+            ->filter($request);
 
         // ＜ソート処理＞
         // ソート対象カラム一覧（ホワイトリスト、SQL インジェクション対策）
