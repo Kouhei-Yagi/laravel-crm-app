@@ -30,21 +30,22 @@ class CustomerController extends Controller
 
         // 顧客一覧取得用のクエリを準備して、検索条件（scope）を適用
         $query = Customer::query()
-            ->filter($request);
+            ->filter($request)
+            ->sort($request);
 
-        // ＜ソート処理＞
-        // ソート可能なカラム一覧（ホワイトリスト）
-        $sortable = ['name', 'email', 'company_name', 'created_at'];
+        // // ＜ソート処理＞
+        // // ソート可能なカラム一覧（ホワイトリスト）
+        // $sortable = ['name', 'email', 'company_name', 'created_at'];
 
-        $sort = $request->get('sort');
-        $direction = $request->get('direction') === 'asc' ? 'asc' : 'desc';
+        // $sort = $request->get('sort');
+        // $direction = $request->get('direction') === 'asc' ? 'asc' : 'desc';
 
-        // ソート処理追加
-        if (in_array($sort, $sortable, true)) {
-            $query->orderBy($sort, $direction);
-        } else {
-            $query->orderBy('created_at', 'desc'); // デフォルト
-        }
+        // // ソート処理追加
+        // if (in_array($sort, $sortable, true)) {
+        //     $query->orderBy($sort, $direction);
+        // } else {
+        //     $query->orderBy('created_at', 'desc'); // デフォルト
+        // }
 
         // 20件ずつ取得して、検索・ソート条件（クエリパラメーター）を保持
         $customers = $query->paginate(20)->appends(request()->query());
