@@ -66,7 +66,7 @@ class Interaction extends Model
     }
 
     /**
-     * 対応日時検索スコープ
+     * 対応日時絞り込みスコープ
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string|null $from
@@ -75,20 +75,20 @@ class Interaction extends Model
      */
     public function scopeInteractedAtRange($query, $from, $to)
     {
-        // 検索フォームの対応日時欄に入力がない場合は何もしない
+        // 対応日時欄がどちらも未入力の場合、絞り込み条件が成立しないため、そのまま返す
         if (!$from && !$to) {
             return $query;
         }
 
-        // 検索フォームの対応日時欄に入力がある場合
-        // 検索範囲の終了日と開始日を入れ替える処理
+        // ユーザーが誤って「開始 > 終了」で入力した場合、正しく絞り込みできるように、値を入れ替える
         if ($from && $to && $from > $to) {
             [$from, $to] = [$to, $from];
         }
-        // 対応日時の検索条件をクエリに追加
+        // 開始日が入力されている場合、その日以降の案件履歴に絞り込むための条件を追加
         if ($from) {
             $query->where('interacted_at', '>=', $from);
         }
+        // 終了日が入力されている場合、その日以前の案件履歴に絞り込むための条件を追加
         if ($to) {
             $query->where('interacted_at', '<=', $to);
         }
@@ -96,7 +96,7 @@ class Interaction extends Model
     }
 
     /**
-     * 対応種別検索スコープ
+     * 対応種別絞り込みスコープ
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string|null $type
@@ -104,13 +104,12 @@ class Interaction extends Model
      */
     public function scopeInteractionType($query, $type)
     {
-        // 検索フォームの対応種別欄が「未選択」の場合は何もしない
+        // 対応種別欄が「未選択」の場合、絞り込み条件が成立しないため、そのまま返す
         if (!$type) {
             return $query;
         }
 
-        // 検索フォームの対応種別欄が「未選択」以外の場合
-        // 対応種別の検索条件をクエリに追加
+        // 対応種別欄が「未選択」以外の場合、その対応種別に紐づく案件履歴に絞り込むための条件を追加
         return $query->where('type', $type);
     }
 
@@ -123,14 +122,13 @@ class Interaction extends Model
      */
     public function scopeContent($query, $keyword)
     {
-        // 検索フォームの内容検索欄が未入力の場合は何もしない
+        // 内容欄が未入力の場合、検索条件が成立しないため、そのまま返す
         if (!$keyword) {
             return $query;
         }
 
-        // 検索フォームの内容検索欄に入力がある場合
+        // 内容欄に入力がある場合、そのキーワードで部分一致検索を行うための条件を追加
         $keyword = trim($keyword);
-        // 内容検索の条件をクエリに追加
         return $query->where('content', 'like', "%{$keyword}%");
     }
 
@@ -143,14 +141,31 @@ class Interaction extends Model
      */
     public function scopeProjectTitle($query, $keyword)
     {
-        // 検索フォームの案件名欄が未入力の場合は何もしない
+        // 案件名欄が未入力の場合、検索条件が成立しないため、そのまま返す
         if (!$keyword) {
             return $query;
         }
 
-        // 検索フォームの案件名欄に入力がある場合
+        // 案件名欄に入力がある場合、入力されたキーワードで部分一致検索を行うための条件を追加
         $keyword = trim($keyword);
-        // 案件名検索の条件をクエリに追加
         return $query->where('title', 'like', "%{$keyword}%");
+    }
+
+    /**
+     * 顧客絞り込みスコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $customerId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCustomer($query, $customerId)
+    {
+        // 顧客名欄が「未選択」の場合、絞り込み条件が成立しないため、そのまま返す
+        if (!$customerId) {
+            return $query;
+        }
+
+        // 顧客名欄が「未選択」以外場合、その顧客に紐づく案件履歴に絞り込むための条件を追加
+        return $query->where('customer_id', $customerId);
     }
 }
