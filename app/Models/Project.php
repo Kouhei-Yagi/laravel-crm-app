@@ -48,6 +48,15 @@ class Project extends Model
     protected string $defaultSort = 'created_at';
     protected string $defaultDirection = 'desc';
 
+    protected array $sortableJoins = [
+        'customer_kana' => [
+            'table' => 'customers',
+            'local_key' => 'projects.customer_id',
+            'foreign_key' => 'customers.id',
+            'select' => ['projects.*', 'customers.kana as customer_kana'],
+        ]
+    ];
+
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
