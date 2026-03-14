@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Sortable;
 
 class Project extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use Sortable;
 
     const STATUSES = [
         'estimating' => '見積中',
@@ -35,6 +37,16 @@ class Project extends Model
         'start_date' => 'date',
         'end_date' => 'date',
     ];
+
+    protected array $sortable = [
+        'title',
+        'amount',
+        'created_at',
+        'customer_kana',
+    ];
+
+    protected string $defaultSort = 'created_at';
+    protected string $defaultDirection = 'desc';
 
     public function customer()
     {
