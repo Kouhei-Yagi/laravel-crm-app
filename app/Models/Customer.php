@@ -44,6 +44,13 @@ class Customer extends Model
         'memo',
     ];
 
+    protected array $sortable = [
+        'name',
+        'email',
+        'company_name',
+        'created_at'
+    ];
+
     public function assignedUser()
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
