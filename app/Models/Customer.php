@@ -51,6 +51,9 @@ class Customer extends Model
         'created_at'
     ];
 
+    protected string $defaultSort = 'created_at';
+    protected string $defaultDirection = 'desc';
+
     public function assignedUser()
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
