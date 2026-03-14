@@ -17,7 +17,7 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        // 期間・作成日用検索バリデーション
+        // 不正な日付入力による検索エラーを防ぐため、対応日時の形式をチェックする
         $request->validate([
             'start_from' => 'nullable|date',
             'end_to' => 'nullable|date',
@@ -25,43 +25,19 @@ class ProjectController extends Controller
             'created_to' => 'nullable|date',
         ]);
 
-        // 顧客名の選択肢
+        // 画面で選択肢として表示するため、顧客名・ステータス・担当者のデータを取得する
         $customers = Customer::orderBy('kana')->get();
-
-        // ステータスの選択肢
         $statuses = Project::STATUSES;
-
-        // 担当者の選択肢
         $users = User::orderBy('name')->get();
 
-        // 案件一覧取得用のクエリを準備して、検索条件（scope）を適用
+        // コントローラの責務を軽くするために、検索・ソート条件をモデル・トレイト側に集約してスコープを適用する
         $query = Project::query()
             ->filter($request)
             ->sort($request);
 
-        // // ＜ソート処理＞
-        // // ソート対象カラム一覧（ホワイトリスト、SQL インジェクション対策）
-        // $sortable = ['title', 'amount', 'created_at', 'customer_kana'];
-
-        // // クエリパラメータの値を取得（値がなければデフォルト値を使用）
-        // $sort = $request->get('sort', 'created_at');
-        // $direction = $request->get('direction', 'desc');
-
-        // // テーブル結合・取得カラム選択（外部テーブルのカラムでソートするため）
-        // if ($sort === 'customer_kana') {
-        //     $query->leftJoin('customers', 'projects.customer_id', '=', 'customers.id')
-        //         ->select('projects.*', 'customers.kana as customer_kana');
-        // }
-
-        // // ソート対象カラムの場合、クエリにソート処理の追加
-        // if (in_array($sort, $sortable, true)) {
-        //     $query->orderBy($sort, $direction);
-        // }
-
-        // 20件ずつ取得して、検索・ソート条件（クエリパラメーター）を保持
+        // ページ移動時に検索条件が失われないよう、クエリパラメータを引き継いでページングする
         $projects = $query->paginate(20)->appends($request->query());
 
-        // projectsテーブルのデータをindexビューに渡す
         return view('projects.index', compact('customers', 'statuses', 'users', 'projects'));
     }
 
