@@ -16,40 +16,24 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        // 作成日検索用バリデーション
+        // 不正な日付入力による検索エラーを防ぐため、対応日時の形式をチェックする
         $request->validate([
             'created_from' => 'nullable|date',
             'created_to' => 'nullable|date',
         ]);
 
-        // ステータスの選択肢
+        // 画面で選択肢として表示するため、ステータス・担当者のデータを取得する
         $statuses = Customer::STATUSES;
-
-        // 担当者の選択肢
         $assignedUsers = User::all();
 
-        // 顧客一覧取得用のクエリを準備して、検索条件（scope）を適用
+        // コントローラの責務を軽くするために、検索・ソート条件をモデル・トレイト側に集約してスコープを適用する
         $query = Customer::query()
-            ->filter($request);
+            ->filter($request)
+            ->sort($request);
 
-        // ＜ソート処理＞
-        // ソート可能なカラム一覧（ホワイトリスト）
-        $sortable = ['name', 'email', 'company_name', 'created_at'];
-
-        $sort = $request->get('sort');
-        $direction = $request->get('direction') === 'asc' ? 'asc' : 'desc';
-
-        // ソート処理追加
-        if (in_array($sort, $sortable, true)) {
-            $query->orderBy($sort, $direction);
-        } else {
-            $query->orderBy('created_at', 'desc'); // デフォルト
-        }
-
-        // 20件ずつ取得して、検索・ソート条件（クエリパラメーター）を保持
+        // ページ移動時に検索条件が失われないよう、クエリパラメータを引き継いでページングする
         $customers = $query->paginate(20)->appends(request()->query());
 
-        // 各種データをindexビューに渡す
         return view('customers.index', compact('statuses', 'assignedUsers', 'customers'));
     }
 

@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Sortable;
 
 class Customer extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use Sortable;
 
     public const STATUSES = [
         'prospect' => '見込み',
@@ -41,6 +43,16 @@ class Customer extends Model
         'assigned_user_id',
         'memo',
     ];
+
+    protected array $sortable = [
+        'name',
+        'email',
+        'company_name',
+        'created_at'
+    ];
+
+    protected string $defaultSort = 'created_at';
+    protected string $defaultDirection = 'desc';
 
     public function assignedUser()
     {
