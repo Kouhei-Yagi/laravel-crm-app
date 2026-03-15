@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\RangeNormalizer;
+use App\Traits\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Sortable;
 
 class Project extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use Sortable;
+    use RangeNormalizer;
 
     const STATUSES = [
         'estimating' => '見積中',
@@ -186,9 +188,7 @@ class Project extends Model
 
         // 検索フォームの税抜金額欄に入力がある場合
         // 検索範囲の最高金額と最低金額を入れ替え処理
-        if ($amountMin && $amountMax && $amountMin > $amountMax) {
-            [$amountMin, $amountMax] = [$amountMax, $amountMin];
-        }
+        [$amountMin, $amountMax] = $this->normalizeRange($amountMin, $amountMax);
         // 税抜金額の検索条件をクエリに追加
         if ($amountMin) {
             $query->where('amount', '>=', $amountMin);
