@@ -42,6 +42,15 @@ class Interaction extends Model
     protected string $defaultSort = 'interacted_at';
     protected string $defaultDirection = 'desc';
 
+    protected array $sortableJoins = [
+        'customer_kana' => [
+            'table' => 'customers',
+            'local_key' => 'interactions.customer_id',
+            'foreign_key' => 'customers.id',
+            'select' => ['interactions.*', 'customers.kana as customer_kana'],
+        ]
+    ];
+
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
