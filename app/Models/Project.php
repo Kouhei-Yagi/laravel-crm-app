@@ -216,9 +216,7 @@ class Project extends Model
 
         // 検索フォームの期間欄に入力がある場合
         // 検索範囲の終了日と開始日を入れ替える処理
-        if ($from && $to && $from > $to) {
-            [$from, $to] = [$to, $from];
-        }
+        [$from, $to] = $this->normalizeRange($from, $to);
         // 期間検索の条件をクエリに追加
         if ($from) {
             $query->where('end_date', '>=', $from);
