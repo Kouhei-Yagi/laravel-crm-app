@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\RangeNormalizer;
+use App\Traits\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Sortable;
 
 class Customer extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use Sortable;
+    use RangeNormalizer;
 
     public const STATUSES = [
         'prospect' => '見込み',
@@ -166,9 +168,7 @@ class Customer extends Model
 
         // 検索フォームの作成欄に入力がある場合
         // 検索範囲の終了日と開始日を入れ替え処理
-        if ($from && $to && $from > $to) {
-            [$from, $to] = [$to, $from];
-        }
+        [$from, $to] = $this->normalizeRange($from, $to);
         // 作成日検索の条件をクエリに追加
         if ($from) {
             $query->where('created_at', '>=', $from);
