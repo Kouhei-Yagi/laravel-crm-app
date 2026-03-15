@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\RangeNormalizer;
+use App\Traits\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Sortable;
 
 class Interaction extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use Sortable;
+    use RangeNormalizer;
 
     public const TYPE = [
         'phone' => '電話',
@@ -99,10 +101,8 @@ class Interaction extends Model
             return $query;
         }
 
-        // ユーザーが誤って「開始 > 終了」で入力した場合、正しく絞り込みできるように、値を入れ替える
-        if ($from && $to && $from > $to) {
-            [$from, $to] = [$to, $from];
-        }
+        // ユーザーが誤って「開始 > 終了」で入力した場合、正しく絞り込みできるように、Trait を活用して値を入れ替える
+        [$from, $to] = $this->normalizeRange($from, $to);
         // 開始日が入力されている場合、その日以降の案件履歴に絞り込むための条件を追加
         if ($from) {
             $query->where('interacted_at', '>=', $from);
