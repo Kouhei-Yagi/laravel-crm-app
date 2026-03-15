@@ -244,9 +244,7 @@ class Project extends Model
 
         // 検索フォームの作成日欄に入力がある場合
         // 検索範囲の終了日と開始日を入れ替える処理
-        if ($from && $to && $from > $to) {
-            [$from, $to] = [$to, $from];
-        }
+        [$from, $to] = $this->normalizeRange($from, $to);
         // 作成日検索の条件をクエリに追加
         if ($from) {
             $query->whereDate('created_at', '>=', $from);
