@@ -34,30 +34,9 @@ class InteractionController extends Controller
             ->filter($request)
             ->sort($request);
 
-        // // ＜ソート処理＞
-        // // クエリパラメータの値を取得（値がなければデフォルト値を使用）
-        // $sort = $request->get('sort', 'interacted_at');
-        // $direction = $request->get('direction', 'desc');
-
-        // // ソート対象カラムと direction のホワイトリスト（SQL インジェクション対策）
-        // $sortable = ['interacted_at', 'customer_kana'];
-        // $direction = $direction === 'asc' ? 'asc' : 'desc'; // asc と desc のみ許可
-
-        // // テーブル結合・取得カラム選択（外部テーブルのカラムでソートするため）
-        // if ($sort === 'customer_kana') {
-        //     $query->leftJoin('customers', 'interactions.customer_id', '=', 'customers.id')
-        //         ->select('interactions.*', 'customers.kana as customer_kana');
-        // }
-
-        // // ソート対象カラムの場合、クエリにソート処理の追加
-        // if (in_array($sort, $sortable, true)) {
-        //     $query->orderBy($sort, $direction);
-        // }
-
         // ページ移動時に検索条件が失われないよう、クエリパラメータを引き継いでページングする
         $interactions = $query->paginate(20)->appends(request()->query());
 
-        // 一覧表示に必要なデータをビューへ渡す
         return view('interactions.index', compact('types', 'customers', 'assignedUsers', 'interactions'));
     }
 
