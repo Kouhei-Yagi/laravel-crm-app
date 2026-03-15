@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Sortable;
 
 class Interaction extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use Sortable;
 
     public const TYPE = [
         'phone' => '電話',
@@ -31,6 +33,14 @@ class Interaction extends Model
     protected $casts = [
         'interacted_at' => 'datetime',
     ];
+
+    protected array $sortable = [
+        'interacted_at',
+        'customer_kana',
+    ];
+
+    protected string $defaultSort = 'interacted_at';
+    protected string $defaultDirection = 'desc';
 
     public function customer()
     {
