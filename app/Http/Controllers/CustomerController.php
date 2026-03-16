@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerSearchRequest;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,17 +12,11 @@ class CustomerController extends Controller
     /**
      * 顧客一覧を表示する
      *
-     * @param mixed $request
+     * @param CustomerSearchRequest $request
      * @return \Illuminate\Contracts\View\View
      */
-    public function index(Request $request)
+    public function index(CustomerSearchRequest $request)
     {
-        // 不正な日付入力による検索エラーを防ぐため、対応日時の形式をチェックする
-        $request->validate([
-            'created_from' => 'nullable|date',
-            'created_to' => 'nullable|date',
-        ]);
-
         // 画面で選択肢として表示するため、ステータス・担当者のデータを取得する
         $statuses = Customer::STATUSES;
         $assignedUsers = User::all();
@@ -32,7 +27,7 @@ class CustomerController extends Controller
             ->sort($request);
 
         // ページ移動時に検索条件が失われないよう、クエリパラメータを引き継いでページングする
-        $customers = $query->paginate(20)->appends(request()->query());
+        $customers = $query->paginate(20)->appends($request->query());
 
         return view('customers.index', compact('statuses', 'assignedUsers', 'customers'));
     }
