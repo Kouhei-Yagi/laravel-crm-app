@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectSearchRequest;
+use App\Http\Requests\ProjectStoreRequest;
 use App\Models\Customer;
 use App\Models\Project;
 use App\Models\User;
@@ -54,30 +55,20 @@ class ProjectController extends Controller
     /**
      * 案件新規登録処理
      *
-     * @param Request $request
+     * @param ProjectStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(ProjectStoreRequest $request)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'customer_id' => 'required|integer|exists:customers,id',
-            'description' => 'nullable|string|max:2000',
-            'status' => 'required|in:' . implode(',', array_keys(Project::STATUSES)),
-            'amount' => 'nullable|integer|min:0',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'memo' => 'nullable|string|max:2000',
-        ]);
+        // 安全に登録するため、バリデーション済の値を取得
+        $validated = $request->validated();
 
-        // 担当者はログインユーザーに固定
+        // 担当者は必ずログインユーザーにするため、担当者IDを固定
         $validated['assigned_user_id'] = auth()->id();
 
-        // バリデーションされたデータを取得して登録
+        // 登録処理
         Project::create($validated);
 
-        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('projects.index')
             ->with('success', '登録しました。');
