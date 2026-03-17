@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerSearchRequest;
+use App\Http\Requests\CustomerStoreRequest;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -52,35 +53,20 @@ class CustomerController extends Controller
     /**
      * 顧客新規登録処理
      *
-     * @param Request $request
+     * @param CustomerStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(CustomerStoreRequest $request)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'kana' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|regex:/^[0-9\-]+$/|max:20',
-            'company_name' => 'nullable|string|max:255',
-            'department' => 'nullable|string|max:255',
-            'position' => 'nullable|string|max:255',
-            'postal_code' => 'nullable|digits:7',
-            'address' => 'nullable|string|max:255',
-            'address_detail' => 'nullable|string|max:255',
-            'status' => 'required|in:' . implode(',', array_keys(Customer::STATUSES)),
-            'rank' => 'required|in:' . implode(',', array_keys(Customer::RANKS)),
-            'memo' => 'nullable|string|max:2000',
-        ]);
+        // 安全に登録するため、バリデーション済の値を取得
+        $validated = $request->validated();
 
-        // 担当者はログインユーザーに固定
+        // 担当者は必ずログインユーザーするめた、担当者IDを固定
         $validated['assigned_user_id'] = auth()->id();
 
-        // バリデーションされたデータを取得して登録
+        // 登録処理
         Customer::create($validated);
 
-        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('customers.index')
             ->with('success', '登録しました。');
