@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerSearchRequest;
 use App\Http\Requests\CustomerStoreRequest;
+use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -61,7 +62,7 @@ class CustomerController extends Controller
         // 安全に登録するため、バリデーション済の値を取得
         $validated = $request->validated();
 
-        // 担当者は必ずログインユーザーするめた、担当者IDを固定
+        // 担当者は必ずログインユーザーするため、担当者IDを固定
         $validated['assigned_user_id'] = auth()->id();
 
         // 登録処理
@@ -105,36 +106,21 @@ class CustomerController extends Controller
     /**
      * 顧客更新処理
      *
-     * @param Request $request
+     * @param CustomerUpdateRequest $request
      * @param Customer $customer
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Customer $customer)
+    public function update(CustomerUpdateRequest $request, Customer $customer)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'kana' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|regex:/^[0-9\-]+$/|max:20',
-            'company_name' => 'nullable|string|max:255',
-            'department' => 'nullable|string|max:255',
-            'position' => 'nullable|string|max:255',
-            'postal_code' => 'nullable|digits:7',
-            'address' => 'nullable|string|max:255',
-            'address_detail' => 'nullable|string|max:255',
-            'status' => 'required|in:' . implode(',', array_keys(Customer::STATUSES)),
-            'rank' => 'required|in:' . implode(',', array_keys(Customer::RANKS)),
-            'memo' => 'nullable|string|max:2000',
-        ]);
+        // 安全に更新するため、バリデーション済の値を取得
+        $validated = $request->validated();
 
-        // 担当者は変更不可
+        // 担当者は必ずログインユーザーするため、担当者IDを固定
         $validated['assigned_user_id'] = $customer->assigned_user_id;
 
-        // バリデーションされたデータを取得して更新
+        // 更新処理
         $customer->update($validated);
 
-        // showビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('customers.show', $customer)
             ->with('success', '更新しました。');
