@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectSearchRequest;
 use App\Http\Requests\ProjectStoreRequest;
+use App\Http\Requests\ProjectUpdateRequest;
 use App\Models\Customer;
 use App\Models\Project;
 use App\Models\User;
@@ -104,31 +105,22 @@ class ProjectController extends Controller
     /**
      * 案件更新処理
      *
-     * @param Request $request
+     * @param ProjectUpdateRequest $request
      * @param Project $project
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Project $project)
+    public function update(ProjectUpdateRequest $request, Project $project)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:2000',
-            'status' => 'required|in:' . implode(',', array_keys(Project::STATUSES)),
-            'amount' => 'nullable|integer|min:0',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'memo' => 'nullable|string|max:2000',
-        ]);
+        // 安全に更新するために、バリデーション済の値を取得
+        $validated = $request->validated();
 
-        // 顧客及び担当者は変更不可
+        // 顧客・担当者は必ずログインユーザーに紐づくものだけにするため、顧客ID・担当者IDは固定
         $validated['customer_id'] = $project->customer_id;
         $validated['assigned_user_id'] = $project->assigned_user_id;
 
-        // バリデーションされたデータを取得して更新
+        // 更新処理
         $project->update($validated);
 
-        // showビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('projects.show', $project)
             ->with('success', '更新しました。');
