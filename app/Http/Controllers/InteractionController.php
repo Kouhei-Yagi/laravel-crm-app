@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InteractionSearchRequest;
 use App\Models\Customer;
 use App\Models\Interaction;
 use App\Models\Project;
@@ -13,17 +14,11 @@ class InteractionController extends Controller
     /**
      * 案件履歴一覧を表示する
      *
-     * @param mixed $request
+     * @param InteractionSearchRequest $request
      * @return \Illuminate\Contracts\View\View
      */
-    public function index(Request $request)
+    public function index(InteractionSearchRequest $request)
     {
-        // 不正な日付入力による検索エラーを防ぐため、対応日時の形式をチェックする
-        $request->validate([
-            'interacted_from' => 'nullable|date',
-            'interacted_to' => 'nullable|date',
-        ]);
-
         // 画面で選択肢として表示するため、対応種別・顧客名・担当者のデータを取得する
         $types = Interaction::TYPE;
         $customers = Customer::orderBy('kana')->get();
@@ -35,7 +30,7 @@ class InteractionController extends Controller
             ->sort($request);
 
         // ページ移動時に検索条件が失われないよう、クエリパラメータを引き継いでページングする
-        $interactions = $query->paginate(20)->appends(request()->query());
+        $interactions = $query->paginate(20)->appends($request->query());
 
         return view('interactions.index', compact('types', 'customers', 'assignedUsers', 'interactions'));
     }
