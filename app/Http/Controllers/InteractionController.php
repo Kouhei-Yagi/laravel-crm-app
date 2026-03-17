@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InteractionSearchRequest;
 use App\Http\Requests\InteractionStoreRequest;
+use App\Http\Requests\InteractionUpdateRequest;
 use App\Models\Customer;
 use App\Models\Interaction;
 use App\Models\Project;
@@ -47,7 +48,7 @@ class InteractionController extends Controller
         $types = Interaction::TYPE;
 
         // 案件名の選択肢
-        $projects = Project::where('id', auth()->id())->get();
+        $projects = Project::where('assigned_user_id', auth()->id())->get();
 
         // 顧客名の選択肢をログインユーザーが担当している顧客のみにする
         $customers = Customer::where('assigned_user_id', auth()->id())->get();
@@ -108,28 +109,23 @@ class InteractionController extends Controller
     /**
      * 案件履歴更新処理
      *
-     * @param Request $request
+     * @param InteractionUpdateRequest $request
      * @param Interaction $interaction
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Interaction $interaction)
+    public function update(InteractionUpdateRequest $request, Interaction $interaction)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'interacted_at' => 'required|date_format:Y-m-d\TH:i',
-            'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
-            'content' => 'required|string|max:2000',
-            'memo' => 'nullable|string|max:2000',
-        ]);
-        // 顧客ID・案件ID・担当者は変更不可
+        // 安全に更新するために、バリデーション済の値を取得
+        $validated = $request->validated();
+
+        // 顧客名・案件名・担当者は必ずログインユーザーに紐づくものだけにするため、顧客ID・案件ID・担当者IDは固定
         $validated['customer_id'] = $interaction->customer_id;
         $validated['project_id'] = $interaction->project_id;
         $validated['assigned_user_id'] = $interaction->assigned_user_id;
 
-        // バリデーションされたデータを取得して更新
+        // 更新処理
         $interaction->update($validated);
 
-        // showビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('interactions.show', $interaction)
             ->with('success', '更新しました。');
