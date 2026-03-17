@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerSearchRequest;
+use App\Http\Requests\CustomerStoreRequest;
+use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,17 +14,11 @@ class CustomerController extends Controller
     /**
      * 顧客一覧を表示する
      *
-     * @param mixed $request
+     * @param CustomerSearchRequest $request
      * @return \Illuminate\Contracts\View\View
      */
-    public function index(Request $request)
+    public function index(CustomerSearchRequest $request)
     {
-        // 不正な日付入力による検索エラーを防ぐため、対応日時の形式をチェックする
-        $request->validate([
-            'created_from' => 'nullable|date',
-            'created_to' => 'nullable|date',
-        ]);
-
         // 画面で選択肢として表示するため、ステータス・担当者のデータを取得する
         $statuses = Customer::STATUSES;
         $assignedUsers = User::all();
@@ -32,7 +29,7 @@ class CustomerController extends Controller
             ->sort($request);
 
         // ページ移動時に検索条件が失われないよう、クエリパラメータを引き継いでページングする
-        $customers = $query->paginate(20)->appends(request()->query());
+        $customers = $query->paginate(20)->appends($request->query());
 
         return view('customers.index', compact('statuses', 'assignedUsers', 'customers'));
     }
@@ -57,35 +54,20 @@ class CustomerController extends Controller
     /**
      * 顧客新規登録処理
      *
-     * @param Request $request
+     * @param CustomerStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(CustomerStoreRequest $request)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'kana' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|regex:/^[0-9\-]+$/|max:20',
-            'company_name' => 'nullable|string|max:255',
-            'department' => 'nullable|string|max:255',
-            'position' => 'nullable|string|max:255',
-            'postal_code' => 'nullable|digits:7',
-            'address' => 'nullable|string|max:255',
-            'address_detail' => 'nullable|string|max:255',
-            'status' => 'required|in:' . implode(',', array_keys(Customer::STATUSES)),
-            'rank' => 'required|in:' . implode(',', array_keys(Customer::RANKS)),
-            'memo' => 'nullable|string|max:2000',
-        ]);
+        // 安全に登録するため、バリデーション済の値を取得
+        $validated = $request->validated();
 
-        // 担当者はログインユーザーに固定
+        // 担当者は必ずログインユーザーするため、担当者IDを固定
         $validated['assigned_user_id'] = auth()->id();
 
-        // バリデーションされたデータを取得して登録
+        // 登録処理
         Customer::create($validated);
 
-        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('customers.index')
             ->with('success', '登録しました。');
@@ -124,36 +106,21 @@ class CustomerController extends Controller
     /**
      * 顧客更新処理
      *
-     * @param Request $request
+     * @param CustomerUpdateRequest $request
      * @param Customer $customer
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Customer $customer)
+    public function update(CustomerUpdateRequest $request, Customer $customer)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'kana' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|regex:/^[0-9\-]+$/|max:20',
-            'company_name' => 'nullable|string|max:255',
-            'department' => 'nullable|string|max:255',
-            'position' => 'nullable|string|max:255',
-            'postal_code' => 'nullable|digits:7',
-            'address' => 'nullable|string|max:255',
-            'address_detail' => 'nullable|string|max:255',
-            'status' => 'required|in:' . implode(',', array_keys(Customer::STATUSES)),
-            'rank' => 'required|in:' . implode(',', array_keys(Customer::RANKS)),
-            'memo' => 'nullable|string|max:2000',
-        ]);
+        // 安全に更新するため、バリデーション済の値を取得
+        $validated = $request->validated();
 
-        // 担当者は変更不可
+        // 担当者は必ずログインユーザーするため、担当者IDを固定
         $validated['assigned_user_id'] = $customer->assigned_user_id;
 
-        // バリデーションされたデータを取得して更新
+        // 更新処理
         $customer->update($validated);
 
-        // showビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('customers.show', $customer)
             ->with('success', '更新しました。');

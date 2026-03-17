@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InteractionSearchRequest;
+use App\Http\Requests\InteractionStoreRequest;
+use App\Http\Requests\InteractionUpdateRequest;
 use App\Models\Customer;
 use App\Models\Interaction;
 use App\Models\Project;
@@ -13,17 +16,11 @@ class InteractionController extends Controller
     /**
      * 案件履歴一覧を表示する
      *
-     * @param mixed $request
+     * @param InteractionSearchRequest $request
      * @return \Illuminate\Contracts\View\View
      */
-    public function index(Request $request)
+    public function index(InteractionSearchRequest $request)
     {
-        // 不正な日付入力による検索エラーを防ぐため、対応日時の形式をチェックする
-        $request->validate([
-            'interacted_from' => 'nullable|date',
-            'interacted_to' => 'nullable|date',
-        ]);
-
         // 画面で選択肢として表示するため、対応種別・顧客名・担当者のデータを取得する
         $types = Interaction::TYPE;
         $customers = Customer::orderBy('kana')->get();
@@ -35,7 +32,7 @@ class InteractionController extends Controller
             ->sort($request);
 
         // ページ移動時に検索条件が失われないよう、クエリパラメータを引き継いでページングする
-        $interactions = $query->paginate(20)->appends(request()->query());
+        $interactions = $query->paginate(20)->appends($request->query());
 
         return view('interactions.index', compact('types', 'customers', 'assignedUsers', 'interactions'));
     }
@@ -51,7 +48,7 @@ class InteractionController extends Controller
         $types = Interaction::TYPE;
 
         // 案件名の選択肢
-        $projects = Project::where('id', auth()->id())->get();
+        $projects = Project::where('assigned_user_id', auth()->id())->get();
 
         // 顧客名の選択肢をログインユーザーが担当している顧客のみにする
         $customers = Customer::where('assigned_user_id', auth()->id())->get();
@@ -63,27 +60,20 @@ class InteractionController extends Controller
     /**
      * 案件履歴新規登録処理
      *
-     * @param Request $request
+     * @param InteractionStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(InteractionStoreRequest $request)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'interacted_at' => 'required|date_format:Y-m-d\TH:i',
-            'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
-            'content' => 'required|string|max:2000',
-            'memo' => 'nullable|string|max:2000',
-            'project_id' => 'nullable|integer|exists:projects,id',
-            'customer_id' => 'required|integer|exists:customers,id',
-        ]);
-        // 担当者はログインユーザーに固定
+        // 安全に登録するために、バリデーション済の値を取得
+        $validated = $request->validated();
+
+        // 担当者は必ずログインユーザーにするため、担当者IDは固定
         $validated['assigned_user_id'] = auth()->id();
 
-        // バリデーションされたデータを取得して登録
+        // 登録処理
         Interaction::create($validated);
 
-        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('interactions.index')
             ->with('success', '登録しました。');
@@ -119,28 +109,23 @@ class InteractionController extends Controller
     /**
      * 案件履歴更新処理
      *
-     * @param Request $request
+     * @param InteractionUpdateRequest $request
      * @param Interaction $interaction
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Interaction $interaction)
+    public function update(InteractionUpdateRequest $request, Interaction $interaction)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'interacted_at' => 'required|date_format:Y-m-d\TH:i',
-            'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
-            'content' => 'required|string|max:2000',
-            'memo' => 'nullable|string|max:2000',
-        ]);
-        // 顧客ID・案件ID・担当者は変更不可
+        // 安全に更新するために、バリデーション済の値を取得
+        $validated = $request->validated();
+
+        // 顧客名・案件名・担当者は必ずログインユーザーに紐づくものだけにするため、顧客ID・案件ID・担当者IDは固定
         $validated['customer_id'] = $interaction->customer_id;
         $validated['project_id'] = $interaction->project_id;
         $validated['assigned_user_id'] = $interaction->assigned_user_id;
 
-        // バリデーションされたデータを取得して更新
+        // 更新処理
         $interaction->update($validated);
 
-        // showビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('interactions.show', $interaction)
             ->with('success', '更新しました。');

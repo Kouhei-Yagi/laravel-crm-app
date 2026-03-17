@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProjectSearchRequest;
+use App\Http\Requests\ProjectStoreRequest;
+use App\Http\Requests\ProjectUpdateRequest;
 use App\Models\Customer;
 use App\Models\Project;
 use App\Models\User;
@@ -12,19 +15,11 @@ class ProjectController extends Controller
     /**
      * 案件一覧を表示する
      *
-     * @param mixed $request
+     * @param  ProjectSearchRequest $request
      * @return \Illuminate\Contracts\View\View
      */
-    public function index(Request $request)
+    public function index(ProjectSearchRequest $request)
     {
-        // 不正な日付入力による検索エラーを防ぐため、対応日時の形式をチェックする
-        $request->validate([
-            'start_from' => 'nullable|date',
-            'end_to' => 'nullable|date',
-            'created_from' => 'nullable|date',
-            'created_to' => 'nullable|date',
-        ]);
-
         // 画面で選択肢として表示するため、顧客名・ステータス・担当者のデータを取得する
         $customers = Customer::orderBy('kana')->get();
         $statuses = Project::STATUSES;
@@ -61,30 +56,20 @@ class ProjectController extends Controller
     /**
      * 案件新規登録処理
      *
-     * @param Request $request
+     * @param ProjectStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(ProjectStoreRequest $request)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'customer_id' => 'required|integer|exists:customers,id',
-            'description' => 'nullable|string|max:2000',
-            'status' => 'required|in:' . implode(',', array_keys(Project::STATUSES)),
-            'amount' => 'nullable|integer|min:0',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'memo' => 'nullable|string|max:2000',
-        ]);
+        // 安全に登録するため、バリデーション済の値を取得
+        $validated = $request->validated();
 
-        // 担当者はログインユーザーに固定
+        // 担当者は必ずログインユーザーにするため、担当者IDを固定
         $validated['assigned_user_id'] = auth()->id();
 
-        // バリデーションされたデータを取得して登録
+        // 登録処理
         Project::create($validated);
 
-        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('projects.index')
             ->with('success', '登録しました。');
@@ -120,31 +105,22 @@ class ProjectController extends Controller
     /**
      * 案件更新処理
      *
-     * @param Request $request
+     * @param ProjectUpdateRequest $request
      * @param Project $project
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Project $project)
+    public function update(ProjectUpdateRequest $request, Project $project)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:2000',
-            'status' => 'required|in:' . implode(',', array_keys(Project::STATUSES)),
-            'amount' => 'nullable|integer|min:0',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'memo' => 'nullable|string|max:2000',
-        ]);
+        // 安全に更新するために、バリデーション済の値を取得
+        $validated = $request->validated();
 
-        // 顧客及び担当者は変更不可
+        // 顧客・担当者は必ずログインユーザーに紐づくものだけにするため、顧客ID・担当者IDは固定
         $validated['customer_id'] = $project->customer_id;
         $validated['assigned_user_id'] = $project->assigned_user_id;
 
-        // バリデーションされたデータを取得して更新
+        // 更新処理
         $project->update($validated);
 
-        // showビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('projects.show', $project)
             ->with('success', '更新しました。');
