@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\InteractionSearchRequest;
+use App\Http\Requests\InteractionStoreRequest;
 use App\Models\Customer;
 use App\Models\Interaction;
 use App\Models\Project;
@@ -58,27 +59,20 @@ class InteractionController extends Controller
     /**
      * 案件履歴新規登録処理
      *
-     * @param Request $request
+     * @param InteractionStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(InteractionStoreRequest $request)
     {
-        // 入力値をバリデーション処理
-        $validated = $request->validate([
-            'interacted_at' => 'required|date_format:Y-m-d\TH:i',
-            'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
-            'content' => 'required|string|max:2000',
-            'memo' => 'nullable|string|max:2000',
-            'project_id' => 'nullable|integer|exists:projects,id',
-            'customer_id' => 'required|integer|exists:customers,id',
-        ]);
-        // 担当者はログインユーザーに固定
+        // 安全に登録するために、バリデーション済の値を取得
+        $validated = $request->validated();
+
+        // 担当者は必ずログインユーザーにするため、担当者IDは固定
         $validated['assigned_user_id'] = auth()->id();
 
-        // バリデーションされたデータを取得して登録
+        // 登録処理
         Interaction::create($validated);
 
-        // indexビューにリダイレクト・フラッシュメッセージを送信
         return redirect()
             ->route('interactions.index')
             ->with('success', '登録しました。');
