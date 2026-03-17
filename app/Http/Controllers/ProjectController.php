@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProjectSearchRequest;
 use App\Models\Customer;
 use App\Models\Project;
 use App\Models\User;
@@ -12,19 +13,11 @@ class ProjectController extends Controller
     /**
      * 案件一覧を表示する
      *
-     * @param mixed $request
+     * @param  ProjectSearchRequest $request
      * @return \Illuminate\Contracts\View\View
      */
-    public function index(Request $request)
+    public function index(ProjectSearchRequest $request)
     {
-        // 不正な日付入力による検索エラーを防ぐため、対応日時の形式をチェックする
-        $request->validate([
-            'start_from' => 'nullable|date',
-            'end_to' => 'nullable|date',
-            'created_from' => 'nullable|date',
-            'created_to' => 'nullable|date',
-        ]);
-
         // 画面で選択肢として表示するため、顧客名・ステータス・担当者のデータを取得する
         $customers = Customer::orderBy('kana')->get();
         $statuses = Project::STATUSES;
