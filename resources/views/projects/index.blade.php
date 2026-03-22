@@ -8,10 +8,9 @@
             </h2>
 
             {{-- ボタン --}}
-            <a href="{{ route('projects.create') }}"
-                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+            <x-button.primary href="{{ route('projects.create') }}">
                 新規作成
-            </a>
+            </x-button.primary>
         </div>
     </x-slot>
 
