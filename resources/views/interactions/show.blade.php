@@ -91,10 +91,9 @@
 
                     {{-- ボタン --}}
                     <div class="flex items-center gap-4 mt-6">
-                        <a href="{{ route('interactions.edit', $interaction) }}"
-                            class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-500">
+                        <x-button.primary href="{{ route('interactions.edit', $interaction) }}">
                             編集
-                        </a>
+                        </x-button.primary>
 
                         <form action="{{ route('interactions.destroy', $interaction) }}" method="post">
                             @csrf
