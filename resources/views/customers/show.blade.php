@@ -122,10 +122,9 @@
 
                     {{-- ボタン --}}
                     <div class="flex items-center gap-4 mt-6">
-                        <a href="{{ route('customers.edit', $customer) }}"
-                            class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-500">
+                        <x-button.primary href="{{ route('customers.edit', $customer) }}">
                             編集
-                        </a>
+                        </x-button.primary>
 
                         <form action="{{ route('customers.destroy', $customer) }}" method="post" class="inline-block">
                             @csrf
