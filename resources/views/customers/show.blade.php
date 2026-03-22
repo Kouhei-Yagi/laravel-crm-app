@@ -135,10 +135,9 @@
                             </button>
                         </form>
 
-                        <a href="{{ route('customers.index') }}"
-                            class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
+                        <x-button.secondary href="{{ route('customers.index') }}">
                             一覧に戻る
-                        </a>
+                        </x-button.secondary>
                     </div>
 
                 </div>
