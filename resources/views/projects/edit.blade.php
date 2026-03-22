@@ -151,10 +151,9 @@
                                 更新
                             </x-button.primary>
 
-                            <a href="{{ route('projects.show', $project) }}"
-                                class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
-                                詳細ページに戻る
-                            </a>
+                            <x-button.secondary href="{{ route('projects.show', $project) }}">
+                                詳細に戻る
+                            </x-button.secondary>
                         </div>
 
                     </form>
