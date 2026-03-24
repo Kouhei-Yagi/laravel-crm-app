@@ -99,8 +99,9 @@
                         <form action="{{ route('projects.destroy', $project) }}" method="post" class="inline-block">
                             @csrf
                             @method('delete')
-                            <button type="submit" onclick="return confirm('本当に削除しますか？')"
-                                class="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 dark:hover:bg-red-500">削除</button>
+                            <x-button.danger type="submit" onclick="return confirm('本当に削除しますか？')">
+                                削除
+                            </x-button.danger>
                         </form>
 
                         <x-button.secondary href="{{ route('projects.index') }}">
