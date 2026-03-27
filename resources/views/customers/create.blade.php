@@ -59,19 +59,12 @@
                         <h3 class="font-semibold text-lg">住所情報</h3>
 
                         {{-- 郵便番号 --}}
-                        <div>
-                            <label for="postal_code" class="block mb-1">郵便番号</label>
-
-                            <input type="text" id="postal_code" name="postal_code"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：1234567（「-」は省略してください。）" value="{{ old('postal_code') }}">
-
-                            @error('postal_code')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-input
+                            name="postal_code"
+                            id="postal_code"
+                            placeholder="例：12334567"
+                            help="半角数字7桁で入力してください。"
+                        />
 
                         {{-- 住所 --}}
                         <div>
