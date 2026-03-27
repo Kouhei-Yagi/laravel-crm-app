@@ -31,19 +31,13 @@
                         />
 
                         {{-- フリガナ --}}
-                        <div>
-                            <label for="kana" class="block mb-1">フリガナ</label>
-
-                            <input type="text" id="kana" name="kana"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：ヤマダ タロウ（「性」と「名」の間には半角スペースを入れてください。）" value="{{ old('kana') }}">
-
-                            @error('kana')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-input
+                            name="kana"
+                            id="kana"
+                            label="フリガナ"
+                            placeholder="例：ヤマダ タロウ"
+                            help="性と名の間に半角スペースを入れて入力してください。"
+                        />
 
                         {{-- メール --}}
                         <div>
