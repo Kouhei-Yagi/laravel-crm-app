@@ -67,19 +67,11 @@
                         />
 
                         {{-- 住所 --}}
-                        <div>
-                            <label for="address" class="block mb-1">住所</label>
-
-                            <input type="text" id="address" name="address"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：福岡県福岡市〇〇" value="{{ old('address') }}">
-
-                            @error('address')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-input
+                            name="address"
+                            id="address"
+                            placeholder="例：福岡県福岡市〇〇"
+                        />
 
                         {{-- 住所詳細 --}}
                         <div>
