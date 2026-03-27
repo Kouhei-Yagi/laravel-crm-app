@@ -20,22 +20,17 @@
                         {{-- 基本情報 --}}
                         <h3 class="font-semibold text-lg">基本情報</h3>
 
-                        <div>
-                            <label for="name" class="block mb-1">
-                                顧客名 <span class="text-red-500">*</span>
-                            </label>
+                        {{-- 顧客名 --}}
+                        <x-input
+                            name="name"
+                            id="name"
+                            label="顧客名"
+                            required
+                            placeholder="例：山田 太郎"
+                            help="姓と名の間に半角スペースを入れて入力してください。"
+                        />
 
-                            <input type="text" id="name" name="name"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：山田 太郎（「性」と「名」の間には半角スペースを入れてください。）" value="{{ old('name') }}">
-
-                            @error('name')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
+                        {{-- フリガナ --}}
                         <div>
                             <label for="kana" class="block mb-1">フリガナ</label>
 
@@ -50,6 +45,7 @@
                             @enderror
                         </div>
 
+                        {{-- メール --}}
                         <div>
                             <label for="email" class="block mb-1">メール</label>
 
@@ -64,6 +60,7 @@
                             @enderror
                         </div>
 
+                        {{-- 電話番号 --}}
                         <div>
                             <label for="phone" class="block mb-1">電話番号</label>
 
@@ -81,6 +78,7 @@
                         {{-- 住所情報 --}}
                         <h3 class="font-semibold text-lg">住所情報</h3>
 
+                        {{-- 郵便番号 --}}
                         <div>
                             <label for="postal_code" class="block mb-1">郵便番号</label>
 
@@ -95,6 +93,7 @@
                             @enderror
                         </div>
 
+                        {{-- 住所 --}}
                         <div>
                             <label for="address" class="block mb-1">住所</label>
 
@@ -109,6 +108,7 @@
                             @enderror
                         </div>
 
+                        {{-- 住所詳細 --}}
                         <div>
                             <label for="address_detail" class="block mb-1">住所詳細</label>
 
@@ -126,6 +126,7 @@
                         {{-- 会社情報 --}}
                         <h3 class="font-semibold text-lg">会社情報</h3>
 
+                        {{-- 会社名 --}}
                         <div>
                             <label for="company_name" class="block mb-1">会社名</label>
 
@@ -140,6 +141,7 @@
                             @enderror
                         </div>
 
+                        {{-- 部署 --}}
                         <div>
                             <label for="department" class="block mb-1">部署</label>
 
@@ -154,6 +156,7 @@
                             @enderror
                         </div>
 
+                        {{-- 役職 --}}
                         <div>
                             <label for="position" class="block mb-1">役職</label>
 
@@ -171,6 +174,7 @@
                         {{-- 管理情報 --}}
                         <h3 class="font-semibold text-lg">管理情報</h3>
 
+                        {{-- ステータス --}}
                         <div>
                             <label for="status" class="block mb-1">
                                 ステータス <span class="text-red-500">*</span>
@@ -193,6 +197,7 @@
                             @enderror
                         </div>
 
+                        {{-- ランク --}}
                         <div>
                             <label for="rank" class="block mb-1">
                                 ランク <span class="text-red-500">*</span>
