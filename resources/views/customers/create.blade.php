@@ -44,6 +44,7 @@
                             name="email"
                             id="email"
                             type="email"
+                            label="メール"
                             placeholder="例：example@example.com"
                         />
 
@@ -52,6 +53,7 @@
                             name="phone"
                             id="phone"
                             type="tel"
+                            label="電話番号"
                             placeholder="例：090-1234-5678"
                         />
 
@@ -62,6 +64,7 @@
                         <x-input
                             name="postal_code"
                             id="postal_code"
+                            label="郵便番号"
                             placeholder="例：12334567"
                             help="半角数字7桁で入力してください。"
                         />
@@ -70,6 +73,7 @@
                         <x-input
                             name="address"
                             id="address"
+                            label="住所"
                             placeholder="例：福岡県福岡市〇〇"
                         />
 
@@ -77,6 +81,7 @@
                         <x-input
                             name="address_detail"
                             id="address_detail"
+                            label="住所詳細"
                             placeholder="例：1-2-3 〇〇マンション101号室"
                             help="番地・建物名・部屋番号を入力してください。"
                         />
@@ -88,23 +93,17 @@
                         <x-input
                             name="company_name"
                             id="company_name"
+                            label="会社名"
                             placeholder="例：株式会社サンプル"
                         />
 
                         {{-- 部署 --}}
-                        <div>
-                            <label for="department" class="block mb-1">部署</label>
-
-                            <input type="text" id="department" name="department" placeholder="例：営業部"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                value="{{ old('department') }}">
-
-                            @error('department')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-input
+                            name="department"
+                            id="department"
+                            label="部署名"
+                            placeholder="例：営業部"
+                        />
 
                         {{-- 役職 --}}
                         <div>
