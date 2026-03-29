@@ -85,19 +85,11 @@
                         <h3 class="font-semibold text-lg">会社情報</h3>
 
                         {{-- 会社名 --}}
-                        <div>
-                            <label for="company_name" class="block mb-1">会社名</label>
-
-                            <input type="text" id="company_name" name="company_name"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：株式会社サンプル" value="{{ old('company_name') }}">
-
-                            @error('company_name')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-input
+                            name="company_name"
+                            id="company_name"
+                            placeholder="例：株式会社サンプル"
+                        />
 
                         {{-- 部署 --}}
                         <div>
