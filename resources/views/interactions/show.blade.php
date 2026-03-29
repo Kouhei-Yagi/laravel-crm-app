@@ -91,24 +91,21 @@
 
                     {{-- ボタン --}}
                     <div class="flex items-center gap-4 mt-6">
-                        <a href="{{ route('interactions.edit', $interaction) }}"
-                            class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-500">
+                        <x-button.primary href="{{ route('interactions.edit', $interaction) }}">
                             編集
-                        </a>
+                        </x-button.primary>
 
                         <form action="{{ route('interactions.destroy', $interaction) }}" method="post">
                             @csrf
                             @method('delete')
-                            <button type="submit" onclick="return confirm('本当に削除しますか？')"
-                                class="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 dark:hover:bg-red-500">
+                            <x-button.danger type="submit" onclick="return confirm('本当に削除しますか？')">
                                 削除
-                            </button>
+                            </x-button.danger>
                         </form>
 
-                        <a href="{{ route('interactions.index') }}"
-                            class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
+                        <x-button.secondary href="{{ route('interactions.index') }}">
                             一覧に戻る
-                        </a>
+                        </x-button.secondary>
                     </div>
 
                 </div>

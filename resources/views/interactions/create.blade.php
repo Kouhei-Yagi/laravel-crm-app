@@ -140,15 +140,13 @@
 
                         {{-- ボタン --}}
                         <div class="flex items-center gap-4 mt-6">
-                            <button type="submit"
-                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            <x-button.primary type="submit">
                                 新規登録
-                            </button>
+                            </x-button.primary>
 
-                            <a href="{{ route('interactions.index') }}"
-                                class="inline-block px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 dark:hover:bg-gray-400">
+                            <x-button.secondary href="{{ route('interactions.index') }}">
                                 一覧に戻る
-                            </a>
+                            </x-button.secondary>
                         </div>
 
                     </form>
