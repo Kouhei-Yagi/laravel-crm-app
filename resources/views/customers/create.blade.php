@@ -117,27 +117,13 @@
                         <h3 class="font-semibold text-lg">管理情報</h3>
 
                         {{-- ステータス --}}
-                        <div>
-                            <label for="status" class="block mb-1">
-                                ステータス <span class="text-red-500">*</span>
-                            </label>
-
-                            <select id="status" name="status"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700">
-                                <option value="">選択してください</option>
-                                @foreach ($statuses as $key => $label)
-                                    <option value="{{ $key }}" @selected(old('status') == $key)>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('status')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-select
+                            name="status"
+                            id="status"
+                            label="ステータス"
+                            required
+                            :options="$statuses"
+                        />
 
                         {{-- ランク --}}
                         <div>
