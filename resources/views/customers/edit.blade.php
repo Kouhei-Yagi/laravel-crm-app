@@ -25,25 +25,22 @@
                         <x-input
                             name="name"
                             id="name"
+                            :value="$customer->name"
                             label="顧客名"
                             required
-                            placeholder="例：山田太郎"
+                            placeholder="例：山田 太郎"
                             help="姓と名の間に半角スペースを入れて入力してください。"
                         />
 
-                        <div>
-                            <label for="kana" class="block mb-1">フリガナ</label>
-
-                            <input type="text" id="kana" name="kana"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：ヤマダタロウ" value="{{ old('kana', $customer->kana) }}">
-
-                            @error('kana')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- フリガナ --}}
+                        <x-input
+                            name="kana"
+                            id="kana"
+                            :value="$customer->kana"
+                            label="フリガナ"
+                            placeholder="例：ヤマダ タロウ"
+                            help="性と名の間に半角スペースを入れて入力してください。"
+                        />
 
                         <div>
                             <label for="email" class="block mb-1">メール</label>
