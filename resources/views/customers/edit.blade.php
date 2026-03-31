@@ -21,21 +21,15 @@
                         {{-- 基本情報 --}}
                         <h3 class="font-semibold text-lg">基本情報</h3>
 
-                        <div>
-                            <label for="name" class="block mb-1">
-                                顧客名 <span class="text-red-500">*</span>
-                            </label>
-
-                            <input type="text" id="name" name="name"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：山田太郎" value="{{ old('name', $customer->name) }}">
-
-                            @error('name')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 顧客名 --}}
+                        <x-input
+                            name="name"
+                            id="name"
+                            label="顧客名"
+                            required
+                            placeholder="例：山田太郎"
+                            help="姓と名の間に半角スペースを入れて入力してください。"
+                        />
 
                         <div>
                             <label for="kana" class="block mb-1">フリガナ</label>
