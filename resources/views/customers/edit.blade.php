@@ -75,19 +75,14 @@
                             help="半角数字7桁で入力してください。"
                         />
 
-                        <div>
-                            <label for="address" class="block mb-1">住所</label>
-
-                            <input type="text" id="address" name="address"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：福岡県福岡市〇〇" value="{{ old('address', $customer->address) }}">
-
-                            @error('address')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 住所 --}}
+                        <x-input
+                            name="address"
+                            id="address"
+                            :value="$customer->address"
+                            label="住所"
+                            placeholder="例：福岡県福岡市〇〇"
+                        />
 
                         <div>
                             <label for="address_detail" class="block mb-1">住所詳細</label>
