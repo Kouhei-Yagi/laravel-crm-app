@@ -42,19 +42,15 @@
                             help="性と名の間に半角スペースを入れて入力してください。"
                         />
 
-                        <div>
-                            <label for="email" class="block mb-1">メール</label>
-
-                            <input type="email" id="email" name="email"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：example@example.com" value="{{ old('email', $customer->email) }}">
-
-                            @error('email')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- メール --}}
+                        <x-input
+                            name="email"
+                            id="email"
+                            type="email"
+                            :value="$customer->email"
+                            label="メール"
+                            placeholder="例：example@example.com"
+                        />
 
                         <div>
                             <label for="phone" class="block mb-1">電話番号</label>
