@@ -52,19 +52,15 @@
                             placeholder="例：example@example.com"
                         />
 
-                        <div>
-                            <label for="phone" class="block mb-1">電話番号</label>
-
-                            <input type="tel" id="phone" name="phone"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：090-1234-5678" value="{{ old('phone', $customer->phone) }}">
-
-                            @error('phone')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 電話番号 --}}
+                        <x-input
+                            name="phone"
+                            id="phone"
+                            type="tel"
+                            :value="$customer->phone"
+                            label="電話番号"
+                            placeholder="例：090-1234-5678"
+                        />
 
                         {{-- 住所情報 --}}
                         <h3 class="font-semibold text-lg">住所情報</h3>
