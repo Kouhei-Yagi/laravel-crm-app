@@ -106,19 +106,14 @@
                             placeholder="例：株式会社サンプル"
                         />
 
-                        <div>
-                            <label for="department" class="block mb-1">部署</label>
-
-                            <input type="text" id="department" name="department" placeholder="例：営業部"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                value="{{ old('department', $customer->department) }}">
-
-                            @error('department')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 部署 --}}
+                        <x-input
+                            name="department"
+                            id="department"
+                            :value="$customer->department"
+                            label="部署"
+                            placeholder="例：営業部"
+                        />
 
                         <div>
                             <label for="position" class="block mb-1">役職</label>
