@@ -84,20 +84,15 @@
                             placeholder="例：福岡県福岡市〇〇"
                         />
 
-                        <div>
-                            <label for="address_detail" class="block mb-1">住所詳細</label>
-
-                            <input type="text" id="address_detail" name="address_detail"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：マンション名・部屋番号など"
-                                value="{{ old('address_detail', $customer->address_detail) }}">
-
-                            @error('address_detail')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 住所詳細 --}}
+                        <x-input
+                            name="address_detail"
+                            id="address_detail"
+                            :value="$customer->address_detail"
+                            label="住所詳細"
+                            placeholder="例：〇〇マンション101号室"
+                            help="建物名・部屋番号などがある場合は入力してください。"
+                        />
 
                         {{-- 会社情報 --}}
                         <h3 class="font-semibold text-lg">会社情報</h3>
