@@ -137,27 +137,15 @@
                             :options="$statuses"
                         />
 
-                        <div>
-                            <label for="rank" class="block mb-1">
-                                ランク <span class="text-red-500">*</span>
-                            </label>
-
-                            <select id="rank" name="rank"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700">
-                                <option value="">選択してください</option>
-                                @foreach ($ranks as $key => $label)
-                                    <option value="{{ $key }}" @selected(old('rank', $customer->rank) == $key)>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('rank')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- ランク --}}
+                        <x-select
+                            name="rank"
+                            id="rank"
+                            :value="$customer->rank"
+                            label="ランク"
+                            required
+                            :options="$ranks"
+                        />
 
                         {{-- メモ --}}
                         <h3 class="font-semibold text-lg">メモ</h3>
