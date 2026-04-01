@@ -21,216 +21,141 @@
                         {{-- 基本情報 --}}
                         <h3 class="font-semibold text-lg">基本情報</h3>
 
-                        <div>
-                            <label for="name" class="block mb-1">
-                                顧客名 <span class="text-red-500">*</span>
-                            </label>
+                        {{-- 顧客名 --}}
+                        <x-input
+                            name="name"
+                            id="name"
+                            :value="$customer->name"
+                            label="顧客名"
+                            required
+                            placeholder="例：山田 太郎"
+                            help="姓と名の間に半角スペースを入れて入力してください。"
+                        />
 
-                            <input type="text" id="name" name="name"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：山田太郎" value="{{ old('name', $customer->name) }}">
+                        {{-- フリガナ --}}
+                        <x-input
+                            name="kana"
+                            id="kana"
+                            :value="$customer->kana"
+                            label="フリガナ"
+                            placeholder="例：ヤマダ タロウ"
+                            help="性と名の間に半角スペースを入れて入力してください。"
+                        />
 
-                            @error('name')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- メール --}}
+                        <x-input
+                            name="email"
+                            id="email"
+                            type="email"
+                            :value="$customer->email"
+                            label="メール"
+                            placeholder="例：example@example.com"
+                        />
 
-                        <div>
-                            <label for="kana" class="block mb-1">フリガナ</label>
-
-                            <input type="text" id="kana" name="kana"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：ヤマダタロウ" value="{{ old('kana', $customer->kana) }}">
-
-                            @error('kana')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="email" class="block mb-1">メール</label>
-
-                            <input type="email" id="email" name="email"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：example@example.com" value="{{ old('email', $customer->email) }}">
-
-                            @error('email')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="phone" class="block mb-1">電話番号</label>
-
-                            <input type="tel" id="phone" name="phone"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：090-1234-5678" value="{{ old('phone', $customer->phone) }}">
-
-                            @error('phone')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 電話番号 --}}
+                        <x-input
+                            name="phone"
+                            id="phone"
+                            type="tel"
+                            :value="$customer->phone"
+                            label="電話番号"
+                            placeholder="例：090-1234-5678"
+                        />
 
                         {{-- 住所情報 --}}
                         <h3 class="font-semibold text-lg">住所情報</h3>
 
-                        <div>
-                            <label for="postal_code" class="block mb-1">郵便番号</label>
+                        {{-- 郵便番号 --}}
+                        <x-input
+                            name="postal_code"
+                            id="postal_code"
+                            :value="$customer->postal_code"
+                            label="郵便番号"
+                            placeholder="例：1234567"
+                            help="半角数字7桁で入力してください。"
+                        />
 
-                            <input type="text" id="postal_code" name="postal_code"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：123-4567" value="{{ old('postal_code', $customer->postal_code) }}">
+                        {{-- 住所 --}}
+                        <x-input
+                            name="address"
+                            id="address"
+                            :value="$customer->address"
+                            label="住所"
+                            placeholder="例：福岡県福岡市〇〇"
+                        />
 
-                            @error('postal_code')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="address" class="block mb-1">住所</label>
-
-                            <input type="text" id="address" name="address"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：福岡県福岡市〇〇" value="{{ old('address', $customer->address) }}">
-
-                            @error('address')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="address_detail" class="block mb-1">住所詳細</label>
-
-                            <input type="text" id="address_detail" name="address_detail"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：マンション名・部屋番号など"
-                                value="{{ old('address_detail', $customer->address_detail) }}">
-
-                            @error('address_detail')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 住所詳細 --}}
+                        <x-input
+                            name="address_detail"
+                            id="address_detail"
+                            :value="$customer->address_detail"
+                            label="住所詳細"
+                            placeholder="例：〇〇マンション101号室"
+                            help="建物名・部屋番号などがある場合は入力してください。"
+                        />
 
                         {{-- 会社情報 --}}
                         <h3 class="font-semibold text-lg">会社情報</h3>
 
-                        <div>
-                            <label for="company_name" class="block mb-1">会社名</label>
+                        {{-- 会社名 --}}
+                        <x-input
+                            name="company_name"
+                            id="company_name"
+                            :value="$customer->company_name"
+                            label="会社名"
+                            placeholder="例：株式会社サンプル"
+                        />
 
-                            <input type="text" id="company_name" name="company_name"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                placeholder="例：株式会社サンプル" value="{{ old('company_name', $customer->company_name) }}">
+                        {{-- 部署 --}}
+                        <x-input
+                            name="department"
+                            id="department"
+                            :value="$customer->department"
+                            label="部署"
+                            placeholder="例：営業部"
+                        />
 
-                            @error('company_name')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="department" class="block mb-1">部署</label>
-
-                            <input type="text" id="department" name="department" placeholder="例：営業部"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                value="{{ old('department', $customer->department) }}">
-
-                            @error('department')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="position" class="block mb-1">役職</label>
-
-                            <input type="text" id="position" name="position" placeholder="例：課長"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                value="{{ old('position', $customer->position) }}">
-
-                            @error('position')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 役職 --}}
+                        <x-input
+                            name="position"
+                            id="position"
+                            :value="$customer->position"
+                            label="役職"
+                            placeholder="例：課長"
+                        />
 
                         {{-- 管理情報 --}}
                         <h3 class="font-semibold text-lg">管理情報</h3>
 
-                        <div>
-                            <label for="status" class="block mb-1">
-                                ステータス <span class="text-red-500">*</span>
-                            </label>
+                        {{-- ステータス --}}
+                        <x-select
+                            name="status"
+                            id="status"
+                            :value="$customer->status"
+                            label="ステータス"
+                            required
+                            :options="$statuses"
+                        />
 
-                            <select id="status" name="status"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700">
-                                <option value="">選択してください</option>
-                                @foreach ($statuses as $key => $label)
-                                    <option value="{{ $key }}" @selected(old('status', $customer->status) == $key)>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('status')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="rank" class="block mb-1">
-                                ランク <span class="text-red-500">*</span>
-                            </label>
-
-                            <select id="rank" name="rank"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700">
-                                <option value="">選択してください</option>
-                                @foreach ($ranks as $key => $label)
-                                    <option value="{{ $key }}" @selected(old('rank', $customer->rank) == $key)>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('rank')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- ランク --}}
+                        <x-select
+                            name="rank"
+                            id="rank"
+                            :value="$customer->rank"
+                            label="ランク"
+                            required
+                            :options="$ranks"
+                        />
 
                         {{-- メモ --}}
                         <h3 class="font-semibold text-lg">メモ</h3>
 
-                        <div>
-                            <textarea id="memo" name="memo"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700 whitespace-pre-line"
-                                placeholder="自由記述欄">{{ old('memo', $customer->memo) }}</textarea>
-
-                            @error('memo')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-textarea
+                            name="memo"
+                            id="memo"
+                            :value="$customer->memo"
+                            placeholder="自由記述欄"
+                        />
 
                         {{-- ボタン --}}
                         <div class="flex items-center gap-4 mt-6">

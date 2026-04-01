@@ -6,6 +6,7 @@ x-select コンポーネント
 @props([
     'name',          // フィールド名（必須）
     'id' => null,    // 未指定なら name を使う
+    'value' => null, // 初期値（old() と統合）
     'label' => null, // x-field に渡すラベル
     'required' => false, // 必須フラグ
     'help' => null,  // 補足説明
@@ -17,7 +18,7 @@ x-select コンポーネント
     $id = $id ?? $name;
 
     // old() があれば old を優先
-    $selectedValue = old($name);
+    $selectedValue = old($name, $value);
 
     // バリデーションエラーがあるかどうか
     $hasError = $errors->has($name);
@@ -43,6 +44,7 @@ x-select コンポーネント
     <select
         name="{{ $name }}"
         id="{{ $id }}"
+        value="{{ $selectedValue }}"
 
         @if ($hasError)
             aria-invalid="true"
