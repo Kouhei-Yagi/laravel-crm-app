@@ -43,13 +43,12 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        // 顧客名の選択肢をログインユーザーが担当している顧客のみにする
-        $customers = Customer::where('assigned_user_id', auth()->id())->get();
-
-        // ステータスの選択肢
+        // 画面で選択肢として表示するため、顧客名・ステータスのデータを取得する
+        $customers = Customer::where('assigned_user_id', auth()->id())
+            ->orderBy('kana')
+            ->pluck('name', 'id');
         $statuses = Project::STATUSES;
 
-        // 各選択肢の値を持ってcreateビューに遷移する
         return view('projects.create', compact('customers', 'statuses'));
     }
 
