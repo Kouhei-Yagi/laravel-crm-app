@@ -90,17 +90,11 @@
                         {{-- メモ --}}
                         <h3 class="font-semibold text-lg">メモ</h3>
 
-                        <div>
-                            <textarea id="memo" name="memo"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700 whitespace-pre-line"
-                                placeholder="自由記述欄">{{ old('memo') }}</textarea>
-
-                            @error('memo')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-textarea
+                            name="memo"
+                            id="memo"
+                            placeholder="自由記述欄"
+                        />
 
                         {{-- ボタン --}}
                         <div class="flex items-center gap-4 mt-6">
