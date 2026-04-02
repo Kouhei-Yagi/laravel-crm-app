@@ -29,27 +29,14 @@
                             placeholder="例：ホームページ制作"
                         />
 
-                        <div>
-                            <label for="customer_id" class="block mb-1">
-                                顧客名 <span class="text-red-500">*</span>
-                            </label>
-
-                            <select id="customer_id" name="customer_id"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700">
-                                <option value="">選択してください</option>
-                                @foreach ($customers as $customer)
-                                    <option value="{{ $customer->id }}" @selected(old('customer_id') == $customer->id)>
-                                        {{ $customer->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('customer_id')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 顧客名 --}}
+                        <x-select
+                            name="customer_id"
+                            id="customer_id"
+                            label="顧客名"
+                            required
+                            :options="$customers"
+                        />
 
                         <div>
                             <label for="description" class="block mb-1">案件内容</label>
