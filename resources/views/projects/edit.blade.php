@@ -40,18 +40,14 @@
                             disabled
                         />
 
-                        <div>
-                            <label for="description" class="block mb-1">案件内容</label>
-
-                            <textarea id="description" name="description" placeholder="例：要件の概要や依頼内容を入力してください"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700 whitespace-pre-line">{{ old('description', $project->description) }}</textarea>
-
-                            @error('description')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 案件内容 --}}
+                        <x-textarea
+                            name="description"
+                            id="description"
+                            :value="$project->description"
+                            label="案件内容"
+                            placeholder="例：要件の概要や依頼内容を入力してください"
+                        />
 
                         {{-- ステータス・金額 --}}
                         <h3 class="font-semibold text-lg">案件ステータス</h3>
