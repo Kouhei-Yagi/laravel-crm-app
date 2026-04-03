@@ -62,19 +62,16 @@
                             :options="$statuses"
                         />
 
-                        <div>
-                            <label for="amount" class="block mb-1">税抜金額</label>
-
-                            <input type="number" id="amount" name="amount" placeholder="例：300000"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                value="{{ old('amount', $project->amount) }}">
-
-                            @error('amount')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 税抜金額 --}}
+                        <x-input
+                            name="amount"
+                            id="amount"
+                            type="number"
+                            :value="$project->amount"
+                            label="税抜金額"
+                            placeholder="例：300000"
+                            help="半角数字のみで入力してください。カンマ（,）は不要です。"
+                        />
 
                         {{-- 期間 --}}
                         <h3 class="font-semibold text-lg">期間</h3>
