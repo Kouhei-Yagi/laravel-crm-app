@@ -21,21 +21,15 @@
                         {{-- 基本情報 --}}
                         <h3 class="font-semibold text-lg">基本情報</h3>
 
-                        <div>
-                            <label for="title" class="block mb-1">
-                                案件名 <span class="text-red-500">*</span>
-                            </label>
-
-                            <input type="text" id="title" name="title" placeholder="例：ホームページ制作"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                value="{{ old('title', $project->title) }}">
-
-                            @error('title')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 案件名 --}}
+                        <x-input
+                            name="title"
+                            id="title"
+                            :value="$project->title"
+                            label="案件名"
+                            required
+                            placeholder="例：ホームページ制作"
+                        />
 
                         <div>
                             <label for="customer_name" class="block mb-1">顧客名</label>
