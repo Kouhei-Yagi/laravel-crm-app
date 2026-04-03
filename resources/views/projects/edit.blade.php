@@ -52,27 +52,15 @@
                         {{-- ステータス・金額 --}}
                         <h3 class="font-semibold text-lg">案件ステータス</h3>
 
-                        <div>
-                            <label for="status" class="block mb-1">
-                                ステータス <span class="text-red-500">*</span>
-                            </label>
-
-                            <select id="status" name="status"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700">
-                                <option value="">選択してください</option>
-                                @foreach ($statuses as $value => $label)
-                                    <option value="{{ $value }}" @selected((old('status') ?? $project->status) == $value)>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('status')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- ステータス --}}
+                        <x-select
+                            name="status"
+                            id="status"
+                            :value="$project->status"
+                            required
+                            label="ステータス"
+                            :options="$statuses"
+                        />
 
                         <div>
                             <label for="amount" class="block mb-1">税抜金額</label>
