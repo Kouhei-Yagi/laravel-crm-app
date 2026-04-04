@@ -40,20 +40,13 @@
                         />
 
                         {{-- 内容 --}}
-                        <div>
-                            <label for="content" class="block mb-1">
-                                内容 <span class="text-red-500">*</span>
-                            </label>
-
-                            <textarea id="content" name="content" placeholder="例：電話で仕様確認を実施"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700 whitespace-pre-line">{{ old('content') }}</textarea>
-
-                            @error('content')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-textarea
+                            name="content"
+                            id="content"
+                            label="内容"
+                            required
+                            placeholder="例：電話で仕様確認を実施"
+                        />
 
                         {{-- メモ --}}
                         <div>
