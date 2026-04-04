@@ -31,27 +31,13 @@
                         />
 
                         {{-- 対応種別 --}}
-                        <div>
-                            <label for="type" class="block mb-1">
-                                対応種別 <span class="text-red-500">*</span>
-                            </label>
-
-                            <select id="type" name="type"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700">
-                                <option value="">選択してください</option>
-                                @foreach ($types as $key => $label)
-                                    <option value="{{ $key }}" @selected(old('type') == $key)>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('type')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-select
+                            name="type"
+                            id="type"
+                            label="対応種別"
+                            required
+                            :options="$types"
+                        />
 
                         {{-- 内容 --}}
                         <div>

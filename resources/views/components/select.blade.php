@@ -64,9 +64,9 @@ x-select コンポーネント
         <option value="">選択してください</option>
 
         {{-- options をループ --}}
-        @foreach ($options as $key => $label)
+        @foreach ($options as $key => $text)
             <option value="{{ $key }}" @selected($selectedValue == $key)>
-                {{ $label }}
+                {{ $text }}
             </option>
         @endforeach
     </select>
