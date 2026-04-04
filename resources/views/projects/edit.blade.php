@@ -76,33 +76,23 @@
                         {{-- 期間 --}}
                         <h3 class="font-semibold text-lg">期間</h3>
 
-                        <div>
-                            <label for="start_date" class="block mb-1">開始日</label>
+                        {{-- 開始日 --}}
+                        <x-input
+                            name="start_date"
+                            id="start_date"
+                            type="date"
+                            :value="$project->start_date?->format('Y-m-d')"
+                            label="開始日"
+                        />
 
-                            <input type="date" id="start_date" name="start_date"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                value="{{ old('start_date', $project->start_date ? $project->start_date->format('Y-m-d') : null) }}">
-
-                            @error('start_date')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="end_date" class="block mb-1">終了日</label>
-
-                            <input type="date" id="end_date" name="end_date"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                value="{{ old('end_date', $project->end_date ? $project->end_date->format('Y-m-d') : null) }}">
-
-                            @error('end_date')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        {{-- 終了日 --}}
+                        <x-input
+                            name="end_date"
+                            id="end_date"
+                            type="date"
+                            :value="$project->end_date?->format('Y-m-d')"
+                            label="終了日"
+                        />
 
                         {{-- メモ --}}
                         <h3 class="font-semibold text-lg">メモ</h3>
