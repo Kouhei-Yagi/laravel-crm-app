@@ -44,7 +44,6 @@ x-select コンポーネント
     <select
         name="{{ $name }}"
         id="{{ $id }}"
-        value="{{ $selectedValue }}"
 
         @if ($hasError)
             aria-invalid="true"

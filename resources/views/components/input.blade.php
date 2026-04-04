@@ -12,6 +12,7 @@ x-input コンポーネント
     'required' => false, // 必須フラグ
     'help' => null, // 補足説明
     'placeholder' => null, // input の placeholder
+    'disabled' => false, // 入力欄を無効化（編集不可）にする
 ])
 
 @php
@@ -62,12 +63,23 @@ x-input コンポーネント
             aria-describedby="{{ $describedBy }}"
         @endif
 
-        {{-- Tailwind の共通スタイルを適用 --}}
-        {{ $attributes->class("
-            w-full border-gray-300 rounded-md shadow-sm
-            text-gray-900 dark:text-gray-100
-            bg-white dark:bg-gray-700
-        ") }}
+        {{-- disabled が true の場合は input を無効化 --}}
+        @if ($disabled)
+            disabled
+        @endif
+
+        {{-- Tailwind のスタイルを適用 --}}
+        {{ $attributes->class([
+            // 共通スタイル
+            "w-full border-gray-300 rounded-md shadow-sm
+             text-gray-900 dark:text-gray-100",
+
+            // 通常時の背景
+            "bg-white dark:bg-gray-700" => ! $disabled,
+
+            // disabled 時の背景・カーソル
+            "bg-gray-100 dark:bg-gray-600 cursor-not-allowed" => $disabled,
+        ]) }}
     />
 
 </x-field>
