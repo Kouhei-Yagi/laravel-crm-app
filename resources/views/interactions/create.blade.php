@@ -21,21 +21,14 @@
                         <h3 class="font-semibold text-lg">基本情報</h3>
 
                         {{-- 対応日時 --}}
-                        <div>
-                            <label for="interacted_at" class="block mb-1">
-                                対応日時 <span class="text-red-500">*</span>
-                            </label>
-
-                            <input type="datetime-local" id="interacted_at" name="interacted_at"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                value="{{ old('interacted_at') }}">
-
-                            @error('interacted_at')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-input
+                            name="interacted_at"
+                            id="interacted_at"
+                            type="datetime-local"
+                            label="対応日時"
+                            required
+                            help="実際に対応した日時を入力してください。"
+                        />
 
                         {{-- 対応種別 --}}
                         <div>
