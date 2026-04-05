@@ -74,14 +74,13 @@
                         />
 
                         {{-- 顧客名 --}}
-                        <div>
-                            <label for="customer_name" class="block mb-1">顧客名</label>
-                            <input type="text" id="customer_name"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-gray-100 dark:bg-gray-600 cursor-not-allowed"
-                                value="{{ $interaction->customer->name }}" disabled>
-                        </div>
+                        <x-input
+                            name="customer_name"
+                            id="customer_name"
+                            :value="$interaction->customer?->name"
+                            label="顧客名"
+                            disabled
+                        />
 
                         {{-- ボタン --}}
                         <div class="flex items-center gap-4 mt-6">
