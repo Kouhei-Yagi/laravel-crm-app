@@ -48,10 +48,10 @@ class InteractionController extends Controller
         $types = Interaction::TYPE;
 
         // 案件名の選択肢
-        $projects = Project::where('assigned_user_id', auth()->id())->get();
+        $projects = Project::where('assigned_user_id', auth()->id())->pluck('title', 'id');
 
         // 顧客名の選択肢をログインユーザーが担当している顧客のみにする
-        $customers = Customer::where('assigned_user_id', auth()->id())->get();
+        $customers = Customer::where('assigned_user_id', auth()->id())->pluck('name', 'id');
 
         // 各選択肢の値を持ってcreateビューに遷移する
         return view('interactions.create', compact('types', 'projects', 'customers'));

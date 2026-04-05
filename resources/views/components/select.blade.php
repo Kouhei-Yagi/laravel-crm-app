@@ -11,6 +11,7 @@ x-select コンポーネント
     'required' => false, // 必須フラグ
     'help' => null,  // 補足説明
     'options' => [], // 選択肢（['key' => '表示名'] の形式）
+    'emptyLabel' => '選択してください。', // 選択肢のデフォルト値
 ])
 
 @php
@@ -61,12 +62,12 @@ x-select コンポーネント
     >
 
         {{-- 空の選択肢 --}}
-        <option value="">選択してください</option>
+        <option value="">{{ $emptyLabel }}</option>
 
         {{-- options をループ --}}
-        @foreach ($options as $key => $label)
+        @foreach ($options as $key => $text)
             <option value="{{ $key }}" @selected($selectedValue == $key)>
-                {{ $label }}
+                {{ $text }}
             </option>
         @endforeach
     </select>
