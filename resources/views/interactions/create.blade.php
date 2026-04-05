@@ -61,25 +61,13 @@
                         <h3 class="font-semibold text-lg">関連情報</h3>
 
                         {{-- 案件名 --}}
-                        <div>
-                            <label for="project_id" class="block mb-1">案件名</label>
-
-                            <select id="project_id" name="project_id"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700">
-                                <option value="">案件未設定（単発対応）</option>
-                                @foreach ($projects as $project)
-                                    <option value="{{ $project->id }}" @selected(old('project_id') == $project->id)>
-                                        {{ $project->title }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('project_id')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-select
+                            name="project_id"
+                            id="project_id"
+                            label="案件名"
+                            :options="$projects"
+                            emptyLabel="案件未設定（単発対応）"
+                        />
 
                         {{-- 顧客名 --}}
                         <div>
