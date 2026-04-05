@@ -22,98 +22,65 @@
                         <h3 class="font-semibold text-lg">基本情報</h3>
 
                         {{-- 対応日時 --}}
-                        <div>
-                            <label for="interacted_at" class="block mb-1">
-                                対応日時 <span class="text-red-500">*</span>
-                            </label>
-
-                            <input type="datetime-local" id="interacted_at" name="interacted_at"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700"
-                                value="{{ old('interacted_at', $interaction->interacted_at->format('Y-m-d\TH:i')) }}">
-
-                            @error('interacted_at')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-input
+                            name="interaction_at"
+                            id="interaction_at"
+                            type="datetime-local"
+                            :value="$interaction->interacted_at?->format('Y-m-d\TH:i')"
+                            label="対応日時"
+                            required
+                        />
 
                         {{-- 対応種別 --}}
-                        <div>
-                            <label for="type" class="block mb-1">
-                                対応種別 <span class="text-red-500">*</span>
-                            </label>
-
-                            <select id="type" name="type"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700">
-                                <option value="">選択してください</option>
-                                @foreach ($types as $key => $label)
-                                    <option value="{{ $key }}" @selected(old('type', $interaction->type) == $key)>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('type')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-select
+                            name="type"
+                            id="type"
+                            :value="$interaction->type"
+                            label="対応種別"
+                            required
+                            :options="$types"
+                        />
 
                         {{-- 内容 --}}
-                        <div>
-                            <label for="content" class="block mb-1">
-                                内容 <span class="text-red-500">*</span>
-                            </label>
-
-                            <textarea id="content" name="content" placeholder="例：電話で仕様確認を実施"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700 whitespace-pre-line">{{ old('content', $interaction->content) }}</textarea>
-
-                            @error('content')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-textarea
+                            name="content"
+                            id="content"
+                            :value="$interaction->content"
+                            label="内容"
+                            required
+                            placeholder="例：電話で仕様確認を実施"
+                        />
 
                         {{-- メモ --}}
-                        <div>
-                            <label for="memo" class="block mb-1">メモ</label>
+                        <h3 class="font-semibold text-lg">メモ</h3>
 
-                            <textarea id="memo" name="memo"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-white dark:bg-gray-700 whitespace-pre-line"
-                                placeholder="自由記述欄">{{ old('memo', $interaction->memo) }}</textarea>
-
-                            @error('memo')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <x-textarea
+                            name="memo"
+                            id="memo"
+                            :value="$interaction->memo"
+                            placeholder="自由記述欄"
+                        />
 
                         {{-- 関連情報 --}}
                         <h3 class="font-semibold text-lg">関連情報</h3>
 
                         {{-- 案件名 --}}
-                        <div>
-                            <label for="project_name" class="block mb-1">案件名</label>
-                            <input type="text" id="project_name"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-gray-100 dark:bg-gray-600 cursor-not-allowed"
-                                value="{{ $interaction->project->title ?? '案件なし（単発対応）' }}" disabled>
-                        </div>
+                        <x-input
+                            name="project_name"
+                            id="project_name"
+                            :value="$interaction->project?->title ?? '案件なし（単発対応）'"
+                            label="案件名"
+                            disabled
+                        />
 
                         {{-- 顧客名 --}}
-                        <div>
-                            <label for="customer_name" class="block mb-1">顧客名</label>
-                            <input type="text" id="customer_name"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-gray-100 dark:bg-gray-600 cursor-not-allowed"
-                                value="{{ $interaction->customer->name }}" disabled>
-                        </div>
+                        <x-input
+                            name="customer_name"
+                            id="customer_name"
+                            :value="$interaction->customer?->name"
+                            label="顧客名"
+                            disabled
+                        />
 
                         {{-- ボタン --}}
                         <div class="flex items-center gap-4 mt-6">
