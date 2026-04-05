@@ -65,14 +65,13 @@
                         <h3 class="font-semibold text-lg">関連情報</h3>
 
                         {{-- 案件名 --}}
-                        <div>
-                            <label for="project_name" class="block mb-1">案件名</label>
-                            <input type="text" id="project_name"
-                                class="w-full border-gray-300 rounded-md shadow-sm
-                                text-gray-900 dark:text-gray-100
-                                bg-gray-100 dark:bg-gray-600 cursor-not-allowed"
-                                value="{{ $interaction->project->title ?? '案件なし（単発対応）' }}" disabled>
-                        </div>
+                        <x-input
+                            name="project_name"
+                            id="project_name"
+                            :value="$interaction->project?->title ?? '案件なし（単発対応）'"
+                            label="案件名"
+                            disabled
+                        />
 
                         {{-- 顧客名 --}}
                         <div>
