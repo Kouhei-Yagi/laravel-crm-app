@@ -23,7 +23,8 @@
                     <x-alert :message="session('success')" />
 
                     {{-- 検索フォーム --}}
-                    <form action="{{ route('customers.index') }}" method="get" class="mb-6">
+                    <x-search.form :action="route('customers.index')" class="mb-6">
+
                         <div
                             class="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-gray-50 dark:bg-gray-700">
 
@@ -118,7 +119,7 @@
                             </div>
 
                         </div>
-                    </form>
+                    </x-search.form>
 
                     {{-- 一覧データ --}}
                     <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
