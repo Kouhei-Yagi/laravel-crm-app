@@ -25,11 +25,6 @@
                     {{-- 検索フォーム --}}
                     <x-search.form :action="route('customers.index')" class="mb-6">
 
-                        {{-- タイトル --}}
-                        <div class="mb-3 pb-2 border-b border-gray-300 dark:border-gray-600">
-                            <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">検索条件</span>
-                        </div>
-
                         {{-- 検索項目 --}}
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
