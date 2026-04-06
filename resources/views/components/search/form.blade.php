@@ -3,7 +3,7 @@
     'title' => '検索条件', // タイトル
 ])
 
-<form action="{{ $action }}" method="get">
+<form action="{{ $action }}" method="get" {{ $attributes->merge(['class' => 'mb-6']) }}>
     <div class="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-gray-50 dark:bg-gray-700">
 
         {{-- タイトル --}}
