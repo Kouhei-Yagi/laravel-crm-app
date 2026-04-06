@@ -23,7 +23,7 @@
                     <x-alert :message="session('success')" />
 
                     {{-- 検索フォーム --}}
-                    <x-search.form :action="route('customers.index')" class="mb-6">
+                    <x-search.form :action="route('customers.index')">
 
                         {{-- キーワード --}}
                         <div>
