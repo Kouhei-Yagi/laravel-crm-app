@@ -25,73 +25,69 @@
                     {{-- 検索フォーム --}}
                     <x-search.form :action="route('customers.index')" class="mb-6">
 
-                        {{-- 検索項目 --}}
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {{-- キーワード --}}
+                        <div>
+                            <label for="keyword"class="block text-sm font-medium mb-1">
+                                キーワード
+                            </label>
 
-                            {{-- キーワード --}}
-                            <div>
-                                <label for="keyword"class="block text-sm font-medium mb-1">
-                                    キーワード
-                                </label>
+                            <input type="text" name="keyword" id="keyword" placeholder="顧客・メール・電話番号・会社名"
+                                value="{{ request('keyword') }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                        </div>
 
-                                <input type="text" name="keyword" id="keyword" placeholder="顧客・メール・電話番号・会社名"
-                                    value="{{ request('keyword') }}"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                            </div>
+                        {{-- ステータス --}}
+                        <div>
+                            <label for="status" class="block text-sm font-medium mb-1">
+                                ステータス
+                            </label>
 
-                            {{-- ステータス --}}
-                            <div>
-                                <label for="status" class="block text-sm font-medium mb-1">
-                                    ステータス
-                                </label>
+                            <select name="status" id="status"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md
+                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                                <option value="">未選択</option>
+                                @foreach ($statuses as $key => $label)
+                                    <option value="{{ $key }}" @selected(request('status') == $key)>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                                <select name="status" id="status"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md
+                        {{-- 担当者 --}}
+                        <div>
+                            <label for="assigned_user_id" class="block text-sm font-medium mb-1">
+                                担当者
+                            </label>
+
+                            <select name="assigned_user_id" id="assigned_user_id"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md
+                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                                <option value="">未選択</option>
+                                @foreach ($assignedUsers as $assignedUser)
+                                    <option value="{{ $assignedUser->id }}" @selected(request('assigned_user_id') == $assignedUser->id)>
+                                        {{ $assignedUser->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- 作成日（from/to） --}}
+                        <div class="md:col-span-2 lg:col-span-3">
+                            <label for="created_from" class="block text-sm font-medium mb-1">
+                                作成日
+                            </label>
+
+                            <div class="flex items-center gap-2">
+                                <input type="date" name="created_from" value="{{ request('created_from') }}"
+                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
                                     dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                    <option value="">未選択</option>
-                                    @foreach ($statuses as $key => $label)
-                                        <option value="{{ $key }}" @selected(request('status') == $key)>
-                                            {{ $label }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
 
-                            {{-- 担当者 --}}
-                            <div>
-                                <label for="assigned_user_id" class="block text-sm font-medium mb-1">
-                                    担当者
-                                </label>
+                                <span class="text-gray-600 dark:text-gray-300">〜</span>
 
-                                <select name="assigned_user_id" id="assigned_user_id"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md
+                                <input type="date" name="created_to" value="{{ request('created_to') }}"
+                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
                                     dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                    <option value="">未選択</option>
-                                    @foreach ($assignedUsers as $assignedUser)
-                                        <option value="{{ $assignedUser->id }}" @selected(request('assigned_user_id') == $assignedUser->id)>
-                                            {{ $assignedUser->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            {{-- 作成日（from/to） --}}
-                            <div class="md:col-span-2 lg:col-span-3">
-                                <label for="created_from" class="block text-sm font-medium mb-1">
-                                    作成日
-                                </label>
-
-                                <div class="flex items-center gap-2">
-                                    <input type="date" name="created_from" value="{{ request('created_from') }}"
-                                        class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                        dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-
-                                    <span class="text-gray-600 dark:text-gray-300">〜</span>
-
-                                    <input type="date" name="created_to" value="{{ request('created_to') }}"
-                                        class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                        dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                </div>
                             </div>
                         </div>
 
