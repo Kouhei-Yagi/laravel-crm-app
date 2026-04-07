@@ -21,12 +21,7 @@
         {{-- ボタン --}}
         <div class="flex justify-end mt-4 gap-3">
             <x-search.button.clear :href="$action" />
-
-            <button type="submit"
-                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700
-                dark:bg-blue-500 dark:hover:bg-blue-600">
-                検索
-            </button>
+            <x-search.button.submit />
         </div>
     </div>
 </form>
