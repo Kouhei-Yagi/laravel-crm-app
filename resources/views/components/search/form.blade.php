@@ -20,11 +20,7 @@
 
         {{-- ボタン --}}
         <div class="flex justify-end mt-4 gap-3">
-            <a href="{{ $action }}"
-                class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400
-                dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
-                クリア
-            </a>
+            <x-search.button.clear :href="$action" />
 
             <button type="submit"
                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700
