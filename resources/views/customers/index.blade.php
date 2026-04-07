@@ -26,15 +26,12 @@
                     <x-search.form :action="route('customers.index')">
 
                         {{-- キーワード --}}
-                        <div>
-                            <label for="keyword"class="block text-sm font-medium mb-1">
-                                キーワード
-                            </label>
-
-                            <input type="text" name="keyword" id="keyword" placeholder="顧客・メール・電話番号・会社名"
-                                value="{{ request('keyword') }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                        </div>
+                        <x-search.input
+                            label="キーワード"
+                            name="keyword"
+                            :value="request('keyword')"
+                            placeholder="顧客・メール・電話番号・会社名"
+                        />
 
                         {{-- ステータス --}}
                         <div>
