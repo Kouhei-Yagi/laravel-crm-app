@@ -66,16 +66,12 @@
                         </div>
 
                         {{-- 内容 --}}
-                        <div>
-                            <label for="content_keyword" class="block text-sm font-medium mb-1">
-                                内容
-                            </label>
-
-                            <input type="text" name="content_keyword" id="content_keyword"
-                                value="{{ request('content_keyword') }}" placeholder="内容で検索"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                        </div>
+                        <x-search.input
+                            label="内容"
+                            name="content_keyword"
+                            :value="request('content_keyword')"
+                            placeholder="内容で検索"
+                        />
 
                         {{-- 案件名 --}}
                         <div>
