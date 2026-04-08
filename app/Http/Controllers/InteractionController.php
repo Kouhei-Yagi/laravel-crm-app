@@ -24,7 +24,7 @@ class InteractionController extends Controller
         // 画面で選択肢として表示するため、対応種別・顧客名・担当者のデータを取得する
         $types = Interaction::TYPE;
         $customers = Customer::orderBy('kana')->pluck('name', 'id');
-        $assignedUsers = User::orderBy('name')->get();
+        $assignedUsers = User::orderBy('name')->pluck('name', 'id');
 
         // 検索条件をモデル側に集約し、コントローラーの責務を軽くするためにスコープを適用する
         $query = Interaction::query()
