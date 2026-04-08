@@ -23,7 +23,7 @@ class ProjectController extends Controller
         // 画面で選択肢として表示するため、顧客名・ステータス・担当者のデータを取得する
         $customers = Customer::orderBy('kana')->pluck('name', 'id');
         $statuses = Project::STATUSES;
-        $users = User::orderBy('name')->get();
+        $assignedUsers = User::orderBy('name')->pluck('name', 'id');
 
         // コントローラの責務を軽くするために、検索・ソート条件をモデル・トレイト側に集約してスコープを適用する
         $query = Project::query()
@@ -33,7 +33,7 @@ class ProjectController extends Controller
         // ページ移動時に検索条件が失われないよう、クエリパラメータを引き継いでページングする
         $projects = $query->paginate(20)->appends($request->query());
 
-        return view('projects.index', compact('customers', 'statuses', 'users', 'projects'));
+        return view('projects.index', compact('customers', 'statuses', 'assignedUsers', 'projects'));
     }
 
     /**

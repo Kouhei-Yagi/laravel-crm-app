@@ -50,22 +50,12 @@
                         />
 
                         {{-- 担当者 --}}
-                        <div>
-                            <label for="assigned_user_id" class="block text-sm font-medium mb-1">
-                                担当者
-                            </label>
-
-                            <select name="assigned_user_id" id="assigned_user_id"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                <option value="">未選択</option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" @selected(request('assigned_user_id') == $user->id)>
-                                        {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-search.select
+                            label="担当者"
+                            name="assigned_user_id"
+                            :value="request('assigned_user_id')"
+                            :options="$assignedUsers"
+                        />
 
                         {{-- 税抜金額（from/to） --}}
                         <div>
