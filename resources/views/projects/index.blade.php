@@ -42,22 +42,12 @@
                         />
 
                         {{-- ステータス --}}
-                        <div>
-                            <label for="status" class="block text-sm font-medium mb-1">
-                                ステータス
-                            </label>
-
-                            <select name="status" id="status"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                <option value="">未選択</option>
-                                @foreach ($statuses as $key => $label)
-                                    <option value="{{ $key }}" @selected(request('status') == $key)>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-search.select
+                            label="ステータス"
+                            name="status"
+                            :value="request('status')"
+                            :options="$statuses"
+                        />
 
                         {{-- 担当者 --}}
                         <div>
