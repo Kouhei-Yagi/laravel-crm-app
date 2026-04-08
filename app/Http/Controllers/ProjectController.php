@@ -21,7 +21,7 @@ class ProjectController extends Controller
     public function index(ProjectSearchRequest $request)
     {
         // 画面で選択肢として表示するため、顧客名・ステータス・担当者のデータを取得する
-        $customers = Customer::orderBy('kana')->get();
+        $customers = Customer::orderBy('kana')->pluck('name', 'id');
         $statuses = Project::STATUSES;
         $users = User::orderBy('name')->get();
 
