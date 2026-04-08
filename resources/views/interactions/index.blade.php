@@ -76,22 +76,12 @@
                         </div>
 
                         {{-- 顧客名 --}}
-                        <div>
-                            <label for="customer_id" class="block text-sm font-medium mb-1">
-                                顧客名
-                            </label>
-
-                            <select name="customer_id" id="customer_id"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                <option value="">未選択</option>
-                                @foreach ($customers as $customer)
-                                    <option value="{{ $customer->id }}" @selected(request('customer_id') == $customer->id)>
-                                        {{ $customer->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-search.select
+                            label="顧客名"
+                            name="customer_id"
+                            :value="request('customer_id')"
+                            :options="$customers"
+                        />
 
                         {{-- 担当者 --}}
                         <div>
