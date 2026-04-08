@@ -48,22 +48,12 @@
                         </div>
 
                         {{-- 対応種別 --}}
-                        <div>
-                            <label for="type" class="block text-sm font-medium mb-1">
-                                対応種別
-                            </label>
-
-                            <select name="type" id="type"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                <option value="">未選択</option>
-                                @foreach ($types as $key => $label)
-                                    <option value="{{ $key }}" @selected(request('type') == $key)>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-search.select
+                            label="対応種別"
+                            name="type"
+                            :value="request('type')"
+                            :options="$types"
+                        />
 
                         {{-- 内容 --}}
                         <x-search.input
