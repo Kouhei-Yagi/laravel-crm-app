@@ -27,25 +27,12 @@
                     <x-search.form :action="route('interactions.index')">
 
                         {{-- 対応日時（from/to） --}}
-                        <div>
-                            <label for="interacted_from" class="block text-sm font-medium mb-1">
-                                対応日時
-                            </label>
-
-                            <div class="flex items-center gap-2">
-                                <input type="date" name="interacted_from" id="interacted_from"
-                                    value="{{ request('interacted_from') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-
-                                <span class="text-gray-600 dark:text-gray-300">〜</span>
-
-                                <input type="date" name="interacted_to" id="interacted_to"
-                                    value="{{ request('interacted_to') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                            </div>
-                        </div>
+                        <x-search.date
+                            label="対応日時"
+                            name="interacted_at"
+                            :from="request('interacted_at_from')"
+                            :to="request('interacted_at_to')"
+                        />
 
                         {{-- 対応種別 --}}
                         <x-search.select

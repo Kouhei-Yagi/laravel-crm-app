@@ -78,7 +78,7 @@ class Interaction extends Model
     public function scopeFilter($query, $request)
     {
         return $query
-            ->interactedAtRange($request->interacted_from, $request->interacted_to)
+            ->interactedAtRange($request->interacted_at_from, $request->interacted_at_to)
             ->interactionType($request->type)
             ->content($request->content_keyword)
             ->projectTitle($request->project_keyword)
