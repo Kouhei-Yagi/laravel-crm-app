@@ -84,7 +84,7 @@ class Customer extends Model
             ->keyword($request->keyword)
             ->status($request->status)
             ->assignedUser($request->assigned_user_id)
-            ->createdRange($request->created_from, $request->created_to);
+            ->createdRange($request->created_at_from, $request->created_at_to);
     }
 
     /**

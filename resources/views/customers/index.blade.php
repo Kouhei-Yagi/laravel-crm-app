@@ -51,21 +51,12 @@
 
                         {{-- 作成日（from/to） --}}
                         <div class="md:col-span-2 lg:col-span-3">
-                            <label for="created_from" class="block text-sm font-medium mb-1">
-                                作成日
-                            </label>
-
-                            <div class="flex items-center gap-2">
-                                <input type="date" name="created_from" value="{{ request('created_from') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-
-                                <span class="text-gray-600 dark:text-gray-300">〜</span>
-
-                                <input type="date" name="created_to" value="{{ request('created_to') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                            </div>
+                            <x-search.date
+                                label="作成日"
+                                name="created_at"
+                                :from="request('created_at_from')"
+                                :to="request('created_at_to')"
+                            />
                         </div>
 
                     </x-search.form>
