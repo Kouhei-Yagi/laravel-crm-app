@@ -90,7 +90,7 @@ class Project extends Model
             ->assignedUser($request->assigned_user_id)
             ->amountRange($request->amount_min, $request->amount_max)
             ->period($request->period_from, $request->period_to)
-            ->createdRange($request->created_from, $request->created_to);
+            ->createdRange($request->created_at_from, $request->created_at_to);
     }
 
     /**

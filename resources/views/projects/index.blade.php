@@ -87,6 +87,15 @@
 
                         {{-- 作成日（from/to） --}}
                         <div class="md:col-span-2 lg:col-span-3">
+                            <x-search.date
+                                label="作成日"
+                                name="created_at"
+                                :from="request('created_at_from')"
+                                :to="request('created_at_to')"
+                            />
+                        </div>
+
+                        {{-- <div class="md:col-span-2 lg:col-span-3">
                             <label for="created_from" class="block text-sm font-medium mb-1">
                                 作成日
                             </label>
@@ -104,7 +113,7 @@
                                     class="w-40 px-3 py-2 border border-gray-300 rounded-md
                                     dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
                             </div>
-                        </div>
+                        </div> --}}
 
                     </x-search.form>
 
