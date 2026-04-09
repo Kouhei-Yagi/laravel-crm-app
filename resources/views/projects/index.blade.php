@@ -78,25 +78,12 @@
                         </div>
 
                         {{-- 期間（from/to） --}}
-                        <div>
-                            <label for="start_from" class="block text-sm font-medium mb-1">
-                                期間
-                            </label>
-
-                            <div class="flex items-center gap-2">
-                                <input type="date" name="start_from" id="start_from"
-                                    value="{{ request('start_from') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-
-                                <span class="text-gray-600 dark:text-gray-300">〜</span>
-
-                                <input type="date" name="end_to" id="end_to"
-                                    value="{{ request('end_to') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                            </div>
-                        </div>
+                        <x-search.date
+                            label="期間"
+                            name="period"
+                            :from="request('period_from')"
+                            :to="request('period_to')"
+                        />
 
                         {{-- 作成日（from/to） --}}
                         <div class="md:col-span-2 lg:col-span-3">
