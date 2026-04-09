@@ -16,7 +16,8 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overfmin-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
                     {{-- フラッシュメッセージ --}}
@@ -58,24 +59,12 @@
                         />
 
                         {{-- 税抜金額（from/to） --}}
-                        <div>
-                            <label for="amount_min" class="block text-sm font-medium mb-1">
-                                税抜金額
-                            </label>
-
-                            <div class="flex items-center gap-2">
-                                <input type="number" name="amount_min" id="amount_min"
-                                    value="{{ request('amount_min') }}" min="0"
-                                    class="w-32 px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-
-                                <span class="text-gray-600 dark:text-gray-300">〜</span>
-
-                                <input type="number" name="amount_max" id="amount_max"
-                                    value="{{ request('amount_max') }}"
-                                    class="w-32 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                            </div>
-                        </div>
+                        <x-search.range
+                            label="税抜金額"
+                            name="amount"
+                            :from="request('amount_from')"
+                            :to="request('amount_to')"
+                        />
 
                         {{-- 期間（from/to） --}}
                         <x-search.date
@@ -94,26 +83,6 @@
                                 :to="request('created_at_to')"
                             />
                         </div>
-
-                        {{-- <div class="md:col-span-2 lg:col-span-3">
-                            <label for="created_from" class="block text-sm font-medium mb-1">
-                                作成日
-                            </label>
-
-                            <div class="flex items-center gap-2">
-                                <input type="date" name="created_from" id="created_from"
-                                    value="{{ request('created_from') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-
-                                <span class="text-gray-600 dark:text-gray-300">〜</span>
-
-                                <input type="date" name="created_to" id="created_to"
-                                    value="{{ request('created_to') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                            </div>
-                        </div> --}}
 
                     </x-search.form>
 
