@@ -64,16 +64,12 @@
                         />
 
                         {{-- 案件名 --}}
-                        <div>
-                            <label for="project_keyword" class="block text-sm font-medium mb-1">
-                                案件名
-                            </label>
-
-                            <input type="text" name="project_keyword" id="project_keyword"
-                                value="{{ request('project_keyword') }}" placeholder="案件名で検索"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                        </div>
+                        <x-search.input
+                            label="案件名"
+                            name="project_keyword"
+                            :value="request('project_keyword')"
+                            placeholder="案件名で検索"
+                        />
 
                         {{-- 顧客名 --}}
                         <x-search.select
