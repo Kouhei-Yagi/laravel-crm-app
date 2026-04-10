@@ -68,9 +68,14 @@
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
                                 {{-- 顧客名 --}}
-                                <th class="px-3 py-2 border">
+                                <x-table.sortable-header
+                                    label="顧客名"
+                                    column="name"
+                                />
+
+                                {{-- <th class="px-3 py-2 border"> --}}
                                     {{-- 検索条件保持ソート --}}
-                                    <a href="{{ route(
+                                    {{-- <a href="{{ route(
                                         'customers.index',
                                         array_merge(request()->query(), [
                                             'sort' => 'name',
@@ -88,7 +93,7 @@
                                             <span class="text-xs">▼</span>
                                         @endif
                                     @endif
-                                </th>
+                                </th> --}}
 
                                 {{-- メール --}}
                                 <th class="px-3 py-2 border">
