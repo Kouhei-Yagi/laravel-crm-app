@@ -21,7 +21,7 @@ class CustomerController extends Controller
     {
         // 画面で選択肢として表示するため、ステータス・担当者のデータを取得する
         $statuses = Customer::STATUSES;
-        $assignedUsers = User::all();
+        $assignedUsers = User::orderBy('name')->pluck('name', 'id');
 
         // コントローラの責務を軽くするために、検索・ソート条件をモデル・トレイト側に集約してスコープを適用する
         $query = Customer::query()

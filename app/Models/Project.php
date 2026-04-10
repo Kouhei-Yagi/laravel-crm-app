@@ -88,9 +88,9 @@ class Project extends Model
             ->customer($request->customer_id)
             ->status($request->status)
             ->assignedUser($request->assigned_user_id)
-            ->amountRange($request->amount_min, $request->amount_max)
-            ->period($request->start_from, $request->end_to)
-            ->createdRange($request->created_from, $request->created_to);
+            ->amountRange($request->amount_from, $request->amount_to)
+            ->period($request->period_from, $request->period_to)
+            ->createdRange($request->created_at_from, $request->created_at_to);
     }
 
     /**

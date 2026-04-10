@@ -27,103 +27,52 @@
                     <x-search.form :action="route('interactions.index')">
 
                         {{-- 対応日時（from/to） --}}
-                        <div>
-                            <label for="interacted_from" class="block text-sm font-medium mb-1">
-                                対応日時
-                            </label>
-
-                            <div class="flex items-center gap-2">
-                                <input type="date" name="interacted_from" id="interacted_from"
-                                    value="{{ request('interacted_from') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-
-                                <span class="text-gray-600 dark:text-gray-300">〜</span>
-
-                                <input type="date" name="interacted_to" id="interacted_to"
-                                    value="{{ request('interacted_to') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                            </div>
-                        </div>
+                        <x-search.date
+                            label="対応日時"
+                            name="interacted_at"
+                            :from="request('interacted_at_from')"
+                            :to="request('interacted_at_to')"
+                        />
 
                         {{-- 対応種別 --}}
-                        <div>
-                            <label for="type" class="block text-sm font-medium mb-1">
-                                対応種別
-                            </label>
-
-                            <select name="type" id="type"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                <option value="">未選択</option>
-                                @foreach ($types as $key => $label)
-                                    <option value="{{ $key }}" @selected(request('type') == $key)>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-search.select
+                            label="対応種別"
+                            name="type"
+                            :value="request('type')"
+                            :options="$types"
+                        />
 
                         {{-- 内容 --}}
-                        <div>
-                            <label for="content_keyword" class="block text-sm font-medium mb-1">
-                                内容
-                            </label>
-
-                            <input type="text" name="content_keyword" id="content_keyword"
-                                value="{{ request('content_keyword') }}" placeholder="内容で検索"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                        </div>
+                        <x-search.input
+                            label="内容"
+                            name="content_keyword"
+                            :value="request('content_keyword')"
+                            placeholder="内容で検索"
+                        />
 
                         {{-- 案件名 --}}
-                        <div>
-                            <label for="project_keyword" class="block text-sm font-medium mb-1">
-                                案件名
-                            </label>
-
-                            <input type="text" name="project_keyword" id="project_keyword"
-                                value="{{ request('project_keyword') }}" placeholder="案件名で検索"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                        </div>
+                        <x-search.input
+                            label="案件名"
+                            name="project_keyword"
+                            :value="request('project_keyword')"
+                            placeholder="案件名で検索"
+                        />
 
                         {{-- 顧客名 --}}
-                        <div>
-                            <label for="customer_id" class="block text-sm font-medium mb-1">
-                                顧客名
-                            </label>
-
-                            <select name="customer_id" id="customer_id"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                <option value="">未選択</option>
-                                @foreach ($customers as $customer)
-                                    <option value="{{ $customer->id }}" @selected(request('customer_id') == $customer->id)>
-                                        {{ $customer->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-search.select
+                            label="顧客名"
+                            name="customer_id"
+                            :value="request('customer_id')"
+                            :options="$customers"
+                        />
 
                         {{-- 担当者 --}}
-                        <div>
-                            <label for="assigned_user_id" class="block text-sm font-medium mb-1">
-                                担当者
-                            </label>
-
-                            <select name="assigned_user_id" id="assigned_user_id"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                <option value="">未選択</option>
-                                @foreach ($assignedUsers as $assignedUser)
-                                    <option value="{{ $assignedUser->id }}" @selected(request('assigned_user_id') == $assignedUser->id)>
-                                        {{ $assignedUser->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-search.select
+                            label="担当者"
+                            name="assigned_user_id"
+                            :value="request('assigned_user_id')"
+                            :options="$assignedUsers"
+                        />
 
                     </x-search.form>
 

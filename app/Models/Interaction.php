@@ -78,7 +78,7 @@ class Interaction extends Model
     public function scopeFilter($query, $request)
     {
         return $query
-            ->interactedAtRange($request->interacted_from, $request->interacted_to)
+            ->interactedAtRange($request->interacted_at_from, $request->interacted_at_to)
             ->interactionType($request->type)
             ->content($request->content_keyword)
             ->projectTitle($request->project_keyword)
@@ -167,7 +167,9 @@ class Interaction extends Model
 
         // 案件名欄に入力がある場合、入力されたキーワードで部分一致検索を行うための条件を追加
         $keyword = trim($keyword);
-        return $query->where('title', 'like', "%{$keyword}%");
+        return $query->whereHas('project', function ($q) use ($keyword) {
+            $q->where('title', 'like', "%{$keyword}%");
+        });
     }
 
     /**

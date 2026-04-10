@@ -16,7 +16,8 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overfmin-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
                     {{-- フラッシュメッセージ --}}
@@ -26,129 +27,61 @@
                     <x-search.form :action="route('projects.index')">
 
                         {{-- 案件名 --}}
-                        <div>
-                            <label for="keyword" class="block text-sm font-medium mb-1">
-                                案件名
-                            </label>
-
-                            <input type="text" name="keyword" id="keyword" value="{{ request('keyword') }}" placeholder="案件名で検索"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                        </div>
+                        <x-search.input
+                            label="案件名"
+                            name="keyword"
+                            :value="request('keyword')"
+                            placeholder="案件名で検索"
+                        />
 
                         {{-- 顧客名 --}}
-                        <div>
-                            <label for="customer_id" class="block text-sm font-medium mb-1">
-                                顧客名
-                            </label>
-
-                            <select name="customer_id" id="customer_id"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                <option value="">未選択</option>
-                                @foreach ($customers as $customer)
-                                    <option value="{{ $customer->id }}" @selected(request('customer_id') == $customer->id)>
-                                        {{ $customer->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-search.select
+                            label="顧客名"
+                            name="customer_id"
+                            :value="request('customer_id')"
+                            :options="$customers"
+                        />
 
                         {{-- ステータス --}}
-                        <div>
-                            <label for="status" class="block text-sm font-medium mb-1">
-                                ステータス
-                            </label>
-
-                            <select name="status" id="status"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                <option value="">未選択</option>
-                                @foreach ($statuses as $key => $label)
-                                    <option value="{{ $key }}" @selected(request('status') == $key)>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-search.select
+                            label="ステータス"
+                            name="status"
+                            :value="request('status')"
+                            :options="$statuses"
+                        />
 
                         {{-- 担当者 --}}
-                        <div>
-                            <label for="assigned_user_id" class="block text-sm font-medium mb-1">
-                                担当者
-                            </label>
-
-                            <select name="assigned_user_id" id="assigned_user_id"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md
-                                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                                <option value="">未選択</option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" @selected(request('assigned_user_id') == $user->id)>
-                                        {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-search.select
+                            label="担当者"
+                            name="assigned_user_id"
+                            :value="request('assigned_user_id')"
+                            :options="$assignedUsers"
+                        />
 
                         {{-- 税抜金額（from/to） --}}
-                        <div>
-                            <label for="amount_min" class="block text-sm font-medium mb-1">
-                                税抜金額
-                            </label>
-
-                            <div class="flex items-center gap-2">
-                                <input type="number" name="amount_min" id="amount_min"
-                                    value="{{ request('amount_min') }}" min="0"
-                                    class="w-32 px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-
-                                <span class="text-gray-600 dark:text-gray-300">〜</span>
-
-                                <input type="number" name="amount_max" id="amount_max"
-                                    value="{{ request('amount_max') }}"
-                                    class="w-32 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                            </div>
-                        </div>
+                        <x-search.range
+                            label="税抜金額"
+                            name="amount"
+                            :from="request('amount_from')"
+                            :to="request('amount_to')"
+                        />
 
                         {{-- 期間（from/to） --}}
-                        <div>
-                            <label for="start_from" class="block text-sm font-medium mb-1">
-                                期間
-                            </label>
-
-                            <div class="flex items-center gap-2">
-                                <input type="date" name="start_from" id="start_from"
-                                    value="{{ request('start_from') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-
-                                <span class="text-gray-600 dark:text-gray-300">〜</span>
-
-                                <input type="date" name="end_to" id="end_to"
-                                    value="{{ request('end_to') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                            </div>
-                        </div>
+                        <x-search.date
+                            label="期間"
+                            name="period"
+                            :from="request('period_from')"
+                            :to="request('period_to')"
+                        />
 
                         {{-- 作成日（from/to） --}}
                         <div class="md:col-span-2 lg:col-span-3">
-                            <label for="created_from" class="block text-sm font-medium mb-1">
-                                作成日
-                            </label>
-
-                            <div class="flex items-center gap-2">
-                                <input type="date" name="created_from" id="created_from"
-                                    value="{{ request('created_from') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-
-                                <span class="text-gray-600 dark:text-gray-300">〜</span>
-
-                                <input type="date" name="created_to" id="created_to"
-                                    value="{{ request('created_to') }}"
-                                    class="w-40 px-3 py-2 border border-gray-300 rounded-md
-                                    dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
-                            </div>
+                            <x-search.date
+                                label="作成日"
+                                name="created_at"
+                                :from="request('created_at_from')"
+                                :to="request('created_at_to')"
+                            />
                         </div>
 
                     </x-search.form>
