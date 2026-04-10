@@ -93,27 +93,10 @@
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
                                 {{-- 案件名 --}}
-                                <th class="px-3 py-2 border">
-                                    {{-- 検索条件保持ソート機能 --}}
-                                    <a href="{{ route(
-                                        'projects.index',
-                                        array_merge(request()->query(), [
-                                            'sort' => 'title',
-                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
-                                        ]),
-                                    ) }}"
-                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                                        案件名
-                                    </a>
-
-                                    @if (request('sort') === 'title')
-                                        @if (request('direction') === 'asc')
-                                            <span class="text-xs">▲</span>
-                                        @elseif (request('direction') === 'desc')
-                                            <span class="text-xs">▼</span>
-                                        @endif
-                                    @endif
-                                </th>
+                                <x-table.sortable-header
+                                    label="案件名"
+                                    column="title"
+                                />
 
                                 {{-- 顧客名 --}}
                                 <th class="px-3 py-2 border">
