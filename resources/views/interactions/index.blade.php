@@ -83,27 +83,10 @@
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
                                 {{-- 対応日時 --}}
-                                <th class="px-3 py-2 border">
-                                    {{-- 検索条件保持ソート機能 --}}
-                                    <a href="{{ route(
-                                        'interactions.index',
-                                        array_merge(request()->query(), [
-                                            'sort' => 'interacted_at',
-                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
-                                        ]),
-                                    ) }}"
-                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                                        対応日時
-                                    </a>
-
-                                    @if (request('sort') === 'interacted_at')
-                                        @if (request('direction') === 'asc')
-                                            <span class="text-xs">▲</span>
-                                        @elseif(request('direction') === 'desc')
-                                            <span class="text-xs">▼</span>
-                                        @endif
-                                    @endif
-                                </th>
+                                <x-table.sortable-header
+                                    label="対応日時"
+                                    column="interacted_at"
+                                />
 
                                 {{-- 対応種別 --}}
                                 <th class="px-3 py-2 border">対応種別</th>
