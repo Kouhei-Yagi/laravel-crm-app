@@ -98,27 +98,10 @@
                                 <th class="px-3 py-2 border">案件名</th>
 
                                 {{-- 顧客名 --}}
-                                <th class="px-3 py-2 border">
-                                    {{-- 検索条件保持ソート機能 --}}
-                                    <a href="{{ route(
-                                        'interactions.index',
-                                        array_merge(request()->query(), [
-                                            'sort' => 'customer_kana',
-                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
-                                        ]),
-                                    ) }}"
-                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                                        顧客名
-                                    </a>
-
-                                    @if (request('sort') === 'customer_kana')
-                                        @if (request('direction') === 'asc')
-                                            <span class="text-xs">▲</span>
-                                        @elseif(request('direction') === 'desc')
-                                            <span class="text-xs">▼</span>
-                                        @endif
-                                    @endif
-                                </th>
+                                <x-table.sortable-header
+                                    label="顧客名"
+                                    column="customer_kana"
+                                />
 
                                 {{-- 担当者 --}}
                                 <th class="px-3 py-2 border">担当者</th>
