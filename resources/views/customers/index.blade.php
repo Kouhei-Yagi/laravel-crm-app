@@ -68,76 +68,25 @@
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
                                 {{-- 顧客名 --}}
-                                <th class="px-3 py-2 border">
-                                    {{-- 検索条件保持ソート --}}
-                                    <a href="{{ route(
-                                        'customers.index',
-                                        array_merge(request()->query(), [
-                                            'sort' => 'name',
-                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
-                                        ]),
-                                    ) }}"
-                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                                        顧客名
-                                    </a>
-
-                                    @if (request('sort') === 'name')
-                                        @if (request('direction') === 'asc')
-                                            <span class="text-xs">▲</span>
-                                        @elseif (request('direction') === 'desc')
-                                            <span class="text-xs">▼</span>
-                                        @endif
-                                    @endif
-                                </th>
+                                <x-table.sortable-header
+                                    label="顧客名"
+                                    column="name"
+                                />
 
                                 {{-- メール --}}
-                                <th class="px-3 py-2 border">
-                                    {{-- 検索条件保持ソート機能 --}}
-                                    <a href="{{ route(
-                                        'customers.index',
-                                        array_merge(request()->query(), [
-                                            'sort' => 'email',
-                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
-                                        ]),
-                                    ) }}"
-                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                                        メール
-                                    </a>
-
-                                    @if (request('sort') === 'email')
-                                        @if (request('direction') === 'asc')
-                                            <span class="text-xs">▲</span>
-                                        @elseif(request('direction') === 'desc')
-                                            <span class="text-xs">▼</span>
-                                        @endif
-                                    @endif
-                                </th>
+                                <x-table.sortable-header
+                                    label="メール"
+                                    column="email"
+                                />
 
                                 {{-- 電話番号 --}}
                                 <th class="px-3 py-2 border">電話番号</th>
 
                                 {{-- 会社名 --}}
-                                <th class="px-3 py-2 border">
-                                    {{-- 検索条件保持ソート機能 --}}
-                                    <a href="{{ route(
-                                        'customers.index',
-                                        array_merge(request()->query(), [
-                                            'sort' => 'company_name',
-                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
-                                        ]),
-                                    ) }}"
-                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                                        会社名
-                                    </a>
-
-                                    @if (request('sort') === 'company_name')
-                                        @if (request('direction') === 'asc')
-                                            <span class="text-xs">▲</span>
-                                        @elseif (request('direction') === 'desc')
-                                            <span class="text-xs">▼</span>
-                                        @endif
-                                    @endif
-                                </th>
+                                <x-table.sortable-header
+                                    label="会社名"
+                                    column="company_name"
+                                />
 
                                 {{-- ステータス --}}
                                 <th class="px-3 py-2 border">ステータス</th>
@@ -146,27 +95,10 @@
                                 <th class="px-3 py-2 border">担当者</th>
 
                                 {{-- 作成日 --}}
-                                <th class="px-3 py-2 border">
-                                    {{-- 検索条件保持ソート機能 --}}
-                                    <a href="{{ route(
-                                        'customers.index',
-                                        array_merge(request()->query(), [
-                                            'sort' => 'created_at',
-                                            'direction' => request('direction') === 'asc' ? 'desc' : 'asc',
-                                        ]),
-                                    ) }}"
-                                        class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                                        作成日
-                                    </a>
-
-                                    @if (request('sort') === 'created_at')
-                                        @if (request('direction') === 'asc')
-                                            <span class="text-xs">▲</span>
-                                        @elseif (request('direction') === 'desc')
-                                            <span class="text-xs">▼</span>
-                                        @endif
-                                    @endif
-                                </th>
+                                <x-table.sortable-header
+                                    label="作成日"
+                                    column="created_at"
+                                />
                             </tr>
                         </thead>
 

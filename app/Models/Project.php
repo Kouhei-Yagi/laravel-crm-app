@@ -149,7 +149,7 @@ class Project extends Model
 
         // 検索フォームのステータス欄が「未選択」以外の場合
         // ステータス検索の条件をクエリに追加
-        return $query->where('status', $status);
+        return $query->where('projects.status', $status);
     }
 
     /**
