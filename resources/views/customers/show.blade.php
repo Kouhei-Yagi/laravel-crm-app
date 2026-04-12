@@ -158,6 +158,9 @@
 
                                     {{-- ステータス --}}
                                     <th class="px-3 py-2 border">ステータス</th>
+
+                                    {{-- 税抜金額 --}}
+                                    <th class="px-3 py-2 border">税抜金額</th>
                                 </tr>
                             </thead>
 
@@ -174,6 +177,11 @@
                                         {{-- ステータス --}}
                                         <td class="px-3 py-2 border">
                                             {{ App\Models\Project::STATUSES[$project->status] }}
+                                        </td>
+
+                                        {{-- 税抜金額 --}}
+                                        <td class="px-3 py-2 border">
+                                            {{ number_format($project->amount) ?: '未設定'}}
                                         </td>
                                     </tr>
                                 @endforeach
