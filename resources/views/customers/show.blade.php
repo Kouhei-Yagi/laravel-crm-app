@@ -148,17 +148,32 @@
                     @if ($customer->projects->isEmpty())
                         <p class="text-gray-500 dark:text-gray-400">案件はありません。</p>
                     @else
-                        <table class="w-full border border-gray-300 dark:border-gray-700 text-sm mt-4">
+                        {{-- 一覧データ --}}
+                        <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
                             <thead>
-                                <tr class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100">
-                                    <th class="px-3 py-2 border border-gray-300 dark:border-gray-700">案件名</th>
+                                {{-- 項目名 --}}
+                                <tr class="bg-gray-50 dark:bg-gray-700">
+                                    {{-- 案件名 --}}
+                                    <th class="px-3 py-2 border">案件名</th>
+
+                                    {{-- ステータス --}}
+                                    <th class="px-3 py-2 border">ステータス</th>
                                 </tr>
                             </thead>
+
                             <tbody>
+                                {{-- レコード --}}
                                 @foreach ($customer->projects as $project)
-                                    <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700 text-gray-800 dark:text-gray-100">
-                                        <td class="px-3 py-2 border border-gray-300 dark:border-gray-700">
+                                    <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+
+                                        {{-- 案件名 --}}
+                                        <td class="px-3 py-2 border">
                                             {{ $project->title }}
+                                        </td>
+
+                                        {{-- ステータス --}}
+                                        <td class="px-3 py-2 border">
+                                            {{ App\Models\Project::STATUSES[$project->status] }}
                                         </td>
                                     </tr>
                                 @endforeach
