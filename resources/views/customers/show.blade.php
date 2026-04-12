@@ -141,18 +141,29 @@
                     </div>
 
                     {{-- 案件一覧 --}}
-                    <h3 class="text-lg font-semibold mt-10 mb-3">
+                    <h3 class="text-lg font-semibold mt-10 mb-3 text-gray-800 dark:text-gray-100">
                         案件一覧（{{ $customer->projects->count() }}件）
                     </h3>
 
                     @if ($customer->projects->isEmpty())
-                        <p class="text-gray-500">案件はありません。</p>
+                        <p class="text-gray-500 dark:text-gray-400">案件はありません。</p>
                     @else
-                        <ul class="list-disc pl-5">
-                            @foreach ($customer->projects as $project)
-                                <li>{{ $project->title }}</li>
-                            @endforeach
-                        </ul>
+                        <table class="w-full border border-gray-300 dark:border-gray-700 text-sm mt-4">
+                            <thead>
+                                <tr class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+                                    <th class="px-3 py-2 border border-gray-300 dark:border-gray-700">案件名</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($customer->projects as $project)
+                                    <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700 text-gray-800 dark:text-gray-100">
+                                        <td class="px-3 py-2 border border-gray-300 dark:border-gray-700">
+                                            {{ $project->title }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     @endif
 
                 </div>
