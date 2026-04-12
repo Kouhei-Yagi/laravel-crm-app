@@ -81,6 +81,9 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
+        // 顧客に紐づく案件一覧と対応履歴一覧をまとめて読み込む（N+1防止）
+        $customer->load(['projects', 'interactions']);
+
         // 選択されたcustomersテーブルのデータをshowビューに渡す
         return view('customers.show', compact('customer'));
     }
