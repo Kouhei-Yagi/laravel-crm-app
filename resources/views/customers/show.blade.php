@@ -145,6 +145,16 @@
                         案件一覧（{{ $customer->projects->count() }}件）
                     </h3>
 
+                    @if ($customer->projects->isEmpty())
+                        <p class="text-gray-500">案件はありません。</p>
+                    @else
+                        <ul class="list-disc pl-5">
+                            @foreach ($customer->projects as $project)
+                                <li>{{ $project->title }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+
                 </div>
             </div>
         </div>
