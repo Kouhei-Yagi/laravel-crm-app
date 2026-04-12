@@ -13,6 +13,7 @@
                     {{-- フラッシュメッセージ --}}
                     <x-alert :message="session('success')" />
 
+                    {{-- 詳細データ --}}
                     <table class="w-full border border-gray-300 dark:border-gray-700 text-sm">
                         <tbody>
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
@@ -138,6 +139,11 @@
                             一覧に戻る
                         </x-button.secondary>
                     </div>
+
+                    {{-- 案件一覧 --}}
+                    <h3 class="text-lg font-semibold mt-10 mb-3">
+                        案件一覧（{{ $customer->projects->count() }}件）
+                    </h3>
 
                 </div>
             </div>
