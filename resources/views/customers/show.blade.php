@@ -180,7 +180,9 @@
 
                                         {{-- 案件名 --}}
                                         <td class="px-3 py-2 border">
-                                            {{ $project->title }}
+                                            <a href="{{ route('projects.show', $project) }}" class="text-blue-600 hover:underline">
+                                                {{ $project->title }}
+                                            </a>
                                         </td>
 
                                         {{-- ステータス --}}
