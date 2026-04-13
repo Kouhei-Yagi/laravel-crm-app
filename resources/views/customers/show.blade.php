@@ -238,6 +238,9 @@
 
                                     {{-- 内容 --}}
                                     <th class="px-3 py-2 border">内容</th>
+
+                                    {{-- 担当者 --}}
+                                    <th class="px-3 py-2 border">担当者</th>
                                 </tr>
                             </thead>
 
@@ -259,6 +262,11 @@
                                         {{-- 内容 --}}
                                         <td class="px-3 py-2 border">
                                             {{ Str::limit($interaction->content, 30) }}
+                                        </td>
+
+                                        {{-- 担当者 --}}
+                                        <td class="px-3 py-2 border">
+                                            {{ $interaction->assignedUser->name }}
                                         </td>
                                     </tr>
                                 @endforeach
