@@ -84,8 +84,13 @@ class CustomerController extends Controller
         // 顧客に紐づく案件一覧と対応履歴一覧をまとめて読み込む（N+1防止）
         $customer->load(['projects', 'interactions']);
 
+        // 対応履歴を対応日時の新しい順に並び替えて取得
+        $interactions = $customer->interactions()
+            ->orderByDesc('interacted_at')
+            ->get();
+
         // 選択されたcustomersテーブルのデータをshowビューに渡す
-        return view('customers.show', compact('customer'));
+        return view('customers.show', compact('customer', 'interactions'));
     }
 
     /**

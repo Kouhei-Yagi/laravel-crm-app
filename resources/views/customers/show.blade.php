@@ -219,10 +219,10 @@
 
                     {{-- 対応履歴一覧 --}}
                     <h3 class="text-lg font-semibold mt-10 mb-3 text-gray-800 dark:text-gray-100">
-                        対応履歴一覧（{{ $customer->interactions->count() }}件）
+                        対応履歴一覧（{{ $interactions->count() }}件）
                     </h3>
 
-                    @if ($customer->interactions->isEmpty())
+                    @if ($interactions->isEmpty())
                         <p class="text-gray-500">対応履歴はありません。</p>
                     @else
                         {{-- 一覧データ --}}
@@ -249,7 +249,7 @@
 
                             {{-- レコード --}}
                             <tbody>
-                                @foreach ($customer->interactions as $interaction)
+                                @foreach ($interactions as $interaction)
                                     <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
 
                                         {{-- 対応日時 --}}
