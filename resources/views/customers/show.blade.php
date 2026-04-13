@@ -164,6 +164,9 @@
 
                                     {{-- 期間 --}}
                                     <th class="px-3 py-2 border">期間</th>
+
+                                    {{-- 担当者 --}}
+                                    <th class="px-3 py-2 border">担当者</th>
                                 </tr>
                             </thead>
 
@@ -192,6 +195,11 @@
                                             {{ optional($project->start_date)->format('Y-m-d') ?: '未設定' }}
                                             ～
                                             {{ optional($project->end_date)->format('Y-m-d') ?: '未設定' }}
+                                        </td>
+
+                                        {{-- 担当者 --}}
+                                        <td class="px-3 py-2 border">
+                                            {{ $project->assignedUser->name }}
                                         </td>
                                     </tr>
                                 @endforeach
