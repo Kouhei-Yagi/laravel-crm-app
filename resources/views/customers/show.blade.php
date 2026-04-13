@@ -225,11 +225,31 @@
                     @if ($customer->interactions->isEmpty())
                         <p class="text-gray-500">対応履歴はありません。</p>
                     @else
-                        <ul class="list-disc pl-5">
-                            @foreach ($customer->interactions as $interaction)
-                                <li>{{ $interaction->content }}</li>
-                            @endforeach
-                        </ul>
+                        {{-- 一覧データ --}}
+                        <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
+                            {{-- 項目名 --}}
+                            <thead>
+                                <tr class="bg-gray-50 dark:bg-gray-700">
+                                    {{-- 内容 --}}
+                                    <th class="px-3 py-2 border">
+                                        内容
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            {{-- レコード --}}
+                            <tbody>
+                                @foreach ($customer->interactions as $interaction)
+                                    <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+
+                                        {{-- 内容 --}}
+                                        <td class="px-3 py-2 border">
+                                            {{ Str::limit($interaction->content, 30) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     @endif
 
                 </div>
