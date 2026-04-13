@@ -142,10 +142,10 @@
 
                     {{-- 案件一覧 --}}
                     <h3 class="text-lg font-semibold mt-10 mb-3 text-gray-800 dark:text-gray-100">
-                        案件一覧（{{ $customer->projects->count() }}件）
+                        案件一覧（{{ $projects->count() }}件）
                     </h3>
 
-                    @if ($customer->projects->isEmpty())
+                    @if ($projects->isEmpty())
                         <p class="text-gray-500 dark:text-gray-400">案件はありません。</p>
                     @else
                         {{-- 一覧データ --}}
@@ -175,7 +175,7 @@
 
                             <tbody>
                                 {{-- レコード --}}
-                                @foreach ($customer->projects as $project)
+                                @foreach ($projects as $project)
                                     <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
 
                                         {{-- 案件名 --}}
