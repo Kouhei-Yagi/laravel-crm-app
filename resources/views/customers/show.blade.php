@@ -274,7 +274,13 @@
 
                                         {{-- 関係案件 --}}
                                         <td class="px-3 py-2 border">
-                                            {{ optional($interaction->project)->title ?: '案件未設定'}}
+                                            @if ($interaction->project)
+                                                <a href="{{route('projects.show', $interaction->project)}}" class="text-blue-600 hover:underline">
+                                                    {{ $interaction->project->title }}
+                                                </a>
+                                            @else
+                                                未設定
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
