@@ -233,6 +233,9 @@
                                     {{-- 対応日時 --}}
                                     <th class="px-3 py-2 border">対応日時</th>
 
+                                    {{-- 対応種別 --}}
+                                    <th class="px-3 py-2 border">対応種別</th>
+
                                     {{-- 内容 --}}
                                     <th class="px-3 py-2 border">内容</th>
                                 </tr>
@@ -246,6 +249,11 @@
                                         {{-- 対応日時 --}}
                                         <td class="px-3 py-2 border">
                                             {{ $interaction->interacted_at->format('Y-m-d H:i') }}
+                                        </td>
+
+                                        {{-- 対応種別 --}}
+                                        <td class="px-3 py-2 border">
+                                            {{ App\Models\Interaction::TYPE[$interaction->type] }}
                                         </td>
 
                                         {{-- 内容 --}}
