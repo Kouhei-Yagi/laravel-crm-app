@@ -241,6 +241,9 @@
 
                                     {{-- 担当者 --}}
                                     <th class="px-3 py-2 border">担当者</th>
+
+                                    {{-- 関係案件 --}}
+                                    <th class="px-3 py-2 border">関係案件</th>
                                 </tr>
                             </thead>
 
@@ -267,6 +270,11 @@
                                         {{-- 担当者 --}}
                                         <td class="px-3 py-2 border">
                                             {{ $interaction->assignedUser->name }}
+                                        </td>
+
+                                        {{-- 関係案件 --}}
+                                        <td class="px-3 py-2 border">
+                                            {{ optional($interaction->project)->title ?: '案件未設定'}}
                                         </td>
                                     </tr>
                                 @endforeach
