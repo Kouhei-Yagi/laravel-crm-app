@@ -167,6 +167,9 @@
 
                                     {{-- 担当者 --}}
                                     <th class="px-3 py-2 border">担当者</th>
+
+                                    {{-- 作成日 --}}
+                                    <th class="px-3 py-2 border">作成日</th>
                                 </tr>
                             </thead>
 
@@ -200,6 +203,11 @@
                                         {{-- 担当者 --}}
                                         <td class="px-3 py-2 border">
                                             {{ $project->assignedUser->name }}
+                                        </td>
+
+                                        {{-- 作成日 --}}
+                                        <td class="px-3 py-2 border">
+                                            {{ $project->created_at->format('Y-m-d') }}
                                         </td>
                                     </tr>
                                 @endforeach
