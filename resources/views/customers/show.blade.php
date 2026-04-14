@@ -141,54 +141,10 @@
                     </div>
 
                     {{-- 案件一覧 --}}
-                    <x-customer.project-list :projects="$projects">
-                        <tbody>
-                            {{-- レコード --}}
-                            @foreach ($projects as $project)
-                                <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-
-                                    {{-- 案件名 --}}
-                                    <td class="px-3 py-2 border">
-                                        <a href="{{ route('projects.show', $project) }}" class="text-blue-600 hover:underline">
-                                            {{ $project->title }}
-                                        </a>
-                                    </td>
-
-                                    {{-- ステータス --}}
-                                    <td class="px-3 py-2 border">
-                                        {{ App\Models\Project::STATUSES[$project->status] }}
-                                    </td>
-
-                                    {{-- 税抜金額 --}}
-                                    <td class="px-3 py-2 border">
-                                        {{ number_format($project->amount) ?: '未設定'}}
-                                    </td>
-
-                                    {{-- 期間 --}}
-                                    <td class="px-3 py-2 border">
-                                        {{ optional($project->start_date)->format('Y-m-d') ?: '未設定' }}
-                                        ～
-                                        {{ optional($project->end_date)->format('Y-m-d') ?: '未設定' }}
-                                    </td>
-
-                                    {{-- 担当者 --}}
-                                    <td class="px-3 py-2 border">
-                                        {{ $project->assignedUser->name }}
-                                    </td>
-
-                                    {{-- 作成日 --}}
-                                    <td class="px-3 py-2 border">
-                                        {{ $project->created_at->format('Y-m-d') }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </x-customer.project-list>
+                    <x-customer.project-list :projects="$projects"/>
 
                     {{-- 対応履歴一覧 --}}
-                    <h3 class="text-lg font-semibold mt-10 mb-3 text-gray-800 dark:text-gray-100">
-                        対応履歴一覧（{{ $interactions->count() }}件）
-                    </h3>
+                    <x-customer.interaction-list :interactions="$interactions"/>
 
                     @if ($interactions->isEmpty())
                         <p class="text-gray-500">対応履歴はありません。</p>
