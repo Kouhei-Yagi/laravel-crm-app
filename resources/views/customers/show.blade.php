@@ -143,9 +143,7 @@
                     {{-- 案件一覧 --}}
                     <x-customer.project-list :projects="$projects"/>
 
-                    @if ($projects->isEmpty())
-                        <p class="text-gray-500 dark:text-gray-400">案件はありません。</p>
-                    @else
+                    @if($projects->isNotEmpty())
                         {{-- 一覧データ --}}
                         <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
                             <thead>
