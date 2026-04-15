@@ -81,21 +81,17 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        // 顧客に紐づく案件一覧と対応履歴一覧をまとめて読み込む（N+1防止）
-        $customer->load(['projects', 'interactions']);
+        // 顧客に紐づく案件一覧と対応履歴一覧を並び替えて読み込む（ N+1 防止）
+        $customer->load([
+            'projects' => fn($q) => $q->orderByDesc('created_at'),
+            'interactions' => fn($q) => $q->orderByDesc('interacted_at'),
+        ]);
 
-        // 案件を作成日の新しい順に並び替えて取得
-        $projects = $customer->projects()
-            ->orderByDesc('created_at')
-            ->get();
-
-        // 対応履歴を対応日時の新しい順に並び替えて取得
-        $interactions = $customer->interactions()
-            ->orderByDesc('interacted_at')
-            ->get();
-
-        // 選択されたcustomersテーブルのデータをshowビューに渡す
-        return view('customers.show', compact('customer', 'projects', 'interactions'));
+        return view('customers.show', [
+            'customer' => $customer,
+            'projects' => $customer->projects,
+            'interactions' => $customer->interactions,
+        ]);
     }
 
     /**
