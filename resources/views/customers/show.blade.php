@@ -146,9 +146,7 @@
                     {{-- 対応履歴一覧 --}}
                     <x-customer.interaction-list :interactions="$interactions"/>
 
-                    @if ($interactions->isEmpty())
-                        <p class="text-gray-500">対応履歴はありません。</p>
-                    @else
+                    @if($interactions->isNotEmpty())
                         {{-- 一覧データ --}}
                         <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
                             {{-- 項目名 --}}
