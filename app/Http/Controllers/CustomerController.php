@@ -83,8 +83,8 @@ class CustomerController extends Controller
     {
         // 顧客に紐づく案件一覧と対応履歴一覧を並び替えて読み込む（ N+1 防止）
         $customer->load([
-            'projects' => fn($q) => $q->orderByDesc('created_at'),
-            'interactions' => fn($q) => $q->orderByDesc('interacted_at'),
+            'projects' => fn($q) => $q->with('assignedUser')->orderByDesc('created_at'),
+            'interactions' => fn($q) => $q->with('assignedUser', 'project')->orderByDesc('interacted_at'),
         ]);
 
         return view('customers.show', [
