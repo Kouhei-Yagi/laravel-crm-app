@@ -144,47 +144,7 @@
                     <x-customer.project-list :projects="$projects"/>
 
                     {{-- 対応履歴一覧 --}}
-                    <x-customer.interaction-list :interactions="$interactions">
-
-                        {{-- レコード --}}
-                        <tbody>
-                            @foreach ($interactions as $interaction)
-                                <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-
-                                    {{-- 対応日時 --}}
-                                    <td class="px-3 py-2 border">
-                                        {{ $interaction->interacted_at->format('Y-m-d H:i') }}
-                                    </td>
-
-                                    {{-- 対応種別 --}}
-                                    <td class="px-3 py-2 border">
-                                        {{ App\Models\Interaction::TYPE[$interaction->type] }}
-                                    </td>
-
-                                    {{-- 内容 --}}
-                                    <td class="px-3 py-2 border">
-                                        {{ Str::limit($interaction->content, 30) }}
-                                    </td>
-
-                                    {{-- 担当者 --}}
-                                    <td class="px-3 py-2 border">
-                                        {{ $interaction->assignedUser->name }}
-                                    </td>
-
-                                    {{-- 関係案件 --}}
-                                    <td class="px-3 py-2 border">
-                                        @if ($interaction->project)
-                                            <a href="{{route('projects.show', $interaction->project)}}" class="text-blue-600 hover:underline">
-                                                {{ $interaction->project->title }}
-                                            </a>
-                                        @else
-                                            未設定
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </x-customer.interaction-list>
+                    <x-customer.interaction-list :interactions="$interactions"/>
 
                 </div>
             </div>
