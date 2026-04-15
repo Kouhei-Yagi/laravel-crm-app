@@ -144,71 +144,47 @@
                     <x-customer.project-list :projects="$projects"/>
 
                     {{-- 対応履歴一覧 --}}
-                    <x-customer.interaction-list :interactions="$interactions"/>
+                    <x-customer.interaction-list :interactions="$interactions">
 
-                    @if($interactions->isNotEmpty())
-                        {{-- 一覧データ --}}
-                        <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
-                            {{-- 項目名 --}}
-                            <thead>
-                                <tr class="bg-gray-50 dark:bg-gray-700">
+                        {{-- レコード --}}
+                        <tbody>
+                            @foreach ($interactions as $interaction)
+                                <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+
                                     {{-- 対応日時 --}}
-                                    <th class="px-3 py-2 border">対応日時</th>
+                                    <td class="px-3 py-2 border">
+                                        {{ $interaction->interacted_at->format('Y-m-d H:i') }}
+                                    </td>
 
                                     {{-- 対応種別 --}}
-                                    <th class="px-3 py-2 border">対応種別</th>
+                                    <td class="px-3 py-2 border">
+                                        {{ App\Models\Interaction::TYPE[$interaction->type] }}
+                                    </td>
 
                                     {{-- 内容 --}}
-                                    <th class="px-3 py-2 border">内容</th>
+                                    <td class="px-3 py-2 border">
+                                        {{ Str::limit($interaction->content, 30) }}
+                                    </td>
 
                                     {{-- 担当者 --}}
-                                    <th class="px-3 py-2 border">担当者</th>
+                                    <td class="px-3 py-2 border">
+                                        {{ $interaction->assignedUser->name }}
+                                    </td>
 
                                     {{-- 関係案件 --}}
-                                    <th class="px-3 py-2 border">関係案件</th>
+                                    <td class="px-3 py-2 border">
+                                        @if ($interaction->project)
+                                            <a href="{{route('projects.show', $interaction->project)}}" class="text-blue-600 hover:underline">
+                                                {{ $interaction->project->title }}
+                                            </a>
+                                        @else
+                                            未設定
+                                        @endif
+                                    </td>
                                 </tr>
-                            </thead>
-
-                            {{-- レコード --}}
-                            <tbody>
-                                @foreach ($interactions as $interaction)
-                                    <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-
-                                        {{-- 対応日時 --}}
-                                        <td class="px-3 py-2 border">
-                                            {{ $interaction->interacted_at->format('Y-m-d H:i') }}
-                                        </td>
-
-                                        {{-- 対応種別 --}}
-                                        <td class="px-3 py-2 border">
-                                            {{ App\Models\Interaction::TYPE[$interaction->type] }}
-                                        </td>
-
-                                        {{-- 内容 --}}
-                                        <td class="px-3 py-2 border">
-                                            {{ Str::limit($interaction->content, 30) }}
-                                        </td>
-
-                                        {{-- 担当者 --}}
-                                        <td class="px-3 py-2 border">
-                                            {{ $interaction->assignedUser->name }}
-                                        </td>
-
-                                        {{-- 関係案件 --}}
-                                        <td class="px-3 py-2 border">
-                                            @if ($interaction->project)
-                                                <a href="{{route('projects.show', $interaction->project)}}" class="text-blue-600 hover:underline">
-                                                    {{ $interaction->project->title }}
-                                                </a>
-                                            @else
-                                                未設定
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @endif
+                            @endforeach
+                        </tbody>
+                    </x-customer.interaction-list>
 
                 </div>
             </div>
