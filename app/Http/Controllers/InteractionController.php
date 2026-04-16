@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 
 class InteractionController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Interaction::class, 'interaction');
+    }
+
     /**
      * 案件履歴一覧を表示する
      *
