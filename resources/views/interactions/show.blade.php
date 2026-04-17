@@ -91,17 +91,21 @@
 
                     {{-- ボタン --}}
                     <div class="flex items-center gap-4 mt-6">
-                        <x-button.primary href="{{ route('interactions.edit', $interaction) }}">
-                            編集
-                        </x-button.primary>
+                        @can('update', $interaction)
+                            <x-button.primary href="{{ route('interactions.edit', $interaction) }}">
+                                編集
+                            </x-button.primary>
+                        @endcan
 
-                        <form action="{{ route('interactions.destroy', $interaction) }}" method="post">
-                            @csrf
-                            @method('delete')
-                            <x-button.danger type="submit" onclick="return confirm('本当に削除しますか？')">
-                                削除
-                            </x-button.danger>
-                        </form>
+                        @can('delete', $interaction)
+                            <form action="{{ route('interactions.destroy', $interaction) }}" method="post">
+                                @csrf
+                                @method('delete')
+                                <x-button.danger type="submit" onclick="return confirm('本当に削除しますか？')">
+                                    削除
+                                </x-button.danger>
+                            </form>
+                        @endcan
 
                         <x-button.secondary href="{{ route('interactions.index') }}">
                             一覧に戻る

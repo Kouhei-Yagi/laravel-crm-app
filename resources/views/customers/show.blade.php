@@ -123,17 +123,21 @@
 
                     {{-- ボタン --}}
                     <div class="flex items-center gap-4 mt-6">
-                        <x-button.primary href="{{ route('customers.edit', $customer) }}">
-                            編集
-                        </x-button.primary>
+                        @can('update', $customer)
+                            <x-button.primary href="{{ route('customers.edit', $customer) }}">
+                                編集
+                            </x-button.primary>
+                        @endcan
 
-                        <form action="{{ route('customers.destroy', $customer) }}" method="post" class="inline-block">
-                            @csrf
-                            @method('delete')
-                            <x-button.danger type="submit" onclick="return confirm('本当に削除しますか？')">
-                                削除
-                            </x-button.danger>
-                        </form>
+                        @can('delete', $customer)
+                            <form action="{{ route('customers.destroy', $customer) }}" method="post" class="inline-block">
+                                @csrf
+                                @method('delete')
+                                <x-button.danger type="submit" onclick="return confirm('本当に削除しますか？')">
+                                    削除
+                                </x-button.danger>
+                            </form>
+                        @endcan
 
                         <x-button.secondary href="{{ route('customers.index') }}">
                             一覧に戻る

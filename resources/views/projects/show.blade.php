@@ -92,17 +92,21 @@
 
                     {{-- ボタン --}}
                     <div class="flex items-center gap-4 mt-6">
-                        <x-button.primary href="{{ route('projects.edit', $project) }}">
-                            編集
-                        </x-button.primary>
+                        @can('update', $project)
+                            <x-button.primary href="{{ route('projects.edit', $project) }}">
+                                編集
+                            </x-button.primary>
+                        @endcan
 
-                        <form action="{{ route('projects.destroy', $project) }}" method="post" class="inline-block">
-                            @csrf
-                            @method('delete')
-                            <x-button.danger type="submit" onclick="return confirm('本当に削除しますか？')">
-                                削除
-                            </x-button.danger>
-                        </form>
+                        @can('delete', $project)
+                            <form action="{{ route('projects.destroy', $project) }}" method="post" class="inline-block">
+                                @csrf
+                                @method('delete')
+                                <x-button.danger type="submit" onclick="return confirm('本当に削除しますか？')">
+                                    削除
+                                </x-button.danger>
+                            </form>
+                        @endcan
 
                         <x-button.secondary href="{{ route('projects.index') }}">
                             一覧に戻る
