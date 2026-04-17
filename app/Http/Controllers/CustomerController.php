@@ -156,4 +156,20 @@ class CustomerController extends Controller
             ->route('customers.index')
             ->with('success', '削除しました。');
     }
+
+    /**
+     * 顧客一覧を CSV でエクスポートする
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function export(Request $request)
+    {
+        $csv = "name,email,phone\n";
+        $csv .= "テスト太郎,test@example.com,090-12234-5678\n";
+
+        return response($csv)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename=customers.csv');
+    }
 }
