@@ -165,16 +165,19 @@ class CustomerController extends Controller
      */
     public function export(Request $request)
     {
-        // 検索条件を反映した顧客一覧を取得
+        // 検索・ソート条件を反映した顧客一覧を取得
         $customers = Customer::query()
             ->filter($request)
             ->sort($request)
             ->get();
 
-        // CSV のヘッダー部分
-        $csv = "name,email,phone,company_name,status,assigned_user,created_at\n";
+        // BOM を付ける（Excel 文字化け対策）
+        $csv = "\xEF\xBB\xBF";
 
-        // データ部分
+        // ヘッダー行
+        $csv .= "name,email,phone,company_name,status,assigned_user,created_at\n";
+
+        // データ行
         foreach ($customers as $customer) {
             $csv .= implode(',', [
                 $customer->name,
