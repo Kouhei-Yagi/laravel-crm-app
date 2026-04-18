@@ -165,9 +165,29 @@ class CustomerController extends Controller
      */
     public function export(Request $request)
     {
-        $csv = "name,email,phone\n";
-        $csv .= "テスト太郎,test@example.com,090-12234-5678\n";
+        // 検索条件を反映した顧客一覧を取得
+        $customers = Customer::query()
+            ->filter($request)
+            ->sort($request)
+            ->get();
 
+        // CSV のヘッダー部分
+        $csv = "name,email,phone,company_name,status,assigned_user,created_at\n";
+
+        // データ部分
+        foreach ($customers as $customer) {
+            $csv .= implode(',', [
+                $customer->name,
+                $customer->email,
+                $customer->phone,
+                $customer->company_name,
+                Customer::STATUSES[$customer->status],
+                $customer->assignedUser->name,
+                $customer->created_at->format('Y-m-d'),
+            ]) . "\n";
+        }
+
+        // レスポンスを返す
         return response($csv)
             ->header('Content-Type', 'text/csv')
             ->header('Content-Disposition', 'attachment; filename=customers.csv');
