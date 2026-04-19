@@ -148,7 +148,7 @@ class Customer extends Model
 
         // 検索フォームの担当者欄が「未選択」以外の場合
         // 担当者検索の条件をクエリに追加
-        $query->where('assigned_user_id', $userId);
+        return $query->where('assigned_user_id', $userId);
     }
 
     /**
