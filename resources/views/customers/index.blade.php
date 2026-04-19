@@ -9,7 +9,10 @@
 
             {{-- ボタン --}}
             <div class="flex gap-2">
-                <x-button.secondary href="{{ route('customers.export', request()->query()) }}">
+                <x-button.secondary :href="route('customers.export', array_merge(
+                    request()->all(),
+                    ['sort' => request('sort'), 'direction' => request('direction')]
+                ))">
                     CSVエクスポート
                 </x-button.secondary>
 
