@@ -156,4 +156,43 @@ class CustomerController extends Controller
             ->route('customers.index')
             ->with('success', '削除しました。');
     }
+
+    /**
+     * 顧客一覧を CSV でエクスポートする
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function export(Request $request)
+    {
+        // 検索・ソート条件を反映した顧客一覧を取得
+        $customers = Customer::query()
+            ->filter($request)
+            ->sort($request)
+            ->get();
+
+        // BOM を付ける（Excel 文字化け対策）
+        $csv = "\xEF\xBB\xBF";
+
+        // ヘッダー行
+        $csv .= "name,email,phone,company_name,status,assigned_user,created_at\n";
+
+        // データ行
+        foreach ($customers as $customer) {
+            $csv .= implode(',', [
+                $customer->name,
+                $customer->email,
+                $customer->phone,
+                $customer->company_name,
+                Customer::STATUSES[$customer->status],
+                $customer->assignedUser->name,
+                $customer->created_at->format('Y-m-d'),
+            ]) . "\n";
+        }
+
+        // レスポンスを返す
+        return response($csv)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename=customers.csv');
+    }
 }

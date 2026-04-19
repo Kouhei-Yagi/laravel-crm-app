@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 
 trait Sortable
 {
-    public function scopeSort($query, Request $request)
+    public function scopeSort($query)
     {
         // クエリパラメータの sort と direction の値を取得する
-        $sort = $request->get('sort', $this->defaultSort);
-        $direction = $request->get('direction', $this->defaultDirection);
+        $sort = request()->get('sort', $this->defaultSort);
+        $direction = request()->get('direction', $this->defaultDirection);
 
         // ソート対象カラムのホワイトリスト化
         $sortable = property_exists($this, 'sortable') ? $this->sortable : [];
