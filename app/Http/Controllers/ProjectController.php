@@ -146,4 +146,24 @@ class ProjectController extends Controller
             ->route('projects.index')
             ->with('success', '削除しました。');
     }
+
+    /**
+     * 案件一覧を CSV でエクスポートする
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function export(Request $request)
+    {
+        // ヘッダー行
+        $csv = "案件名,顧客名,ステータス,税抜金額,担当者,期間,作成日\n";
+
+        // データ行
+        $csv .= "新規Webサイト制作,株式会社サンプル,提案中,500000,山田太郎,2024-05-01〜2024-07-31,2024-04-10\n";
+
+        // ヘッダー情報を付与し、レスポンスを返す
+        return response($csv)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename=projects.csv');
+    }
 }
