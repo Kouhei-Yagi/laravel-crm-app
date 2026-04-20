@@ -8,9 +8,15 @@
             </h2>
 
             {{-- ボタン --}}
-            <x-button.primary href="{{ route('projects.create') }}">
-                新規作成
-            </x-button.primary>
+            <div class="flex gap-2">
+                <x-button.secondary :href="route('projects.export', request()->query())">
+                    CSVエクスポート
+                </x-button.secondary>
+
+                <x-button.primary href="{{ route('projects.create') }}">
+                    新規作成
+                </x-button.primary>
+            </div>
         </div>
     </x-slot>
 
