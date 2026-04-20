@@ -155,22 +155,24 @@ class ProjectController extends Controller
      */
     public function export(Request $request)
     {
-        // 案件一覧から最初のデータのみを取得
-        $projects = Project::orderByDesc('created_at')->first();
+        // 案件一覧からデータ全件を取得
+        $projects = Project::orderByDesc('created_at')->get();
 
         // ヘッダー行
         $csv = "案件名,顧客名,ステータス,税抜金額,担当者,期間,作成日\n";
 
         // データ行
-        $csv .= implode(',', [
-            $projects->title,
-            $projects->customer->name,
-            Project::STATUSES[$projects->status],
-            $projects->amount,
-            $projects->assignedUser->name,
-            $projects->start_date->format('Y-m-d') . '~' . $projects->end_date->format('Y-m-d'),
-            $projects->created_at->format('Y-m-d'),
-        ]) . "\n";
+        foreach ($projects as $project) {
+            $csv .= implode(',', [
+                $project->title,
+                $project->customer->name,
+                Project::STATUSES[$project->status],
+                $project?->amount,
+                $project->assignedUser->name,
+                $project->start_date?->format('Y-m-d') . '~' . $project->end_date?->format('Y-m-d'),
+                $project->created_at->format('Y-m-d'),
+            ]) . "\n";
+        }
 
         // ヘッダー情報を付与し、レスポンスを返す
         return response($csv)
