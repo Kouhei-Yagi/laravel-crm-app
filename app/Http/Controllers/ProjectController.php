@@ -155,11 +155,22 @@ class ProjectController extends Controller
      */
     public function export(Request $request)
     {
+        // 案件一覧から最初のデータのみを取得
+        $projects = Project::orderByDesc('created_at')->first();
+
         // ヘッダー行
         $csv = "案件名,顧客名,ステータス,税抜金額,担当者,期間,作成日\n";
 
         // データ行
-        $csv .= "新規Webサイト制作,株式会社サンプル,提案中,500000,山田太郎,2024-05-01〜2024-07-31,2024-04-10\n";
+        $csv .= implode(',', [
+            $projects->title,
+            $projects->customer->name,
+            Project::STATUSES[$projects->status],
+            $projects->amount,
+            $projects->assignedUser->name,
+            $projects->start_date->format('Y-m-d') . '~' . $projects->end_date->format('Y-m-d'),
+            $projects->created_at->format('Y-m-d'),
+        ]) . "\n";
 
         // ヘッダー情報を付与し、レスポンスを返す
         return response($csv)
