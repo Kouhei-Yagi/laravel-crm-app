@@ -4186,7 +4186,7 @@ php artisan make:provider AuthServiceProvider
 
 1. `routes/web.php`にルートの追加
 
-- `routes/web.php`に`Route::get('customers/export', [Customer::class, export])->name('customers.export');`を追加
+- `routes/web.php`に`Route::get('customers/export', [CustomerController::class, export])->name('customers.export');`を追加
   ※`Route::resource('customers', ...)`より前に記述する必要がある（後ろに書くと`/customers/export`が`/customers/{customer}`と解釈され 404 になる）
 
 2. Controller に export() メソッドを追加
@@ -4234,5 +4234,78 @@ php artisan make:provider AuthServiceProvider
   → カンマを含む値は`" "`で囲む必要がある
   → BOM を付けることで Excel の文字化けを防げる
   → CSV 出力は「ただの文字列」ではなく「データの持ち出し機能」であることを理解
+
+---
+
+## 機能名：案件一覧画面の CSV エクスポート
+
+### 目的
+
+- 担当者が Excel などで顧客データを分析・共有しやすくするため
+- 検索・ソート条件を反映した CSV を出力し、ユーザー体験を向上させるため
+
+### ブランチ名：**feature/project-csv-export**
+
+### 実装日：2026-04-20
+
+### 作成・変更・自動生成されたファイル
+
+- `routes/web.php`（更新）
+- `app/Http/Controllers/ProjectController.php`（更新）
+- `resources/views/projects/index.blade.php`（更新）
+
+### 実装内容
+
+- CSV エクスポート用のルートを追加
+    - `/projects/export`を GET で追加
+    - `projects.export`という名前付きルートを設定
+    - `Route::resource('projects')`より前に記述（後ろに書くと`/projects/{project}`にマッチして 404 になるため）
+- CustomerController に export() メソッドを実装
+    - 検索条件（keyword / customer_id / status / assigned_user_id / amount / period_from / period_to / created_at）を反映
+    - ソート条件（sort / direction）を反映
+    - Eloquent の結果をループして CSV 文字列を生成
+    - Excel 文字化け対策として UTF-8 BOM（`\xEF\xBB\xBF`）を付与
+    - `response()`を使って CSV をダウンロードさせるレスポンスを返却
+- 顧客一覧画面に「CSV エクスポート」ボタンを追加
+    - Blade コンポーネント`<x-button.secondary>`を使用
+    - `route('projects.export', request()->query())`を使い、現在の検索・ソート条件をそのまま引き継いだ URL を生成
+    - HTML エスケープを避けるため`:href="..."`を使用
+
+### 実装手順
+
+1. `routes/web.php`にルートの追加
+
+- `/projects/export`を GET で追加し、名前付きルート`projects.export`を設定
+
+2. Controller に export() メソッドを追加
+
+- 最初は固定文字列の CSV を返す
+- 次に 1 件の実データを返す
+- 次に複数件のデータを返す
+- 検索・ソート条件を反映
+- 最後に BOM を付与して Excel 文字化け対策を実装
+
+3. 顧客一覧画面に「CSV エクスポート」ボタンを追加
+
+- 現在の検索条件を引き継ぐため`request()->query()`を使用
+- `<x-button.secondary>`で UI に統一感を持たせる
+
+### 確認内容
+
+- 検索条件が CSV に正しく反映されること
+- ソート条件が CSV に正しく反映されること
+- Excel で開いても文字化けしないこと
+- CSV の列順が一覧画面と一致していること
+- CSV ダウンロードが正常に行えること
+
+### 気づき・課題
+
+- Eloquent モデルの実データは`attributes`に格納されており、その他にも多くのメタ情報が含まれることを理解した
+- `\xEF\xBB\xBF`の`\x`は「16進数のバイト値として扱う」という意味であり、UTF-8 BOM の 3 バイトを表現している
+- 今後の改善ポイント
+    - N+1 問題の解消（with() の追加）
+    - ファイル名に日時を付与してユーザーが管理しやすくする
+    - CSV のエスケープ処理（カンマ・改行対応）
+    - 大量データ対応（ストリーム出力）
 
 ---
