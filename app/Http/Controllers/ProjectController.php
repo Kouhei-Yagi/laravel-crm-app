@@ -155,8 +155,11 @@ class ProjectController extends Controller
      */
     public function export(Request $request)
     {
-        // 案件一覧からデータ全件を取得
-        $projects = Project::orderByDesc('created_at')->get();
+        // 検索・ソート条件を反映した案件一覧を取得
+        $projects = Project::query()
+            ->filter($request)
+            ->sort($request)
+            ->get();
 
         // ヘッダー行
         $csv = "案件名,顧客名,ステータス,税抜金額,担当者,期間,作成日\n";
