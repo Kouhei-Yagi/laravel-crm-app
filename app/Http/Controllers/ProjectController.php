@@ -161,8 +161,11 @@ class ProjectController extends Controller
             ->sort($request)
             ->get();
 
+        // BOM の付与（Excel 文字化け対策）
+        $csv = "\xEF\xBB\xBF";
+
         // ヘッダー行
-        $csv = "案件名,顧客名,ステータス,税抜金額,担当者,期間,作成日\n";
+        $csv .= "案件名,顧客名,ステータス,税抜金額,担当者,期間,作成日\n";
 
         // データ行
         foreach ($projects as $project) {
