@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('customers/export', [CustomerController::class, 'export'])->name('customers.export');
+    Route::get('projects/export', [ProjectController::class, 'export'])->name('projects.export');
 
     Route::resource('customers', CustomerController::class);
     Route::resource('projects', ProjectController::class);

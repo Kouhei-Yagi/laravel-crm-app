@@ -146,4 +146,43 @@ class ProjectController extends Controller
             ->route('projects.index')
             ->with('success', '削除しました。');
     }
+
+    /**
+     * 案件一覧を CSV でエクスポートする
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function export(Request $request)
+    {
+        // 検索・ソート条件を反映した案件一覧を取得
+        $projects = Project::query()
+            ->filter($request)
+            ->sort($request)
+            ->get();
+
+        // BOM の付与（Excel 文字化け対策）
+        $csv = "\xEF\xBB\xBF";
+
+        // ヘッダー行
+        $csv .= "案件名,顧客名,ステータス,税抜金額,担当者,期間,作成日\n";
+
+        // データ行
+        foreach ($projects as $project) {
+            $csv .= implode(',', [
+                $project->title,
+                $project->customer->name,
+                Project::STATUSES[$project->status],
+                $project?->amount,
+                $project->assignedUser->name,
+                $project->start_date?->format('Y-m-d') . '~' . $project->end_date?->format('Y-m-d'),
+                $project->created_at->format('Y-m-d'),
+            ]) . "\n";
+        }
+
+        // ヘッダー情報を付与し、レスポンスを返す
+        return response($csv)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename=projects.csv');
+    }
 }
