@@ -3,7 +3,7 @@
 use App\Models\Customer;
 use Tests\TestCase;
 
-it('allows authenticated users to view the customer index page', function () {
+it('一覧画面に顧客の名前を表示', function () {
     // ログインユーザーを作成してログイン
     $this->loginUser();
 
@@ -20,4 +20,12 @@ it('allows authenticated users to view the customer index page', function () {
     foreach ($customers as $customer) {
         $response->assertSee($customer->name);
     }
+});
+
+it('ログインしないで一覧画面にアクセスした際は、ログインページにリダイレクト', function () {
+    // ログインしないでアクセス
+    $response = $this->get('/customers');
+
+    // /login にリダイレクトされることを確認
+    $response->assertRedirect('/login');
 });
