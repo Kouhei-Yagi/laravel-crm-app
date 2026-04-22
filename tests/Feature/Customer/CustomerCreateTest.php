@@ -9,7 +9,7 @@ it('ログインユーザーの顧客作成画面の表示テスト', function (
     // /customers/create にログイン
     $response = $this->get('/customers/create');
 
-    // ログイン成功（ステータスコード 200）を確認
+    // 作成画面が正常に表示されることを確認
     $response->assertOk();
 });
 
@@ -70,7 +70,7 @@ it('ステータスのバリデーションエラーのテスト', function () {
         'rank' => 'A',
     ];
 
-    // POST / customers にデータ送信
+    // POST /customers にデータ送信
     $response = $this->post('/customers', $data);
 
     // バリデーションエラー → 302 リダイレクトを確認
@@ -91,7 +91,7 @@ it('ランクのバリデーションエラーのテスト', function () {
         'rank' => '',
     ];
 
-    // POST / customers にデータ送信
+    // POST /customers にデータ送信
     $response = $this->post('/customers', $data);
 
     // バリデーションエラー → 302 リダイレクを確認
@@ -99,4 +99,20 @@ it('ランクのバリデーションエラーのテスト', function () {
 
     // rank にエラーがあることを確認
     $response->assertSessionHasErrors(['rank']);
+});
+
+it('未ログインユーザーでの顧客新規登録画面アクセス制限（認可）テスト', function () {
+    // ログインしないでアクセス
+    $response = $this->get('/customers/create');
+
+    // /login にリダイレクトされることを確認
+    $response->assertRedirect('/login');
+});
+
+it('未ログインユーザーでの顧客新規登録処理アクセス制限（認可）テスト', function () {
+    // ログインしないでアクセス
+    $response = $this->post('/customers');
+
+    // /login にリダイレクト
+    $response->assertRedirect('/login');
 });
