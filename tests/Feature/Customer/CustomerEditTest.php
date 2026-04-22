@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Customer;
+use Pest\ArchPresets\Custom;
 use Tests\TestCase;
 
 it('顧客編集画面の表示テスト', function () {
@@ -126,4 +127,26 @@ it('ランクの顧客更新処理バリデーションのテスト', function (
 
     // rank にエラーメッセージがあるか確認
     $response->assertSessionHasErrors(['rank']);
+});
+
+it('未ログインユーザーでの顧客編集画面アクセス制限（認可）テスト', function () {
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // ログインせずに GET /customer/{id}/edit にアクセス
+    $response = $this->get("/customers/{$customer->id}/edit");
+
+    // /login にリダイレクトされることを確認
+    $response->assertRedirect('/login');
+});
+
+it('未ログインユーザーでの顧客更新処理アクセス制限（認可）テスト', function () {
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // ログインせずに PATCH /customers/{id} にアクセス
+    $response = $this->patch("/customers/{$customer->id}");
+
+    // /login にリダイレクトされることを確認
+    $response->assertRedirect('/login');
 });
