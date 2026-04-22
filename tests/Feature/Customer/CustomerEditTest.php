@@ -49,3 +49,81 @@ it('customers テーブルの更新処理テスト', function () {
         'rank' => 'A',
     ]);
 });
+
+it('名前の顧客更新処理バリデーションエラーのテスト', function () {
+    // ログインユーザーを作成してログイン
+    $user = $this->loginUser();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create([
+        'assigned_user_id' => $user->id
+    ]);
+
+    // 送信するデータを作成
+    $data = [
+        'name' => '',
+        'status' => 'prospect',
+        'rank' => 'A',
+    ];
+
+    // PATCH /customers/{id} にデータを持ってアクセス
+    $response = $this->patch("/customers/{$customer->id}", $data);
+
+    // バリデーションエラー → 302 リダイレクトを確認
+    $response->assertStatus(302);
+
+    // name にエラーメッセージがあることを確認
+    $response->assertSessionHasErrors(['name']);
+});
+
+it('ステータスの顧客更新処理バリデーションエラーのテスト', function () {
+    // ログインユーザーを作成してログイン
+    $user = $this->loginUser();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create([
+        'assigned_user_id' => $user->id
+    ]);
+
+    // 送信するデータを作成
+    $data = [
+        'name' => '山田 太郎',
+        'status' => '',
+        'rank' => 'A',
+    ];
+
+    // PATCH /customers/{id} にデータを持ってアクセス
+    $response = $this->patch("/customers/{$customer->id}", $data);
+
+    // バリデーションエラー → 302 リダイレクトを確認
+    $response->assertStatus(302);
+
+    // status にエラーメッセージがあることを確認
+    $response->assertSessionHasErrors(['status']);
+});
+
+it('ランクの顧客更新処理バリデーションのテスト', function () {
+    // ログインユーザーを作成してログイン
+    $user = $this->loginUser();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create([
+        'assigned_user_id' => $user->id
+    ]);
+
+    // 送信するデータを作成
+    $data = [
+        'name' => '山田 太郎',
+        'status' => 'prospect',
+        'rank' => '',
+    ];
+
+    // PATCH /customers/{id} にデータを持ってアクセス
+    $response = $this->patch("/customers/{$customer->id}", $data);
+
+    // バリデーションエラー → 302 リダイレクトを確認
+    $response->assertStatus(302);
+
+    // rank にエラーメッセージがあるか確認
+    $response->assertSessionHasErrors(['rank']);
+});
