@@ -12,7 +12,7 @@ it('ログインユーザーは自分の担当する顧客を削除できる', f
         'assigned_user_id' => $user->id,
     ]);
 
-    // DELETE /customers/{id} にアクセス（顧客を削除）
+    // 削除処理にアクセス
     $response = $this->delete("/customers/{$customer->id}");
 
     // 一覧画面にリダイレクトすることを確認
@@ -22,4 +22,15 @@ it('ログインユーザーは自分の担当する顧客を削除できる', f
     $this->assertSoftDeleted('customers', [
         'id' => $customer->id
     ]);
+});
+
+it('未ログインユーザーは顧客削除処理ができない', function () {
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 未ログイン状態で削除処理にアクセス
+    $response = $this->delete("/customers/{$customer->id}");
+
+    // /login にリダイレクトされることを確認
+    $response->assertRedirect('/login');
 });
