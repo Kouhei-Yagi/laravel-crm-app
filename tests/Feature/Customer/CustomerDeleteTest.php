@@ -1,0 +1,25 @@
+<?php
+
+use App\Models\Customer;
+use Tests\TestCase;
+
+it('ログインユーザーは自分の担当する顧客を削除できる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create([
+        'assigned_user_id' => $user->id,
+    ]);
+
+    // DELETE /customers/{id} にアクセス（顧客を削除）
+    $response = $this->delete("/customers/{$customer->id}");
+
+    // 一覧画面にリダイレクトすることを確認
+    $response->assertRedirect('/customers');
+
+    // DB から顧客が論理削除されていることを確認
+    $this->assertSoftDeleted('customers', [
+        'id' => $customer->id
+    ]);
+});
