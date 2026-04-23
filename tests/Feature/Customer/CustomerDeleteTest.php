@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Customer;
+use App\Models\User;
 use Tests\TestCase;
 
 it('ログインユーザーは自分の担当する顧客を削除できる', function () {
@@ -33,4 +34,23 @@ it('未ログインユーザーは顧客削除処理ができない', function (
 
     // /login にリダイレクトされることを確認
     $response->assertRedirect('/login');
+});
+
+it('ログインユーザー以外のユーザーが作成した顧客は削除できない', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 別ユーザーを作成
+    $otherUser = User::factory()->create();
+
+    // 別ユーザーで顧客を作成
+    $customer = Customer::factory()->create([
+        'assigned_user_id' => $otherUser->id
+    ]);
+
+    // ログインユーザーで別ユーザーの顧客の削除処理にアクセス
+    $response = $this->delete("/customers/{$customer->id}");
+
+    // 403 Forbidden が返ることを確認
+    $response->assertStatus(403);
 });
