@@ -6,7 +6,7 @@ use Tests\TestCase;
 
 uses(TestCase::class);
 
-it('顧客新規登録処理の name は必須である', function () {
+it('name は必須である', function () {
     // 入力フォームから送信するデータ
     $data = [
         'name' => '',
@@ -25,7 +25,7 @@ it('顧客新規登録処理の name は必須である', function () {
     expect($validator->fails())->toBeTrue();
 });
 
-it('顧客新規登録処理の status は必須である', function () {
+it('status は必須である', function () {
     // 入力フォームから送信するデータ
     $data = [
         'name' => '山田 太郎',
@@ -44,7 +44,7 @@ it('顧客新規登録処理の status は必須である', function () {
     expect($validator->fails())->toBeTrue();
 });
 
-it('顧客新規登録処理の rank は必須である', function () {
+it('rank は必須である', function () {
     // 入力フォームから送信するデータ
     $data = [
         'name' => '山田 太郎',
@@ -63,7 +63,7 @@ it('顧客新規登録処理の rank は必須である', function () {
     expect($validator->fails())->toBeTrue();
 });
 
-it('顧客新規登録処理の email は正しい形式ならバリデーションを通過する', function ($validEmail) {
+it('email は正しい形式ならバリデーションを通過する', function ($validEmail) {
     // 入力フォームからの送信データ
     $data = [
         'name' => '山田 太郎',
@@ -90,7 +90,7 @@ it('顧客新規登録処理の email は正しい形式ならバリデーショ
     'user-name@example.org',
 ]);
 
-it('顧客新規登録処理の email は不正な形式だとバリデーションエラーになる', function ($invalidEmail) {
+it('email は不正な形式だとバリデーションエラーになる', function ($invalidEmail) {
     // 入力フォームから送信するデータ
     $data = [
         'name' => '山田 太郎',
@@ -118,7 +118,7 @@ it('顧客新規登録処理の email は不正な形式だとバリデーショ
     'test@ example.com', // スペース入り
 ]);
 
-it('顧客新規登録処理の phone は正しい形式なら通過する', function ($validPhone) {
+it('phone は正しい形式なら通過する', function ($validPhone) {
     // 入力フォームからの送信データ
     $data = [
         'name' => '山田 太郎',
@@ -147,7 +147,7 @@ it('顧客新規登録処理の phone は正しい形式なら通過する', fun
     '',                   // nullable（空文字OK）
 ]);
 
-it('顧客新規登録処理の phone は不正な形式だとバリデーションエラーになる', function ($invalidPhone) {
+it('phone は不正な形式だとバリデーションエラーになる', function ($invalidPhone) {
     // 入力フォームからの送信データ
     $data = [
         'name' => '山田 太郎',
@@ -176,7 +176,7 @@ it('顧客新規登録処理の phone は不正な形式だとバリデーショ
     '090-1234-5678-9876-5432', // max:20 に違反
 ]);
 
-it('顧客新規登録処理の postal_code は正しい形式なら通過する', function ($validPostalCode) {
+it('postal_code は正しい形式なら通過する', function ($validPostalCode) {
     // 入力フォームからのデータ送信
     $data = [
         'name' => '山田 太郎',
@@ -203,7 +203,7 @@ it('顧客新規登録処理の postal_code は正しい形式なら通過する
     '',         // nullable（空文字OK）
 ]);
 
-it('顧客新規登録処理の postal_code は不正な形式だとバリデーションエラーになる', function ($invalidPostalCode) {
+it('postal_code は不正な形式だとバリデーションエラーになる', function ($invalidPostalCode) {
     // 入力フォームからのデータ送信
     $data = [
         'name' => '山田 太郎',
@@ -232,3 +232,93 @@ it('顧客新規登録処理の postal_code は不正な形式だとバリデー
     '1234 567',   // スペース入り
     '1234_567',   // 記号（アンダースコア）
 ]);
+
+it('status は許可された値なら通過する', function ($validStatus) {
+    // 入力フォームからのデータ送信
+    $data = [
+        'name' => '山田 太郎',
+        'status' => $validStatus,
+        'rank' => 'A',
+    ];
+
+    // CustomerStoreRequest の rules を取得
+    $request = new CustomerStoreRequest();
+    $rules = $request->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーション通過を確認
+    expect($validator->fails())->toBeFalse();
+
+    // データプロバイダ機能で繰り返す
+})->with([
+    'prospect',
+    'negotiation',
+    'won',
+    'lost',
+    'inactive',
+]);
+
+it('status は許可されていない値だとバリデーションエラーになる', function () {
+    // 入力フォームからのデータ送信
+    $data = [
+        'name' => '山田 太郎',
+        'status' => 'unknown',
+        'rank' => 'A',
+    ];
+
+    // CustomerStoreRequest の rules を取得
+    $request = new CustomerStoreRequest();
+    $rules = $request->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーションエラーになることを確認
+    expect($validator->fails())->toBeTrue();
+});
+
+it('rank は許可された値なら通過する', function ($validRank) {
+    // 入力フォームからのデータ送信
+    $data = [
+        'name' => '山田 太郎',
+        'status' => 'prospect',
+        'rank' => $validRank,
+    ];
+
+    // CustomerStoreRequest の rules を取得
+    $request = new CustomerStoreRequest();
+    $rules = $request->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーション通過を確認
+    expect($validator->fails())->toBeFalse();
+
+    // データプロバイダ機能で繰り返す
+})->with([
+    'A',
+    'B',
+    'C',
+]);
+
+it('rank は許可されていない値だとバリデーションエラーになる', function () {
+    // 入力フォームからのデータ送信
+    $data = [
+        'name' => '山田 太郎',
+        'status' => 'prospect',
+        'rank' => 'Z',
+    ];
+
+    // CustomerStoreRequest の rules を取得
+    $request = new CustomerStoreRequest();
+    $rules = $request->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーションエラーになることを確認
+    expect($validator->fails())->toBeTrue();
+});
