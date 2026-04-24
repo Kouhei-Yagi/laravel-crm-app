@@ -175,3 +175,60 @@ it('顧客新規登録処理の phone は不正な形式だとバリデーショ
     '090+1234+5678',      // プラス記号
     '090-1234-5678-9876-5432', // max:20 に違反
 ]);
+
+it('顧客新規登録処理の postal_code は正しい形式なら通過する', function ($validPostalCode) {
+    // 入力フォームからのデータ送信
+    $data = [
+        'name' => '山田 太郎',
+        'status' => 'prospect',
+        'rank' => 'A',
+        'postal_code' => $validPostalCode,
+    ];
+
+    // CustomerStoreRequest の rules を取得
+    $request = new CustomerStoreRequest();
+    $rules = $request->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーション通過を確認
+    expect($validator->fails())->toBeFalse();
+
+    // データプロバイダ機能で繰り返す
+})->with([
+    '1234567',  // 7桁の数字（基本形）
+    '0000000',  // 0埋めもOK
+    '9876543',  // ランダムな7桁
+    '',         // nullable（空文字OK）
+]);
+
+it('顧客新規登録処理の postal_code は不正な形式だとバリデーションエラーになる', function ($invalidPostalCode) {
+    // 入力フォームからのデータ送信
+    $data = [
+        'name' => '山田 太郎',
+        'status' => 'prospect',
+        'rank' => 'A',
+        'postal_code' => $invalidPostalCode,
+    ];
+
+    // CustomerStoreRequest の rules を取得
+    $request = new CustomerStoreRequest();
+    $rules = $request->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーションエラーになることを確認
+    expect($validator->fails())->toBeTrue();
+
+    // データプロバイダ機能で繰り返し
+})->with([
+    '123456',     // 6桁（短い）
+    '12345678',   // 8桁（長い）
+    '123-4567',   // ハイフン入り
+    '１２３４５６７', // 全角数字
+    '1234abc',    // 文字混じり
+    '1234 567',   // スペース入り
+    '1234_567',   // 記号（アンダースコア）
+]);
