@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Customer;
 use App\Models\User;
 use App\Policies\CustomerPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,6 +15,20 @@ it('一覧画面はログインユーザーなら見れる', function () {
     // Policy の viewAny() を呼び出す
     $result = (new CustomerPolicy())->viewAny($user);
 
-    // 許可されているか確認
+    // 許可されていることを確認
+    expect($result)->toBeTrue();
+});
+
+it('詳細画面はログインユーザーなら見れる', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // Policy の view を呼び出す
+    $result = (new CustomerPolicy())->view($user, $customer);
+
+    // 許可されていることを確認
     expect($result)->toBeTrue();
 });
