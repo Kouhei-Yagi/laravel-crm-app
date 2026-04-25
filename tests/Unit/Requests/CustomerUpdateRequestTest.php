@@ -224,3 +224,89 @@ it('postal_code は不正な形式だとバリデーションエラーになる'
     '1234 567',   // スペース入り
     '1234_567',   // 記号（アンダースコア）
 ]);
+
+it('status は許可された値なら通過する', function ($validStatus) {
+    // 入力フォームからのデータ送信
+    $data = [
+        'name' => '山田 太郎',
+        'status' => $validStatus,
+        'rank' => 'A',
+    ];
+
+    // CustomerUpdateRequest の rules を取得
+    $rules = (new CustomerUpdateRequest())->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーション通過を確認
+    expect($validator->fails())->toBeFalse();
+
+    // データプロバイダ機能で繰り返す
+})->with([
+    'prospect',
+    'negotiation',
+    'won',
+    'lost',
+    'inactive',
+]);
+
+it('status は許可されていない値だとバリデーションエラーになる', function () {
+    // 入力フォームからのデータ送信
+    $data = [
+        'name' => '山田 太郎',
+        'status' => 'unknown',
+        'rank' => 'A',
+    ];
+
+    // CustomerUpdateRequest の rules を取得
+    $rules = (new CustomerUpdateRequest())->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーションエラーになることを確認
+    expect($validator->fails())->toBeTrue();
+});
+
+it('rank は許可された値なら通過する', function ($validRank) {
+    // 入力フォームからのデータ送信
+    $data = [
+        'name' => '山田 太郎',
+        'status' => 'prospect',
+        'rank' => $validRank,
+    ];
+
+    // CustomerUpdateRequest の rules を取得
+    $rules = (new CustomerUpdateRequest())->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーション通過を確認
+    expect($validator->fails())->toBeFalse();
+
+    // データプロバイダ機能で繰り返す
+})->with([
+    'A',
+    'B',
+    'C',
+]);
+
+it('rank は許可されていない値だとバリデーションエラーになる', function () {
+    // 入力フォームからのデータ送信
+    $data = [
+        'name' => '山田 太郎',
+        'status' => 'prospect',
+        'rank' => 'Z',
+    ];
+
+    // CustomerUpdateRequest の rules を取得
+    $rules = (new CustomerUpdateRequest())->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーションエラーになることを確認
+    expect($validator->fails())->toBeTrue();
+});
