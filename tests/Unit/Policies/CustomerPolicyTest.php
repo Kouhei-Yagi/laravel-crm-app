@@ -43,3 +43,39 @@ it('新規作成画面はログインユーザーなら見れる', function () {
     // 許可されていることを確認
     expect($result)->toBeTrue();
 });
+
+it('更新処理は担当者ならできる', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create([
+        'assigned_user_id' => $user->id
+    ]);
+
+    // Policy の update を呼び出す
+    $result = (new CustomerPolicy())->update($user, $customer);
+
+    // 許可されていることを確認
+    expect($result)->toBeTrue();
+});
+
+
+it('更新処理は担当者以外ではできない', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // 他ユーザーを作成
+    $otherUser = User::factory()->create();
+
+    // 他ユーザーで顧客を作成
+    $customer = Customer::factory()->create([
+        'assigned_user_id' => $otherUser->id
+    ]);
+
+    // policy の update を呼び出す
+    $result = (new CustomerPolicy())->update($user, $customer);
+
+    // 許可されていないことを確認
+    expect($result)->toBeFalse();
+});
