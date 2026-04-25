@@ -32,3 +32,14 @@ it('詳細画面はログインユーザーなら見れる', function () {
     // 許可されていることを確認
     expect($result)->toBeTrue();
 });
+
+it('新規作成画面はログインユーザーなら見れる', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // Policy の create を呼び出す
+    $result = (new CustomerPolicy())->create($user);
+
+    // 許可されていることを確認
+    expect($result)->toBeTrue();
+});
