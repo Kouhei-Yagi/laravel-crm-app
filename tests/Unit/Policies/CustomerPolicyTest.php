@@ -128,3 +128,17 @@ it('復元処理は誰もできない', function () {
     // 許可されていないことを確認
     expect($result)->toBeFalse();
 });
+
+it('完全削除は誰もできない', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // Policy の forceDelete を呼び出す
+    $result = (new CustomerPolicy())->forceDelete($user, $customer);
+
+    // 許可されていないことを確認
+    expect($result)->toBeFalse();
+});
