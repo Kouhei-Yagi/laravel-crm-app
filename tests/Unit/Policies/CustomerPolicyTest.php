@@ -114,3 +114,17 @@ it('削除処理は担当顧客以外はできない', function () {
     // 許可されていないことを確認
     expect($result)->toBeFalse();
 });
+
+it('復元処理は誰もできない', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // Policy の restore を呼び出す
+    $result = (new CustomerPolicy())->restore($user, $customer);
+
+    // 許可されていないことを確認
+    expect($result)->toBeFalse();
+});
