@@ -61,7 +61,7 @@ it('phone の部分一致検索ができる', function () {
     // 検索にヒットしない任意の顧客を作成
     Customer::factory()->create(['phone' => '092-123-5678']);
 
-    // '?keyword=090' 検索処理にアクセス
+    // '?keyword=090' で検索処理にアクセス
     $response = $this->get('/customers?keyword=090');
 
     // アクセス成功（ステータスコード 200）を確認
@@ -70,4 +70,24 @@ it('phone の部分一致検索ができる', function () {
     $response->assertSee('090-1234-5678');
     // 検索条件にヒットしないデータは表示されないことを確認
     $response->assertDontSee('092-123-5678');
+});
+
+it('company_name の部分一致検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 検索にヒットする任意の顧客を作成
+    Customer::factory()->create(['company_name' => '株式会社テスト']);
+    // 検索にヒットしない任意の顧客を作成
+    Customer::factory()->create(['company_name' => '有限会社ソリューション']);
+
+    // '?keyword=株式会社' で検索処理にアクセス
+    $response = $this->get('/customers?keyword=株式会社');
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+    // 検索条件にヒットしたデータが表示されることを確認
+    $response->assertSee('株式会社テスト');
+    // 検索条件にヒットしないデータは表示されないことを確認
+    $response->assertDontSee('有限会社ソリューション');
 });
