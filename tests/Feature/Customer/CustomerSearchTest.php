@@ -166,3 +166,31 @@ it('created_at の範囲検索ができる', function () {
     // 検索条件にヒットしないデータは表示されないことを確認
     $response->assertDontSee('2026-05-15');
 });
+
+it('複数条件の AND 検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // 検索にヒットする任意の顧客を作成
+    Customer::factory()->create([
+        'name' => '山田 太郎',
+        'status' => 'prospect',
+        'rank' => 'A',
+        'assigned_user_id' => $user->id,
+        'created_at' => '2026-04-15 12:00:00',
+    ]);
+    // 検索にヒットしない任意の顧客を作成
+    Customer::factory()->create([
+        'name' => '佐藤 花子'
+    ]);
+
+    // '?keyword=山田&status=prospect&rank=A&assigned_user_id={$user->id}&created_at_from=2026-04-01&created_at_to=2026-04-30' で検索処理にアクセス
+    $response = $this->get("/customers?keyword=山田&status=prospect&rank=A&assigned_user_id={$user->id}&created_at_from=2026-04-01&created_at_to=2026-04-30");
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+    // 検索条件にヒットしたデータが表示されることを確認
+    $response->assertSee('山田 太郎');
+    // 検索条件にヒットしないデータは表示されないことを確認
+    $response->assertDontSee('佐藤 花子');
+});
