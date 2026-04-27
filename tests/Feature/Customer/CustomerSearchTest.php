@@ -194,3 +194,21 @@ it('複数条件の AND 検索ができる', function () {
     // 検索条件にヒットしないデータは表示されないことを確認
     $response->assertDontSee('佐藤 花子');
 });
+
+it('検索条件がない場合は全件表示される', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を3件作成
+    $customers = Customer::factory()->count(3)->create();
+
+    // 検索処理にアクセス
+    $response = $this->get('/customers');
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+    // 全件表示されることを確認
+    foreach ($customers as $customer) {
+        $response->assertSee($customer->name);
+    }
+});
