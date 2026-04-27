@@ -91,3 +91,29 @@ it('company_name の部分一致検索ができる', function () {
     // 検索条件にヒットしないデータは表示されないことを確認
     $response->assertDontSee('有限会社ソリューション');
 });
+
+it('status の絞り込み検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 検索にヒットする任意の顧客を作成
+    Customer::factory()->create([
+        'status' => 'prospect',
+        'name' => '見込み 太郎',
+    ]);
+    // 検索にヒットしない任意の顧客を作成
+    Customer::factory()->create([
+        'status' => 'won',
+        'name' => '成約 太郎',
+    ]);
+
+    // '?status=prospect' で検索処理にアクセス
+    $response = $this->get('/customers?status=prospect');
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+    // 検索条件にヒットしたデータが表示されることを確認
+    $response->assertSee('見込み 太郎');
+    // 検索条件にヒットしないデータは表示されないことを確認
+    $response->assertDontSee('成約 太郎');
+});
