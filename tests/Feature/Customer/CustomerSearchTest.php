@@ -146,3 +146,23 @@ it('assigned_user_id の絞り込み検索ができる', function () {
     // 検索条件にヒットしないデータは表示されないことを確認
     $response->assertDontSee('佐藤 花子');
 });
+
+it('created_at の範囲検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 検索にヒットする任意の顧客を作成
+    Customer::factory()->create(['created_at' => '2026-04-15 12:00:00']);
+    // 検索にヒットしない任意の顧客を作成
+    Customer::factory()->create(['created_at' => '2026-05-15 12:00:00']);
+
+    // '?created_at_from=2026-04-01&created_at_to=2026-04-30'で検索処理にアクセス
+    $response = $this->get('/customers?created_at_from=2026-04-01&created_at_to=2026-04-30');
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+    // 検索条件にヒットしたデータが表示されることを確認
+    $response->assertSee('2026-04-15');
+    // 検索条件にヒットしないデータは表示されないことを確認
+    $response->assertDontSee('2026-05-15');
+});
