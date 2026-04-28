@@ -75,3 +75,39 @@ it('email で降順ソートができる', function () {
     // C → B → A の順に表示されることを確認
     $response->assertSeeInOrder(['C@example.com', 'B@example.com', 'A@example.com']);
 });
+
+it('company_name で昇順ソートができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 並び順がバラバラの顧客を3件作成
+    Customer::factory()->create(['company_name' => 'C株式会社']);
+    Customer::factory()->create(['company_name' => 'A株式会社']);
+    Customer::factory()->create(['company_name' => 'B株式会社']);
+
+    // 昇順ソートでアクセス
+    $response = $this->get('/customers?sort=company_name&direction=asc');
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+    // A → B → C の順で表示されることを確認
+    $response->assertSeeInOrder(['A株式会社', 'B株式会社', 'C株式会社']);
+});
+
+it('company_name で降順ソートができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 並び順がバラバラの顧客を3件作成
+    Customer::factory()->create(['company_name' => 'A株式会社']);
+    Customer::factory()->create(['company_name' => 'C株式会社']);
+    Customer::factory()->create(['company_name' => 'B株式会社']);
+
+    // 降順ソートでアクセス
+    $response = $this->get('/customers?sort=company_name&direction=desc');
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+    // C → B → A の順で表示されることを確認
+    $response->assertSeeInOrder(['C株式会社', 'B株式会社', 'A株式会社']);
+});
