@@ -147,3 +147,21 @@ it('created_at で降順ソートができる', function () {
     // 03 → 02 → 01 の順で表示されることを確認
     $response->assertSeeInOrder(['2026-01-03', '2026-01-02', '2026-01-01']);
 });
+
+it('ソートパラメータがない場合はデフォルトソートで表示される', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 並び順がバラバラの顧客を3件作成
+    Customer::factory()->create(['created_at' => '2026-01-01 00:00:00']);
+    Customer::factory()->create(['created_at' => '2026-01-03 00:00:00']);
+    Customer::factory()->create(['created_at' => '2026-01-02 00:00:00']);
+
+    // ソートパラメータなしでアクセス
+    $response = $this->get('/customers');
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+    // 03 → 02 → 01 の順で表示されることを確認
+    $response->assertSeeInOrder(['2026-01-03', '2026-01-02', '2026-01-01']);
+});
