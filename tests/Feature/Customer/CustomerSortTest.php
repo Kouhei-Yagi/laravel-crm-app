@@ -111,3 +111,39 @@ it('company_name で降順ソートができる', function () {
     // C → B → A の順で表示されることを確認
     $response->assertSeeInOrder(['C株式会社', 'B株式会社', 'A株式会社']);
 });
+
+it('created_at で昇順ソートができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 並び順がバラバラの顧客を3件作成
+    Customer::factory()->create(['created_at' => '2026-01-03 00:00:00']);
+    Customer::factory()->create(['created_at' => '2026-01-01 00:00:00']);
+    Customer::factory()->create(['created_at' => '2026-01-02 00:00:00']);
+
+    // 昇順ソートでアクセス
+    $response = $this->get('/customers?sort=created_at&direction=asc');
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+    // 01 → 02 → 03 の順で表示されることを確認
+    $response->assertSeeInOrder(['2026-01-01', '2026-01-02', '2026-01-03']);
+});
+
+it('created_at で降順ソートができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 並び順がバラバラの顧客を3件作成
+    Customer::factory()->create(['created_at' => '2026-01-01 00:00:00']);
+    Customer::factory()->create(['created_at' => '2026-01-03 00:00:00']);
+    Customer::factory()->create(['created_at' => '2026-01-02 00:00:00']);
+
+    // 降順ソートでアクセス
+    $response = $this->get('/customers?sort=created_at&direction=desc');
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+    // 03 → 02 → 01 の順で表示されることを確認
+    $response->assertSeeInOrder(['2026-01-03', '2026-01-02', '2026-01-01']);
+});
