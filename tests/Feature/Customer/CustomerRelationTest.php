@@ -86,3 +86,17 @@ it('Project が存在する場合は Customer は削除できない', function (
     // Customer が削除されていないことを確認
     expect(Customer::find($customer->id))->not->toBeNull();
 });
+
+it('Interaction が存在する場合は Customerは削除できない', function () {
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 顧客に紐づく対応履歴を作成
+    Interaction::factory()->create(['customer_id' => $customer->id]);
+
+    // 顧客の削除を試みると外部キー制約エラーが発生することを確認
+    expect(fn() => DB::table('customers')->where('id', $customer->id)->delete())
+        ->toThrow(QueryException::class);
+    // Customer が削除されていないことを確認
+    expect(Customer::find($customer->id))->not->toBeNull();
+});
