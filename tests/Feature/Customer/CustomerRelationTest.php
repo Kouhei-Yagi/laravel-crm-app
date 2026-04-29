@@ -143,3 +143,17 @@ it('Interaction が存在すれば User は削除できない', function () {
     // ログインユーザーが削除されていないことを確認
     expect(User::find($user->id))->not->toBeNull();
 });
+
+it('Interaction が存在しても Project は削除できる', function () {
+    // 任意の案件を作成
+    $project = Project::factory()->create();
+
+    // 案件に紐づく対応履歴を作成
+    $interaction = Interaction::factory()->create(['project_id' => $project->id]);
+
+    // 案件を削除
+    DB::table('projects')->where('id', $project->id)->delete();
+
+    // 対応履歴の案件が削除されていることを確認
+    expect(Interaction::find($interaction->id)->project_id)->toBeNull();
+});
