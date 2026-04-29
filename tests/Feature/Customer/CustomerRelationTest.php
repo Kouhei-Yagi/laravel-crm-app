@@ -3,7 +3,8 @@
 use App\Models\Customer;
 use App\Models\Interaction;
 use App\Models\Project;
-use PhpParser\Node\Expr\FuncCall;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 it('Customer は User に belongsTo する', function () {
@@ -70,4 +71,18 @@ it('User は Customers を hasMany する', function () {
 
     // ログインユーザーに紐づく顧客が2件取得できることを確認
     expect($user->customers->count())->toBe(2);
+});
+
+it('Project が存在する場合は Customer は削除できない', function () {
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 顧客に紐づく案件を作成
+    Project::factory()->create(['customer_id' => $customer->id]);
+
+    // 削除を試みると外部キー制約エラーが発生することを確認
+    expect(fn() => DB::table('customers')->where('id', $customer->id)->delete())
+        ->toThrow(QueryException::class);
+    // Customer が削除されていないことを確認
+    expect(Customer::find($customer->id))->not->toBeNull();
 });
