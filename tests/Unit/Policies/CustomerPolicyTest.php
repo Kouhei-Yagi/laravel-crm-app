@@ -1,0 +1,144 @@
+<?php
+
+use App\Models\Customer;
+use App\Models\User;
+use App\Policies\CustomerPolicy;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+uses(RefreshDatabase::class, TestCase::class);
+
+it('一覧画面はログインユーザーなら見れる', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // Policy の viewAny() を呼び出す
+    $result = (new CustomerPolicy())->viewAny($user);
+
+    // 許可されていることを確認
+    expect($result)->toBeTrue();
+});
+
+it('詳細画面はログインユーザーなら見れる', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // Policy の view を呼び出す
+    $result = (new CustomerPolicy())->view($user, $customer);
+
+    // 許可されていることを確認
+    expect($result)->toBeTrue();
+});
+
+it('新規作成画面はログインユーザーなら見れる', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // Policy の create を呼び出す
+    $result = (new CustomerPolicy())->create($user);
+
+    // 許可されていることを確認
+    expect($result)->toBeTrue();
+});
+
+it('更新処理は担当顧客ならできる', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create([
+        'assigned_user_id' => $user->id
+    ]);
+
+    // Policy の update を呼び出す
+    $result = (new CustomerPolicy())->update($user, $customer);
+
+    // 許可されていることを確認
+    expect($result)->toBeTrue();
+});
+
+
+it('更新処理は担当顧客以外ではできない', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // 他ユーザーを作成
+    $otherUser = User::factory()->create();
+
+    // 他ユーザーで顧客を作成
+    $customer = Customer::factory()->create([
+        'assigned_user_id' => $otherUser->id
+    ]);
+
+    // policy の update を呼び出す
+    $result = (new CustomerPolicy())->update($user, $customer);
+
+    // 許可されていないことを確認
+    expect($result)->toBeFalse();
+});
+
+it('削除処理は担当顧客ならできる', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create([
+        'assigned_user_id' => $user->id
+    ]);
+
+    // Policy の delete を呼び出す
+    $result = (new CustomerPolicy())->delete($user, $customer);
+
+    // 許可されているか確認
+    expect($result)->toBeTrue();
+});
+
+it('削除処理は担当顧客以外はできない', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // 他ユーザーを作成
+    $otherUser = User::factory()->create();
+
+    // 他ユーザーで顧客を作成
+    $customer = Customer::factory()->create([
+        'assigned_user_id' => $otherUser->id
+    ]);
+
+    // Policy の delete を呼び出す
+    $result = (new CustomerPolicy())->delete($user, $customer);
+
+    // 許可されていないことを確認
+    expect($result)->toBeFalse();
+});
+
+it('復元処理は誰もできない', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // Policy の restore を呼び出す
+    $result = (new CustomerPolicy())->restore($user, $customer);
+
+    // 許可されていないことを確認
+    expect($result)->toBeFalse();
+});
+
+it('完全削除は誰もできない', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // Policy の forceDelete を呼び出す
+    $result = (new CustomerPolicy())->forceDelete($user, $customer);
+
+    // 許可されていないことを確認
+    expect($result)->toBeFalse();
+});
