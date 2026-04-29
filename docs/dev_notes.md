@@ -4309,3 +4309,224 @@ php artisan make:provider AuthServiceProvider
     - 大量データ対応（ストリーム出力）
 
 ---
+
+## 機能名：顧客ドメインテスト
+
+### 目的
+
+- 顧客ドメイン（顧客・案件・対応履歴・担当者の関係を含む）の既存機能を自動テストで保証し、品質を向上させる
+- リファクタリングや機能追加時に、既存機能が壊れていないことを即座に確認できる基盤を作る
+- 開発者が安心してコードを変更できる環境を整える
+
+### ブランチ名：**test/customer-domain-tests**
+
+### 実装日：2026-04-21 ~ 2026-04-29
+
+### 作成・変更・自動生成されたファイル
+
+- `tests/CreatesUser.php`（新規）
+- `tests/TestCase.php`（新規）
+- `tests/Feature/Customer/CustomerIndexTest.php`（新規）
+- `tests/Feature/Customer/CustomerCreateTest.php`（新規）
+- `tests/Feature/Customer/CustomerEditTest.php`（新規）
+- `tests/Feature/Customer/CustomerShowTest.php`（新規）
+- `tests/Feature/Customer/CustomerDeleteTest.php`（新規）
+- `tests/Unit/Requests/CustomerStoreRequestTest.php`（新規）
+- `tests/Unit/Requests/CustomerUpdateRequestTest.php`（新規）
+- `tests/Unit/Policies/CustomerPolicyTest.php`（新規）
+- `tests/Feature/Customer/CustomerSearchTest.php`（新規）
+- `tests/Feature/Customer/CustomerSortTest.php`（新規）
+- `tests/Feature/Customer/CustomerRelationTest.php`（新規）
+
+### 実装内容
+
+- ログインヘルパー Trait の作成
+    - TestCase に Trait を読み込み
+- 顧客 CRUD の Feature テスト
+    - 一覧 / 作成 / 編集 / 詳細 / 削除
+    - 認可（未ログイン / Policy）
+    - バリデーション
+    - DB 反映の確認
+- FormRequest バリデーションの Unit テスト
+    - 必須項目
+    - 形式チェック（email / phone / postal_code）
+    - Enum の valid / invalid
+- Policy の Unit テスト
+    - viewAny / view / create / update / delete / restore / forceDelete
+- 検索機能テスト
+    - 各項目の部分一致・完全一致
+    - 絞り込み
+    - 複数条件
+    - 検索なし時の全件表示
+- ソート機能テスト
+    - name / email / company_name / created_at
+    - 昇順・降順
+    - デフォルトソート
+- リレーションテスト
+    - belongsTo / hasMany
+    - 外部キー制約（restrict / nullOnDelete）
+
+### 実装手順
+
+#### 1. テスト環境の準備
+
+1. `phpunit.xml`の DB 設定確認
+
+- 下記の設定を確認
+
+    ```sh
+    <env name="DB_CONNECTION" value="sqlite"/>
+    <env name="DB_DATABASE" value=":memory:"/>
+    ```
+
+2. ログインヘルパー Trait の作成
+
+- `tests/CreatesUser.php`を作成
+- `tests/TestCase.php`に Trait を追加
+
+#### 2. CRUD 機能テスト
+
+1. `CustomerIndexTest.php`を作成
+
+- 一覧画面の閲覧テストを追加
+- Customer の一覧表示のテストを追加
+- 未ログインユーザーのアクセス制限（認可）テスト（index）を追加
+
+2. `CustomerCreateTest.php`を作成
+
+- 顧客作成画面の表示テストの追加
+- customers テーブルへの新規登録テストを追加
+- 入力必須項目のバリデーションエラーのテストを追加
+- 未ログインユーザーのアクセス制限（認可）テスト（create / store）を追加
+
+3. `CustomerEditTest.php`を作成
+
+- 顧客編集画面の表示テストの追加
+- customers テーブルの更新処理テストを追加
+- 入力必須項目のバリデーションエラーのテストを追加
+- 未ログインユーザーのアクセス制限（認可）テスト（edit / update）を追加
+- ポリシー（403）テスト（edit / update）を追加
+
+4. `CustomerShowTest.php`を作成
+
+- 顧客詳細画面の表示テストの追加
+- 未ログインユーザーのアクセス制限（認可）テストを追加
+
+5. `CustomerDeleteTest.php`を作成
+
+- customers テーブルの削除処理テストを追加
+- 未ログインユーザーのアクセス制限（認可）テストを追加
+- ポリシー（403）テストを追加
+
+#### 3. FormRequest バリデーション単体テスト
+
+1. `CustomerStoreRequestTest.php`を作成
+
+- 必須項目（`name`/`status`/`rank`）テストを追加
+- `email`の形式テスト（valid / invalid）を追加
+- `phone`の形式テスト（valid / invalid）を追加
+- `postal_code`の形式テスト（valid / invalid）を追加
+- `status`/`rank`の Enum テスト（valid / invalid）を追加
+
+2. `CustomerUpdateRequestTest.php`を作成
+
+- 必須項目（`name`/`status`/`rank`）テストを追加
+- `email`の形式テスト（valid / invalid）を追加
+- `phone`の形式テスト（valid / invalid）を追加
+- `postal_code`の形式テスト（valid / invalid）を追加
+- `status`/`rank`の Enum テスト（valid / invalid）を追加
+
+#### 4. Policy 単体テスト
+
+- `viewAny`（一覧閲覧）テストを追加
+- `view`（個別閲覧）テストを追加
+- `create`（新規作成）テストを追加
+- `update`（更新）テストを追加
+- `delete`（削除）テストを追加
+- `restore`（復元）テストを追加
+- `forceDelete`（完全削除）テストを追加
+
+#### 5. 検索機能テスト
+
+- `name`の部分一致検索テストを追加
+- `email`の部分一致 / 完全一致検索テストを追加
+- `phone`の部分一致検索テストを追加
+- `company_name`の部分一致検索テストを追加
+- `status`の絞り込み検索テストを追加
+- `assigned_user_id`の絞り込み検索テストを追加
+- `created_at`の範囲検索テストを追加
+- 複数条件の AND 検索テストを追加
+- 検索なしの場合の全件表示テストを追加
+
+#### 6. ソート機能テスト
+
+- `name`の昇順・降順ソートテストを追加
+- `email`の昇順・降順ソートテストを追加
+- `company_name`の昇順・降順ソートテストを追加
+- `created_at`の昇順・降順ソートテストを追加
+- デフォルトソート（sort パラメータなし）テストを追加
+
+#### 7. リレーション機能テスト
+
+- `Customer` → `User` の belongsTo テストを追加
+- `Customer` → `Projects` の hasMany テストを追加
+- `Customer` → `Interactions` の hasMany テストを追加
+- `Project` → `Customer` の belongsTo テストを追加
+- `Interaction` → `Customer` の belongsTo テストを追加
+- `User` → `Customer`s の hasMany テストを追加
+- `Customer`削除時の外部キー制約（`Project` / `restrict`）のテストを追加
+- `Customer`削除時の外部キー制約（`Interaction` / `restrict`）のテストを追加
+- `User`削除時の外部キー制約（`Customer` / `restrict`）のテストを追加
+- `User`削除時の外部キー制約（`Project` / `restrict`）のテストを追加
+- `User`削除時の外部キー制約（`Interaction` / `restrict`）のテストを追加
+- `Project`削除時の外部キー制約（`Interaction` / `nullOnDelete`）のテストを追加
+
+### 確認内容
+
+- 全テストが PASS したこと
+
+### 気づき・課題
+
+- 下記のことを理解した
+  → 実務では、意図しない挙動を早期に発見するために、機能を実装したらすぐテストを記述する
+  → `php artisan test`は「テストを実行するコマンド」
+  → `TestCase.php`は「全テストの親クラス」
+  → `factory()->count()->create()`が柔軟で標準的な記述
+  → `actingAs()`は「ログイン状態を作るメソッド」
+  → `it()`は「Pest が提供しているテストを書くためのメソッド」
+  → `get()`は「GET リクエストを送信するメソッド」
+  → `post()`は「POST リクエストを送信するメソッド」
+  → `patch()`は「PATCH リクエストを送信するメソッド」
+  → `delete()`は「DELETE リクエストを送信するメソッド」
+  → `assertOk()`は「HTTP 200（成功）を確認するメソッド」
+  → `assertSee()`は「レスポンスの HTML に引数の文字列が含まれていることを確認するメソッド」
+  → `assertDontSee()`は「レスポンスの HTML に引数の文字列が含まれていないことを確認するメソッド」
+  → `assertRedirect()`は「未ログイン時はログイン画面に遷移させるメソッド」
+  → `assertDatabaseHas()`は「DB にデータが保存されていることを確認するメソッド」
+  → `assertSoftDeleted()`は「DB からデータがソフトデリートされていることを確認するメソッド」
+  → `assertStatus()`は「HTTP レスポンスのステータスコードを確認するメソッド」
+  → `assertSessionHasErrors()`は「セッションにバリデーションエラーが存在することを確認するメソッド」
+  → `uses()`は「引数のクラスなどを使用するメソッド」
+  → `Validator::make()`は「バリデーションを実行するメソッド」
+  → `validator()->fails()`は「入力がルールに違反している確認するメソッド」
+  → `expect($value)->toBeTrue() / toBeFalse()`は「$value が true / false であることを確認するメソッド」
+  → `expect($value1)->toBe($value2)`は「$value1 が $value2 と完全一致であることを確認するメソッド」
+  → `with()`は「同じテストで複数のデータを渡すメソッド」（データプロバイダ機能）
+  → 「データ駆動テスト」は考え方や手法、「データプロバイダ機能」はデータ駆動テストを実現する仕組みや機能
+  → Unit テストでは、TestCase のメソッド（作成した`loginUser()`など）は使えない
+  → Unit テストでは、DB を使う前提になっていないので、`uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);`を追加する
+  → email の検索テストでは、一意性を持つフィールドになることが多いので、完全一致と部分一致をテストする
+  → `<select>`の検索テストでは、レスポンス HTML に必ず`<option value="〇〇">`が含まれるため、検索対象の値（status, rank など）を`assertSee()`/`assertDontSee()`で判定してはいけない
+  → `assertSeeInOrder()`は「文字列の出現順をチェックするメソッド」
+  → hasMany のリレーションテストでは、`count()`で件数を確認する
+  → 削除時の外部キー制約のテストでは、Eloquentは使えないので、`DB::table()->delete()`を使う
+  → `toThrow()`は「例外を投げることを確認するメソッド」
+  → `toBeNull()`は「null であることを確認するメソッド」
+
+- 下記のことを復習できた
+  → マイグレーションの`constrained()`は「別テーブルの id と紐づく外部キーであることを宣言するメソッド」
+  → マイグレーションの`restrictOnDelete()`は「子がいる親は削除を禁止するメソッド」
+  → マイグレーションの`cascadeOnDelete()`は「親を削除したら、子も一緒に削除するメソッド」
+  → マイグレーションの`nullOnDelete()`は「親を削除したら、子の親IDを空にするメソッド」
+
+---
