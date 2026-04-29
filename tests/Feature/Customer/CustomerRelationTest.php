@@ -3,6 +3,7 @@
 use App\Models\Customer;
 use App\Models\Interaction;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -99,4 +100,18 @@ it('Interaction が存在する場合は Customerは削除できない', functio
         ->toThrow(QueryException::class);
     // Customer が削除されていないことを確認
     expect(Customer::find($customer->id))->not->toBeNull();
+});
+
+it('Customer が存在する場合は User は削除できない', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // ログインユーザーで顧客を作成
+    Customer::factory()->create(['assigned_user_id' => $user->id]);
+
+    // User の削除を試みると外部キー制約エラーが発生することを確認
+    expect(fn() => DB::table('users')->where('id', $user->id)->delete())
+        ->toThrow(QueryException::class);
+    // User が削除されていないことを確認
+    expect(User::find($user->id))->not->toBeNull();
 });
