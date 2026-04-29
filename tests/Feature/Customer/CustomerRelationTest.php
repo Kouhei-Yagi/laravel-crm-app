@@ -81,10 +81,10 @@ it('Project が存在する場合は Customer は削除できない', function (
     // 顧客に紐づく案件を作成
     Project::factory()->create(['customer_id' => $customer->id]);
 
-    // 削除を試みると外部キー制約エラーが発生することを確認
+    // 顧客の削除を試みると外部キー制約エラーが発生することを確認
     expect(fn() => DB::table('customers')->where('id', $customer->id)->delete())
         ->toThrow(QueryException::class);
-    // Customer が削除されていないことを確認
+    // 顧客が削除されていないことを確認
     expect(Customer::find($customer->id))->not->toBeNull();
 });
 
@@ -98,7 +98,7 @@ it('Interaction が存在する場合は Customerは削除できない', functio
     // 顧客の削除を試みると外部キー制約エラーが発生することを確認
     expect(fn() => DB::table('customers')->where('id', $customer->id)->delete())
         ->toThrow(QueryException::class);
-    // Customer が削除されていないことを確認
+    // 顧客が削除されていないことを確認
     expect(Customer::find($customer->id))->not->toBeNull();
 });
 
@@ -109,10 +109,10 @@ it('Customer が存在する場合は User は削除できない', function () {
     // ログインユーザーで顧客を作成
     Customer::factory()->create(['assigned_user_id' => $user->id]);
 
-    // 削除を試みると外部キー制約エラーが発生することを確認
+    // ログインユーザーの削除を試みると外部キー制約エラーが発生することを確認
     expect(fn() => DB::table('users')->where('id', $user->id)->delete())
         ->toThrow(QueryException::class);
-    // User が削除されていないことを確認
+    // ログインユーザーが削除されていないことを確認
     expect(User::find($user->id))->not->toBeNull();
 });
 
@@ -123,9 +123,23 @@ it('Project が存在する場合は User は削除できない', function () {
     // ログインユーザーで案件を作成
     Project::factory()->create(['assigned_user_id' => $user->id]);
 
-    // 削除を試みると外部キー制約エラーが発生することを確認
+    // ログインユーザーの削除を試みると外部キー制約エラーが発生することを確認
     expect(fn() => DB::table('users')->where('id', $user->id)->delete())
         ->toThrow(QueryException::class);
-    // User が削除されていないことを確認
+    // ログインユーザーが削除されていないことを確認
+    expect(User::find($user->id))->not->toBeNull();
+});
+
+it('Interaction が存在すれば User は削除できない', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // ログインユーザーで対応履歴を作成
+    Interaction::factory()->create(['assigned_user_id' => $user->id]);
+
+    // ログインユーザーの削除を試みると外部キー制約違反エラーが発生することを確認
+    expect(fn() => DB::table('users')->where('id', $user->id)->delete())
+        ->toThrow(QueryException::class);
+    // ログインユーザーが削除されていないことを確認
     expect(User::find($user->id))->not->toBeNull();
 });
