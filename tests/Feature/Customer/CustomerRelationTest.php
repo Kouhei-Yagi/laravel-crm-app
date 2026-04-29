@@ -49,3 +49,14 @@ it('Project は Customer に belongsTo する', function () {
     // 案件に紐づく顧客IDが、実際に紐づけた顧客IDと一致することを確認
     expect($project->customer->id)->toBe($customer->id);
 });
+
+it('Interaction は Customer に belongsTo する', function () {
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 顧客に紐づく対応履歴を作成
+    $interaction = Interaction::factory()->create(['customer_id' => $customer->id]);
+
+    // 対応履歴に紐づく顧客IDが、実際に紐づけた顧客IDを一致していることを確認
+    expect($interaction->customer->id)->toBe($customer->id);
+});
