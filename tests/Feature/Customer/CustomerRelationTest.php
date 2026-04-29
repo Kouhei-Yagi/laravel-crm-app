@@ -60,3 +60,14 @@ it('Interaction は Customer に belongsTo する', function () {
     // 対応履歴に紐づく顧客IDが、実際に紐づけた顧客IDを一致していることを確認
     expect($interaction->customer->id)->toBe($customer->id);
 });
+
+it('User は Customers を hasMany する', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // ログインユーザーで顧客を2件作成
+    Customer::factory()->count(2)->create(['assigned_user_id' => $user->id]);
+
+    // ログインユーザーに紐づく顧客が2件取得できることを確認
+    expect($user->customers->count())->toBe(2);
+});
