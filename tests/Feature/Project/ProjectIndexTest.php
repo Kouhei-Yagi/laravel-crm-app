@@ -21,3 +21,14 @@ it('ログインユーザーは案件一覧を表示できる', function () {
         $response->assertSee($project->title);
     }
 });
+
+it('未ログインユーザーは案件一覧にアクセスできない', function () {
+    // 案件一覧画面にアクセス
+    $response = $this->get('/projects');
+
+    // アクセス失敗（ステータスコード 302）を確認
+    $response->assertStatus(302);
+
+    // ログイン画面にリダイレクトされることを確認
+    $response->assertRedirect('/login');
+});
