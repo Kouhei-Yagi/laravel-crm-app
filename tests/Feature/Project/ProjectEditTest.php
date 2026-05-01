@@ -1,0 +1,25 @@
+<?php
+
+use App\Models\Customer;
+use App\Models\Project;
+use tests\TestCase;
+
+it('ログインユーザーは自分が担当している顧客に紐づく案件編集画面を表示できる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create(['assigned_user_id' => $user->id]);
+
+    // 顧客に紐づいた案件を作成
+    $project = Project::factory()->create(['customer_id' => $customer->id]);
+
+    // 案件編集画面にアクセス
+    $response = $this->get("/projects/{$project->id}/edit");
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 案件名が表示されることを確認
+    $response->assertSee($project->title);
+});
