@@ -22,7 +22,7 @@ it('ログインユーザーは案件を登録できる', function () {
     // ログインユーザーで顧客を作成
     $customer = Customer::factory()->create(['assigned_user_id' => $user->id]);
 
-    // 送信するデータ（案件作成フォームに入力したデータ）
+    // 送信するデータ（案件作成フォームに入力したデータ）を作成
     $data = [
         'title' => 'ホームページ制作',
         'customer_id' => $customer->id,
@@ -42,4 +42,73 @@ it('ログインユーザーは案件を登録できる', function () {
         'status' => 'estimating',
         'assigned_user_id' => $user->id,
     ]);
+});
+
+it('title がない場合はバリデーションエラーになる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create(['assigned_user_id' => $user->id]);
+
+    // 送信するデータ（案件作成フォームに入力したデータ）を作成
+    $data = [
+        'title' => '',
+        'customer_id' => $customer->id,
+        'status' => 'estimating',
+    ];
+
+    // データを持って案件登録処理にアクセス
+    $response = $this->post('/projects', $data);
+
+    // バリデーションエラー（ステータスコード 302）を確認
+    $response->assertStatus(302);
+
+    // エラーメッセージがあることを確認
+    $response->assertSessionHasErrors('title');
+});
+
+it('customer_id がない場合はバリデーションエラーになる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 送信するデータ（案件作成フォームに入力したデータ）を作成
+    $data = [
+        'title' => 'ホームページ制作',
+        'customer_id' => '',
+        'status' => 'estimating',
+    ];
+
+    // データを持って案件登録処理にアクセス
+    $response = $this->post('/projects', $data);
+
+    // バリデーションエラー（ステータスコード 302）を確認
+    $response->assertStatus(302);
+
+    // エラーメッセージがあることを確認
+    $response->assertSessionHasErrors('customer_id');
+});
+
+it('status がない場合はバリデーションエラーになる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create(['assigned_user_id' => $user->id]);
+
+    // 送信するデータ（案件作成フォームに入力したデータ）を作成
+    $data = [
+        'title' => 'ホームページ制作',
+        'customer_id' => $customer->id,
+        'status' => '',
+    ];
+
+    // データを持って案件登録処理にアクセス
+    $response = $this->post('/projects', $data);
+
+    // バリデーションエラー（ステータスコード 302）を確認
+    $response->assertStatus(302);
+
+    // バリデーションエラーがあることを確認
+    $response->assertSessionHasErrors('status');
 });
