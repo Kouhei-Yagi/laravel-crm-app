@@ -112,3 +112,25 @@ it('status がない場合はバリデーションエラーになる', function 
     // バリデーションエラーがあることを確認
     $response->assertSessionHasErrors('status');
 });
+
+it('未ログインユーザーは案件作成画面にアクセスできない', function () {
+    // 案件作成画面にアクセス
+    $response = $this->get('/projects/create');
+
+    // アクセス失敗（ステータスコード 302）を確認
+    $response->assertStatus(302);
+
+    // ログイン画面にリダイレクトされることを確認
+    $response->assertRedirect('/login');
+});
+
+it('未ログインユーザーは案件登録処理にアクセスできない', function () {
+    // 案件登録処理にアクセス
+    $response = $this->post('/projects');
+
+    // アクセス失敗（ステータスコード 302）を確認
+    $response->assertStatus(302);
+
+    // ログイン画面にリダイレクトされることを確認
+    $response->assertRedirect('/login');
+});
