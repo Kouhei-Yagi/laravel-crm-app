@@ -2,6 +2,7 @@
 
 use App\Models\Customer;
 use App\Models\Project;
+use App\Models\User;
 use tests\TestCase;
 
 it('ログインユーザーは自分が担当している顧客に紐づく案件の編集画面を表示できる', function () {
@@ -136,4 +137,51 @@ it('未ログインユーザーは案件更新処理にアクセスできない'
 
     // ログイン画面にリダイレクトされることを確認
     $response->assertRedirect('/login');
+});
+
+it('自分の担当以外の顧客に紐づく案件の編集画面にはアクセスできない', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 他ユーザーを作成
+    $otherUser = User::factory()->create();
+
+    // 他ユーザーに紐づく顧客を作成
+    $customer = Customer::factory()->create(['assigned_user_id' => $otherUser->id]);
+
+    // 他ユーザーが作成した顧客に紐づく案件を作成
+    $project = Project::factory()->create(['customer_id' => $customer->id]);
+
+    // ログインユーザーで案件編集画面にアクセス
+    $response = $this->get("/projects/{$project->id}/edit");
+
+    // アクセス失敗（ステータスコード 403）を確認
+    $response->assertStatus(403);
+});
+
+it('自分の担当以外の顧客に紐づく案件の更新処理にはアクセスできない', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 他ユーザーを作成
+    $otherUser = User::factory()->create();
+
+    // 他ユーザーに紐づく顧客を作成
+    $customer = Customer::factory()->create(['assigned_user_id' => $otherUser->id]);
+
+    // 他ユーザーが作成した顧客に紐づく案件を作成
+    $project = Project::factory()->create(['customer_id' => $customer->id]);
+
+    // 送信するデータ（案件編集フォームに入力されたデータ）を作成
+    $data = [
+        'title' => 'ホームページ制作',
+        'customer_id' => $customer->id,
+        'status' => 'estimating',
+    ];
+
+    // ログインユーザーで案件編集画面にアクセス
+    $response = $this->patch("/projects/{$project->id}", $data);
+
+    // アクセス失敗（ステータスコード 403）を確認
+    $response->assertStatus(403);
 });
