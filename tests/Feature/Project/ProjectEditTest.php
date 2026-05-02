@@ -109,3 +109,31 @@ it('status がない場合はバリデーションエラーになる', function 
     // エラーメッセージがあることを確認
     $response->assertSessionHasErrors('status');
 });
+
+it('未ログインユーザーは案件編集画面にアクセスできない', function () {
+    // 任意の案件を作成
+    $project = Project::factory()->create();
+
+    // ログインせずに案件作成画面にアクセス
+    $response = $this->get("/projects/{$project->id}/edit");
+
+    // アクセス失敗（ステータスコード 302）を確認
+    $response->assertStatus(302);
+
+    // ログイン画面にリダイレクトされることを確認
+    $response->assertRedirect('/login');
+});
+
+it('未ログインユーザーは案件更新処理にアクセスできない', function () {
+    // 任意の案件を作成
+    $project = Project::factory()->create();
+
+    // ログインせずに案件更新処理にアクセス
+    $response = $this->patch("/projects/{$project->id}");
+
+    // アクセス失敗（ステータスコード 302）を確認
+    $response->assertStatus(302);
+
+    // ログイン画面にリダイレクトされることを確認
+    $response->assertRedirect('/login');
+});
