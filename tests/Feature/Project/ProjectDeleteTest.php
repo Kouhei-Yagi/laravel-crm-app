@@ -2,6 +2,7 @@
 
 use App\Models\Customer;
 use App\Models\Project;
+use App\Models\User;
 use Tests\TestCase;
 
 it('ログインユーザーは自分が担当している顧客に紐づく案件を削除できる', function () {
@@ -33,4 +34,24 @@ it('未ログインユーザーは案件削除処理にアクセスできない'
 
     // ログイン画面にリダイレクトされることを確認
     $response->assertRedirect('/login');
+});
+
+it('自分の担当以外の顧客に紐づく案件の削除処理にはアクセスできない', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 他ユーザーを作成
+    $otherUser = User::factory()->create();
+
+    // 他ユーザーで顧客を作成
+    $customer = Customer::factory()->create(['assigned_user_id' => $otherUser->id]);
+
+    // 顧客に紐づく案件を作成
+    $project = Project::factory()->create(['customer_id' => $customer->id]);
+
+    // ログインユーザーで案件削除処理にアクセス
+    $response = $this->delete("/projects/{$project->id}");
+
+    // アクセス失敗（ステータスコード 403）を確認
+    $response->assertStatus(403);
 });
