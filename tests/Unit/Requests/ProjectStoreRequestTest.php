@@ -2,7 +2,6 @@
 
 use App\Http\Requests\ProjectStoreRequest;
 use App\Models\Customer;
-use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
@@ -349,6 +348,45 @@ it('status は許可されていない値の場合はバリデーションエラ
     $rules = (new ProjectStoreRequest())->rules();
 
     // バリデーションを実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーションエラーになることを確認
+    expect($validator->fails())->toBeTrue();
+});
+
+it('customer_id が customers テーブルに存在するIDである場合はバリデーションを通過する', function () {
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 送信するデータ（案件作成フォームから入力されたデータ）を作成
+    $data = [
+        'title' => 'ホームページ制作',
+        'customer_id' => $customer->id,
+        'status' => 'estimating',
+    ];
+
+    // バリデーションルールを取得
+    $rules = (new ProjectStoreRequest())->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーションを通過することを確認
+    expect($validator->fails())->toBeFalse();
+});
+
+it('customer_id が customers テーブルに存在しないIDの場合はバリデーションエラーになる', function () {
+    // 送信するデータ（案件作成フォームから入力されたデータ）を作成
+    $data = [
+        'title' => 'ホームページ制作',
+        'customer_id' => 99999,
+        'status' => 'estimating',
+    ];
+
+    // バリデーションルールを取得
+    $rules = (new ProjectStoreRequest())->rules();
+
+    // バリデーション実行
     $validator = Validator::make($data, $rules);
 
     // バリデーションエラーになることを確認
