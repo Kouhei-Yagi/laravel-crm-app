@@ -32,3 +32,14 @@ it('案件詳細画面はログインユーザーなら誰でも見れる', func
     // 許可されていることを確認
     expect($result)->toBeTrue();
 });
+
+it('案件作成画面はログインユーザーなら誰でも見れる', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // Policy の create() を呼び出す
+    $result = (new ProjectPolicy())->create($user);
+
+    // 許可されていることを確認
+    expect($result)->toBeTrue();
+});
