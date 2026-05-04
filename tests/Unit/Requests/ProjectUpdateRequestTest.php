@@ -69,7 +69,7 @@ it('amount が正しい形式の場合はバリデーションを通過する', 
 ]);
 
 it('amount が不正な形式の場合はバリデーションエラーになる', function ($invalidAmount) {
-    // 送信するデータ（案件作成フォームから入力されたデータ）を作成
+    // 送信するデータ（案件編集フォームから入力されたデータ）を作成
     $data = [
         'title' => 'ホームページ制作',
         'status' => 'estimating',
@@ -95,4 +95,59 @@ it('amount が不正な形式の場合はバリデーションエラーになる
     '1,000',
     -1,
     -100,
+]);
+
+it('start_date が正しい形式の場合はバリデーションを通過する', function ($validStartDate) {
+    // 送信するデータ（案件編集フォームに入力されたデータ）を作成
+    $data = [
+        'title' => 'ホームページ制作',
+        'status' => 'estimating',
+        'start_date' => $validStartDate,
+    ];
+
+    // バリデーションルールを取得
+    $rules = (new ProjectUpdateRequest())->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーションを通過することを確認
+    expect($validator->fails())->toBeFalse();
+
+    // データプロバイダ機能で繰り返す
+})->with([
+    null,
+    '',
+    '2024-01-01',
+    '2025-12-31',
+    '2024/01/01',
+    'January 1, 2024',
+]);
+
+it('start_date が不正な形式の場合はバリデーションエラーになる', function ($invalidStartDate) {
+    // 送信するデータ（案件編集フォームに入力されたデータ）を作成
+    $data = [
+        'title' => 'ホームページ制作',
+        'status' => 'estimating',
+        'start_date' => $invalidStartDate,
+    ];
+
+    // バリデーションルールを取得
+    $rules = (new ProjectUpdateRequest())->rules();
+
+    // バリデーション実行
+    $validator = Validator::make($data, $rules);
+
+    // バリデーションエラーになることを確認
+    expect($validator->fails())->toBeTrue();
+
+    // データプロバイダ機能で繰り返す
+})->with([
+    'abc',
+    '2024-13-01',
+    '2024-00-10',
+    '2024-01-32',
+    '2024-02-30',
+    '2024/13/01',
+    12345,
 ]);
