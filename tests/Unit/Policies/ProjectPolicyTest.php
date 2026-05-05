@@ -135,3 +135,20 @@ it('案件復元処理はできない', function () {
     // 許可されていないことを確認
     expect($result)->toBeFalse();
 });
+
+it('案件完全削除処理はできない', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create(['assigned_user_id' => $user->id]);
+
+    // 顧客に紐づく案件を作成
+    $project = Project::factory()->create(['customer_id' => $customer->id]);
+
+    // Policy で forceDelete() を呼び出す
+    $result = (new ProjectPolicy())->forceDelete($user, $project);
+
+    // 許可されていないことを確認
+    expect($result)->toBeFalse();
+});
