@@ -58,9 +58,41 @@ it('ログインユーザーは案件の customer_id で絞り込み検索がで
     // アクセス成功（ステータスコード 200）を確認
     $response->assertOk();
 
-    // ヒットした案件が表示されることを確認
+    // 検索にヒットした案件が表示されることを確認
     $response->assertSee('A社の案件');
 
-    // ヒットしない案件は表示されないことを確認
+    // 検索にヒットしない案件は表示されないことを確認
     $response->assertDontSee('B社の案件');
+});
+
+it('ログインユーザーは案件の status で絞り込み検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 検索にヒットする案件とヒットしない案件を作成
+    Project::factory()->create([
+        'customer_id' => $customer->id,
+        'status' => 'estimating',
+        'title' => 'ヒットする案件',
+    ]);
+    Project::factory()->create([
+        'customer_id' => $customer->id,
+        'status' => 'proposing',
+        'title' => 'ヒットしない案件',
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('projects.index', ['status' => 'estimating']));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットした案件が表示されることを確認
+    $response->assertSee('ヒットする案件');
+
+    // 検索にヒットしない案件は表示されないことを確認
+    $response->assertDontSee('ヒットしない案件');
 });
