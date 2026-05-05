@@ -33,3 +33,34 @@ it('ログインユーザーは案件の title で部分一致検索ができる
     // 検索にヒットしない案件名は表示されないことを確認
     $response->assertDontSee('アプリ開発');
 });
+
+it('ログインユーザーは案件の customer_id で絞り込み検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を作成
+    $customerA = Customer::factory()->create();
+    $customerB = Customer::factory()->create();
+
+    // 検索にヒットする案件とヒットしない案件を作成
+    Project::factory()->create([
+        'customer_id' => $customerA->id,
+        'title' => 'A社の案件',
+    ]);
+    Project::factory()->create([
+        'customer_id' => $customerB->id,
+        'title' => 'B社の案件',
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('projects.index', ['customer_id' => $customerA->id]));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // ヒットした案件が表示されることを確認
+    $response->assertSee('A社の案件');
+
+    // ヒットしない案件は表示されないことを確認
+    $response->assertDontSee('B社の案件');
+});
