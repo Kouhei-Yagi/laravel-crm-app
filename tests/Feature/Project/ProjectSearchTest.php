@@ -278,3 +278,38 @@ it('ログインユーザーは start_date と end_date が逆転していた場
     // 検索でヒットしない案件は表示されないことを確認
     $response->assertDontSee('ヒットしない案件');
 });
+
+it('ログインユーザーは created_at で範囲検索できる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 検索にヒットする案件とヒットしない案件を作成
+    Project::factory()->create([
+        'customer_id' => $customer->id,
+        'created_at' => '2026-01-10',
+        'title' => 'ヒットする案件',
+    ]);
+    Project::factory()->create([
+        'customer_id' => $customer->id,
+        'created_at' => '2026-04-10',
+        'title' => 'ヒットしない案件',
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('projects.index', [
+        'created_at_form' => '2026-01-01',
+        'created_at_to' => '2026-01-31',
+    ]));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットする案件が表示されることを確認
+    $response->assertSee('ヒットする案件');
+
+    // 検索にヒットしない案件は表示されないことを確認
+    $response->assertDontSee('ヒットしない案件');
+});
