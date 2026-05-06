@@ -313,3 +313,51 @@ it('ログインユーザーは created_at で範囲検索できる', function (
     // 検索にヒットしない案件は表示されないことを確認
     $response->assertDontSee('ヒットしない案件');
 });
+
+it('ログインユーザーは複数条件をすべて満たす案件のみ検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create(['assigned_user_id' => $user->id]);
+
+    // 検索にヒットする案件とヒットしない案件を作成
+    Project::factory()->create([
+        'customer_id' => $customer->id,
+        'assigned_user_id' => $user->id,
+        'title' => 'ヒットする案件',
+        'status' => 'estimating',
+        'amount' => 100,
+        'start_date' => '2026-04-15',
+        'end_date' => '2026-05-15',
+        'created_at' => '2026-01-01',
+    ]);
+    Project::factory()->create([
+        'customer_id' => $customer->id,
+        'assigned_user_id' => $user->id,
+        'title' => 'ヒットしない案件',
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('projects.index', [
+        'customer_id' => $customer->id,
+        'assigned_user_id' => $user->id,
+        'title' => 'ヒット',
+        'status' => 'estimating',
+        'amount_from' => 100,
+        'amount_to' => 300,
+        'period_form' => '2026-04-01',
+        'period_to' => '2026-04-30',
+        'created_at_from' => '2026-01-01',
+        'created_at_to' => '2026-01-31',
+    ]));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットする案件が表示されることを確認
+    $response->assertSee('ヒットする案件');
+
+    // 検索にヒットしない案件は表示されないことを確認
+    $response->assertDontSee('ヒットしない案件');
+});
