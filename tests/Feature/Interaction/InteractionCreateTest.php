@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Customer;
 use App\Models\Interaction;
 use Tests\TestCase;
 
@@ -15,4 +16,35 @@ it('ログインユーザーは対応履歴作成画面を表示できる', func
 
     // 対応種別が表示されることを確認
     $response->assertSeeText('電話');
+});
+
+it('ログインユーザーは対応履歴を DB に登録できる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->create(['assigned_user_id' => $user->id]);
+
+    // 送信するデータ（対応履歴作成フォームに入力されたデータ）を作成
+    $data = [
+        'interacted_at' => '2026-01-01T12:00',
+        'type' => 'phone',
+        'content' => 'テスト',
+        'customer_id' => $customer->id,
+    ];
+
+    // 対応履歴登録処理にアクセス
+    $response = $this->post(route('interactions.store'), $data);
+
+    // 登録後、対応履歴一覧にリダイレクトすることを確認
+    $response->assertRedirect(route('interactions.index'));
+
+    // DB に登録されていることを確認
+    $this->assertDatabaseHas('interactions', [
+        'interacted_at' => '2026-01-01 12:00:00',
+        'type' => 'phone',
+        'content' => 'テスト',
+        'customer_id' => $customer->id,
+        'assigned_user_id' => $user->id,
+    ]);
 });
