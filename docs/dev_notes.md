@@ -4530,3 +4530,152 @@ php artisan make:provider AuthServiceProvider
   → マイグレーションの`nullOnDelete()`は「親を削除したら、子の親IDを空にするメソッド」
 
 ---
+
+## 機能名：案件ドメインテスト
+
+### 目的
+
+- 案件ドメインの既存機能を自動テストで保証し、品質を向上させるため
+- リファクタリングや機能追加時に、既存機能が壊れていないことを即座に確認できる基盤を作るため
+- 開発者が安心してコードを変更できる環境を整えるため
+
+### ブランチ名：**test/project-domain-tests**
+
+### 実装日：2026-04-30 ~ 2026-05-7
+
+### 作成・変更・自動生成されたファイル
+
+- `tests/Feature/Project/ProjectIndexTest.php`（新規）
+- `tests/Feature/Project/ProjectCreateTest.php`（新規）
+- `tests/Feature//ProjectShowTest.php`（新規）
+- `tests/Feature/Project/ProjectEditTest.php`（新規）
+- `tests/Feature/Project/ProjectDeleteTest.php`（新規）
+- `tests/Unit/Requests/ProjectStoreRequestTest.php`（新規）
+- `tests/Unit/Requests/ProjectUpdateRequestTest.php`（新規）
+- `tests/Unit/Policies/ProjectPolicyTest.php`（新規）
+- `tests/Feature/Project/ProjectSearchTest.php`（新規）
+- `tests/Feature/Project/ProjectSortTest.php`（新規）
+
+### 実装内容
+
+- 案件 CRUD の機能テスト
+    - 一覧 / 作成 / 編集 / 詳細 / 削除
+    - 認可（未ログイン / Policy）
+    - バリデーション
+    - DB 反映の確認
+- FormRequest バリデーションの単体テスト
+    - 必須項目（`title`/`customer_id`/`status`）
+    - 形式チェック（`amount`/`start_date`/`end_date`）
+    - `end_date`の`after_or_equal`の valid / invalid
+    - Enum の valid / invalid
+    - `customer_id`の exists
+- Policy の単体テスト
+    - `viewAny`/`view`/`create`/`update`/`delete`/`restore`/`forceDelete`
+    - 権限あり / なし
+- 検索機能テスト
+    - `title`の部分一致
+    - 絞り込み（`customer_id`/`status`/`assigned_user_id`）
+    - 範囲（`amount`/`start_date`/`end_date`/`created_at`）
+    - 範囲の逆転（from > to）
+    - 複数条件 AND 検索
+    - 検索条件なし時の全件表示
+- ソート機能テスト
+    - `title`/`customer_kana`/`amount`/`created_at`
+    - 昇順・降順
+    - デフォルトソート（sort パラメータなし → created_at desc）
+
+### 実装手順
+
+#### 1. CRUD 機能テスト
+
+1. `ProjectIndexTest.php`を作成
+
+- 一覧画面表示（ログインユーザーアクセス）テストを追加
+- 未ログインユーザーのアクセス制限（認可）テスト（index）を追加
+
+2. `ProjectCreateTest.php`を作成
+
+- 案件作成画面表示（ログインユーザーアクセス）テストの追加
+- projects テーブルへの新規登録（ログインユーザーアクセス）テストを追加
+- 入力必須項目（`title`/`customer_id`/`status`）のバリデーションエラーテストを追加
+- 未ログインユーザーのアクセス制限（認可）テスト（create / store）を追加
+
+3. `ProjectShowTest.php`を作成
+
+- 顧客詳細画面表示（ログインユーザーアクセス）テストの追加
+- 未ログインユーザーのアクセス制限（認可）テストを追加
+
+4. `ProjectEditTest.php`を作成
+
+- 案件編集画面表示（ログインユーザーアクセス）テストの追加
+- projects テーブルの更新処理（ログインユーザーアクセス）テストを追加
+- 入力必須項目（`title`/`status`）バリデーションエラーのテストを追加
+- 未ログインユーザーのアクセス制限（認可）テスト（edit / update）を追加
+- ポリシー（403）テスト（edit / update）を追加
+
+5. `ProjectDeleteTest.php`を作成
+
+- projects テーブルの削除処理（ログインユーザーアクセス）テストを追加
+- 未ログインユーザーのアクセス制限（認可）テストを追加
+- ポリシー（403）テストを追加
+
+#### 2. FormRequest バリデーション単体テスト
+
+1. `ProjectStoreRequestTest.php`を作成
+
+- 必須項目（`title`/`customer_id`/`status`）テストを追加
+- `amount`の形式テスト（valid / invalid）を追加
+- `start_date`/`end_date`の形式テスト（valid / invalid）を追加d
+- `end_date`の`after_or_equal`テスト（valid / invalid）を追加
+- `status`の Enum テスト（valid / invalid）を追加
+- `customer_id`の exists テスト（valid / invalid）を追加
+
+2. `ProjectUpdateRequestTest.php`を作成
+
+- 必須項目（`title`/`status`）テストを追加
+- `amount`の形式テスト（valid / invalid）を追加
+- `start_date`/`end_date`の形式テスト（valid / invalid）を追加
+- `end_date`の`after_or_equal`テスト（valid / invalid）を追加
+- `status`の Enum テスト（valid / invalid）を追加
+
+#### 3. Policy 単体テスト
+
+- `viewAny`（一覧閲覧）テストを追加
+- `view`（個別閲覧）テストを追加
+- `create`（新規作成）テストを追加
+- `update`（更新）テスト（処理可 / 処理不可）を追加
+- `delete`（削除）テスト（処理可 / 処理不可）を追加
+- `restore`（復元）テストを追加
+- `forceDelete`（完全削除）テストを追加
+
+#### 4. 検索機能テスト
+
+- `title`の部分一致検索テストを追加
+- `customer_id`の絞り込み検索テストを追加
+- `status`の絞り込み検索テストを追加
+- `assigned_user_id`の絞り込み検索テストを追加
+- `amount`の範囲検索テスト（順転 / 逆転）を追加
+- `start_date`/`end_date`の範囲検索テスト（順転 / 逆転）を追加
+- `created_at`の範囲検索テストを追加
+- 複数条件の AND 検索テストを追加
+- 検索条件なしの場合の全件表示テストを追加
+
+#### 5. ソート機能テスト
+
+- `title`の昇順・降順ソートテストを追加
+- `customer_kana`の昇順・降順ソートテストを追加
+- `amount`の昇順・降順ソートテストを追加
+- `created_at`の昇順・降順ソートテストを追加
+- デフォルトソート（sort パラメータなし）テストを追加
+
+### 確認内容
+
+- 全テストが PASS したこと
+
+### 気づき・課題
+
+- `$this->get()`の戻り値は「HTTP レスポンスをテストしやすくしたオブジェクト」であることを理解した
+- 仕様により編集できない項目はバリデーション対象にしない（テストも不要）
+- Factory の Faker の`realText()`は日本語環境で無限ループになる既知バグがあるため、`sentence()`などに変更する必要がある
+
+---
