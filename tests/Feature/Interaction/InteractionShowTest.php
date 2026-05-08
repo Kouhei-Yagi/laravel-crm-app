@@ -32,3 +32,17 @@ it('ログインユーザーは対応履歴詳細画面を表示できる', func
         $interaction->assignedUser->name,
     ]);
 });
+
+it('未ログインユーザーは対応履歴詳細画面にアクセスできない', function () {
+    // 任意の対応履歴を作成
+    $interaction = Interaction::factory()->create();
+
+    // 対応履歴詳細画面にアクセス
+    $response = $this->get(route('interactions.show', $interaction));
+
+    // アクセス失敗（ステータスコード 302）を確認
+    $response->assertStatus(302);
+
+    // ログイン画面にリダイレクトされることを確認
+    $response->assertRedirect(route('login'));
+});
