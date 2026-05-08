@@ -148,3 +148,36 @@ it('対応履歴登録処理で customer_id がない場合はバリデーショ
     // エラーメッセージが存在することを確認
     $response->assertSessionHasErrors('customer_id');
 });
+
+it('未ログインユーザーは対応履歴作成画面にアクセスできない', function () {
+    // 対応履歴作成画面にアクセス
+    $response = $this->get(route('interactions.create'));
+
+    // アクセス失敗（ステータスコード 302）を確認
+    $response->assertStatus(302);
+
+    // ログイン画面にリダイレクトされることを確認
+    $response->assertRedirect(route('login'));
+});
+
+it('未ログインユーザーは対応履歴登録処理にアクセスできない', function () {
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 送信するデータを作成
+    $data = [
+        'interacted_at' => '2026-01-01T12:00',
+        'type' => 'phone',
+        'content' => 'テスト',
+        'customer_id' => $customer->id,
+    ];
+
+    // 対応履歴登録処理にアクセス
+    $response = $this->post(route('interactions.store'), $data);
+
+    // アクセス失敗（ステータスコード 302）を確認
+    $response->assertStatus(302);
+
+    // ログイン画面にリダイレクトされることを確認
+    $response->assertRedirect(route('login'));
+});
