@@ -44,3 +44,46 @@ it('ログインユーザーなら誰でも新規作成が許可されている'
     // 許可されていることを確認
     expect($result)->toBeTrue();
 });
+
+it('ログインユーザーは自分の担当する顧客に紐づく対応履歴なら更新が許可されている', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->for($user, 'assignedUser')->create();
+
+    // 顧客に紐づく対応履歴を作成
+    $interaction = Interaction::factory()
+        ->for($user, 'assignedUser')
+        ->for($customer, 'customer')
+        ->create();
+
+    // Policy の update() を呼び出す
+    $result = (new InteractionPolicy())->update($user, $interaction);
+
+    // 許可されていることを確認
+    expect($result)->toBeTrue();
+});
+
+it('ログインユーザーは他ユーザーが担当する顧客に紐づく対応履歴の更新が許可されていない', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // 他ユーザーを作成
+    $otherUser = User::factory()->create();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->for($otherUser, 'assignedUser')->create();
+
+    // 顧客に紐づく対応履歴を作成
+    $interaction = Interaction::factory()
+        ->for($otherUser, 'assignedUser')
+        ->for($customer, 'customer')
+        ->create();
+
+    // Policy の update() を呼び出す
+    $result = (new InteractionPolicy())->update($user, $interaction);
+
+    // 許可されていないことを確認
+    expect($result)->toBeFalse();
+});
