@@ -150,3 +150,23 @@ it('対応履歴の復元処理は誰も許可されていない', function () {
     // 許可されていないことを確認
     expect($result)->toBeFalse();
 });
+
+it('対応履歴の完全削除処理は誰も許可されていない', function () {
+    // ログインユーザーを作成
+    $user = User::factory()->create();
+
+    // ログインユーザーで顧客を作成
+    $customer = Customer::factory()->for($user, 'assignedUser')->create();
+
+    // 顧客に紐づく対応履歴を作成
+    $interaction = Interaction::factory()
+        ->for($user, 'assignedUser')
+        ->for($customer, 'customer')
+        ->create();
+
+    // Policy の forceDelete() を呼び出す
+    $result = (new InteractionPolicy())->forceDelete($user, $interaction);
+
+    // 許可されていないことを確認
+    expect($result)->toBeFalse();
+});
