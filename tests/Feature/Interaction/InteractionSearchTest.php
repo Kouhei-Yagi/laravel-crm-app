@@ -75,8 +75,8 @@ it('ログインユーザーは type で絞り込み検索ができる', functio
     // ログインユーザーを作成し、ログイン状態にする
     $user = $this->loginUser();
 
-    // ログインユーザーで顧客を作成
-    $customer = Customer::factory()->for($user, 'assignedUser')->create();
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
 
     // 検索にヒットする対応履歴をヒットしない対応履歴を作成
     Interaction::factory()->create([
@@ -92,6 +92,37 @@ it('ログインユーザーは type で絞り込み検索ができる', functio
 
     // 検索処理にアクセス
     $response = $this->get(route('interactions.index', ['type' => 'phone']));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットする対応履歴が表示されることを確認
+    $response->assertSeeText('ヒットする対応履歴');
+
+    // 検索にヒットしない対応履歴は表示されないことを確認
+    $response->assertDontSeeText('ヒットしない対応履歴');
+});
+
+it('ログインユーザーは customer_id で絞り込み検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // 任意の顧客を2件作成
+    $customerA = Customer::factory()->create();
+    $customerB = Customer::factory()->create();
+
+    // 検索にヒットする対応履歴をヒットしない対応履歴を作成
+    Interaction::factory()->create([
+        'content' => 'ヒットする対応履歴',
+        'customer_id' => $customerA->id,
+    ]);
+    Interaction::factory()->create([
+        'content' => 'ヒットしない対応履歴',
+        'customer_id' => $customerB->id,
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('interactions.index', ['customer_id' => $customerA->id]));
 
     // アクセス成功（ステータスコード 200）を確認
     $response->assertOk();
