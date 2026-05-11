@@ -155,3 +155,37 @@ it('ログインユーザーは customer_kana で降順ソートができる', f
     // 降順ソートで表示されることを確認
     $request->assertSeeInOrder(['テストC', 'テストB', 'テストA']);
 });
+
+it('ログインユーザーは sort パラメータがない場合はデフォルトソートで表示される', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 顧客に紐づいたバラバラの対応履歴を3件作成
+    Interaction::factory()->create([
+        'content' => 'テストC',
+        'customer_id' => $customer->id,
+        'interacted_at' => '2026-03-01T12:00',
+    ]);
+    Interaction::factory()->create([
+        'content' => 'テストA',
+        'customer_id' => $customer->id,
+        'interacted_at' => '2026-01-01T12:00',
+    ]);
+    Interaction::factory()->create([
+        'content' => 'テストB',
+        'customer_id' => $customer->id,
+        'interacted_at' => '2026-02-01T12:00',
+    ]);
+
+    // ソート処理にアクセス
+    $request = $this->get(route('interactions.index'));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $request->assertOk();
+
+    // デフォルトソート（?sort=interacted_at&direction=desc）で表示されることを確認
+    $request->assertSeeInOrder(['テストC', 'テストB', 'テストA']);
+});
