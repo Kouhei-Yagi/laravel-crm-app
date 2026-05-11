@@ -4343,7 +4343,7 @@ php artisan make:provider AuthServiceProvider
 - ログインヘルパー Trait の作成
     - TestCase に Trait を読み込み
 - 顧客 CRUD の Feature テスト
-    - 一覧 / 作成 / 編集 / 詳細 / 削除
+    - 一覧 / 作成 / 編集 / 詳細 / 論理削除
     - 認可（未ログイン / Policy）
     - バリデーション
     - DB 反映の確認
@@ -4414,7 +4414,7 @@ php artisan make:provider AuthServiceProvider
 
 5. `CustomerDeleteTest.php`を作成
 
-- customers テーブルの削除処理テストを追加
+- customers テーブルの論理削除処理テストを追加
 - 未ログインユーザーのアクセス制限（認可）テストを追加
 - ポリシー（403）テストを追加
 
@@ -4559,7 +4559,7 @@ php artisan make:provider AuthServiceProvider
 ### 実装内容
 
 - 案件 CRUD の機能テスト
-    - 一覧 / 作成 / 編集 / 詳細 / 削除
+    - 一覧 / 作成 / 編集 / 詳細 / 論理削除
     - 認可（未ログイン / Policy）
     - バリデーション
     - DB 反映の確認
@@ -4615,7 +4615,7 @@ php artisan make:provider AuthServiceProvider
 
 5. `ProjectDeleteTest.php`を作成
 
-- projects テーブルの削除処理（ログインユーザーアクセス）テストを追加
+- projects テーブルの論理削除処理（ログインユーザーアクセス）テストを追加
 - 未ログインユーザーのアクセス制限（認可）テストを追加
 - ポリシー（403）テストを追加
 
@@ -4677,5 +4677,149 @@ php artisan make:provider AuthServiceProvider
 - `$this->get()`の戻り値は「HTTP レスポンスをテストしやすくしたオブジェクト」であることを理解した
 - 仕様により編集できない項目はバリデーション対象にしない（テストも不要）
 - Factory の Faker の`realText()`は日本語環境で無限ループになる既知バグがあるため、`sentence()`などに変更する必要がある
+
+---
+
+## 機能名：対応履歴ドメインテスト
+
+### 目的
+
+- 対応履歴ドメインの既存機能を自動テストで保証し、品質を向上させるため
+- リファクタリングや機能追加時に、既存機能が壊れていないことを即座に確認できる基盤を作るため
+- 開発者が安心してコードを変更できる環境を整えるため
+
+### ブランチ名：**test/interaction-domain-tests**
+
+### 実装日：2026-05-7 ~ 2026-05-11
+
+### 作成・変更・自動生成されたファイル
+
+- `tests/Feature/Interaction/InteractionIndexTest.php`（新規）
+- `tests/Feature/Interaction/InteractionCreateTest.php`（新規）
+- `tests/Feature/Interaction/InteractionShowTest.php`（新規）
+- `tests/Feature/Interaction/InteractionEditTest.php`（新規）
+- `tests/Feature/Interaction/InteractionDeleteTest.php`（新規）
+- `tests/Unit/Requests/InteractionStoreRequestTest.php`（新規）
+- `tests/Unit/Requests/InteractionUpdateRequestTest.php`（新規）
+- `tests/Unit/Policies/InteractionPolicyTest.php`（新規）
+- `tests/Feature/Interaction/InteractionSearchTest.php`（新規）
+- `tests/Feature/Interaction/InteractionSortTest.php`（新規）
+
+### 実装内容
+
+- 対応履歴 CRUD の機能テスト
+    - 一覧 / 作成 / 編集 / 詳細 / 論理削除
+    - 認可（未ログイン / Policy）
+    - バリデーション
+    - DB 反映の確認
+- FormRequest バリデーションの単体テスト
+    - 必須項目（`interacted_at`/`type`/`content`/`customer_id`）
+    - 形式チェック（`interacted_at`）
+    - `type`の Enum の valid / invalid
+    - `project_id`/`customer_id`の exists
+- Policy の単体テスト
+    - `viewAny`/`view`/`create`/`update`/`delete`/`restore`/`forceDelete`
+    - 権限あり / なし
+- 検索機能テスト
+    - `content_keyword`/`project_keyword`の部分一致
+    - 絞り込み（`type`/`customer_id`/`assigned_user_id`）
+    - 範囲（`interacted_at`）
+    - 範囲の逆転（from > to）
+    - 複数条件 AND 検索
+    - 検索条件なし時の全件表示
+- ソート機能テスト
+    - `interacted_at`/`customer_kana`
+    - 昇順・降順
+    - デフォルトソート（sort パラメータなし → interacted_at desc）
+
+### 実装手順
+
+#### 1. CRUD 機能テスト
+
+1. `InteractionIndexTest.php`を作成
+
+- 一覧画面表示（ログインユーザーアクセス）テストを追加
+- 未ログインユーザーのアクセス制限（認可）テスト（index）を追加
+
+2. `InteractionCreateTest.php`を作成
+
+- 対応履歴作成画面表示（ログインユーザーアクセス）テストの追加
+- interactions テーブルへの新規登録（ログインユーザーアクセス）テストを追加
+- 入力必須項目（`interacted_at`/`type`/`content`/`customer_id`）のバリデーションエラーテストを追加
+- 未ログインユーザーのアクセス制限（認可）テスト（create / store）を追加
+
+3. `InteractionShowTest.php`を作成
+
+- 顧客詳細画面表示（ログインユーザーアクセス）テストの追加
+- 未ログインユーザーのアクセス制限（認可）テストを追加
+
+4. `InteractionEditTest.php`を作成
+
+- 対応履歴編集画面表示（ログインユーザーアクセス）テストの追加
+- interactions テーブルの更新処理（ログインユーザーアクセス）テストを追加
+- 入力必須項目（`interacted_at`/`type`/`content`）バリデーションエラーのテストを追加
+- 未ログインユーザーのアクセス制限（認可）テスト（edit / update）を追加
+- ポリシー（403）テスト（edit / update）を追加
+
+5. `InteractionDeleteTest.php`を作成
+
+- interactions テーブルの論理削除処理（ログインユーザーアクセス）テストを追加
+- 未ログインユーザーのアクセス制限（認可）テストを追加
+- ポリシー（403）テストを追加
+
+#### 2. FormRequest バリデーション単体テスト
+
+1. `InteractionStoreRequestTest.php`を作成
+
+- 入力必須項目（`interacted_at`/`type`/`content`/`customer_id`）テストを追加
+- `interacted_at`の形式テスト（valid / invalid）を追加
+- `type`の Enum テスト（valid / invalid）を追加
+- `project_id`/`customer_id`の exists テスト（valid / invalid）を追加
+
+2. `InteractionUpdateRequestTest.php`を作成
+
+- 入力必須項目（`interacted_at`/`type`/`content`）テストを追加
+- `interacted_at`の形式テスト（valid / invalid）を追加
+- `type`の Enum テスト（valid / invalid）を追加
+
+#### 3. Policy 単体テスト
+
+- `viewAny`（一覧閲覧）テストを追加
+- `view`（個別閲覧）テストを追加
+- `create`（新規作成）テストを追加
+- `update`（更新）テスト（処理可 / 処理不可）を追加
+- `delete`（削除）テスト（処理可 / 処理不可）を追加
+- `restore`（復元）テストを追加
+- `forceDelete`（完全削除）テストを追加
+
+#### 4. 検索機能テスト
+
+- `content_keyword`の部分一致検索テストを追加
+- `project_keyword`の部分一致検索テストを追加
+- `type`の絞り込み検索テストを追加
+- `customer_id`の絞り込み検索テストを追加
+- `assigned_user_id`の絞り込み検索テストを追加
+- `interacted_at`の範囲検索テスト（順転 / 逆転）を追加
+- 複数条件の AND 検索テストを追加
+- 検索条件なしの場合の全件表示テストを追加
+
+#### 5. ソート機能テスト
+
+- `interacted_at`の昇順・降順ソートテストを追加
+- `customer_kana`の昇順・降順ソートテストを追加
+- デフォルトソート（sort パラメータなし）テストを追加
+
+### 確認内容
+
+- 全テストが PASS したこと
+
+### 気づき・課題
+
+- `assertSeeText()`は HTML タグを除去したテキストに対してマッチングする
+- バリデーションエラー時のリダイレクト先は「元の URL」になるため、store → create に戻るとは限らない
+- `factory()->for()`は belongsTo リレーションの外部キーを自動設定する
+- `assertForbidden()`は HTTP 403 を確認する
+- `$validator->errors()->has()`で「どの項目がエラーか」を確認できる
+- データプロバイダの`with()`は連想配列で名前を付けると読みやすい
 
 ---
