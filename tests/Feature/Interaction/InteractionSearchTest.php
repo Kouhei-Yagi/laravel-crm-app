@@ -1,0 +1,320 @@
+<?php
+
+use App\Models\Customer;
+use App\Models\Interaction;
+use App\Models\Project;
+use App\Models\User;
+use Tests\TestCase;
+
+it('ログインユーザーは content_keyword で部分一致検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 検索にヒットする対応履歴とヒットしない対応履歴を作成
+    Interaction::factory()->create([
+        'content' => 'ヒットする対応履歴',
+        'customer_id' => $customer->id,
+    ]);
+    Interaction::factory()->create([
+        'content' => 'ヒットしない対応履歴',
+        'customer_id' => $customer->id,
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('interactions.index', ['content_keyword' => 'ヒットする']));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットする対応履歴が表示されることを確認
+    $response->assertSeeText('ヒットする対応履歴');
+
+    // 検索にヒットしない対応履歴は表示されないことを確認
+    $response->assertDontSeeText('ヒットしない対応履歴');
+});
+
+it('ログインユーザーは project_keyword で部分一致検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 顧客に紐づく案件を2件作成
+    $projectA = Project::factory()->for($customer, 'customer')->create(['title' => '案件A']);
+    $projectB = Project::factory()->for($customer, 'customer')->create(['title' => '案件B']);
+
+    // 検索にヒットする対応履歴とヒットしない対応履歴を作成
+    Interaction::factory()->create([
+        'content' => 'ヒットする対応履歴',
+        'customer_id' => $customer->id,
+        'project_id' => $projectA->id,
+    ]);
+    Interaction::factory()->create([
+        'content' => 'ヒットしない対応履歴',
+        'customer_id' => $customer->id,
+        'project_id' => $projectB->id,
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('interactions.index', ['project_keyword' => '案件A']));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットする対応履歴が表示されることを確認
+    $response->assertSeeText('ヒットする対応履歴');
+
+    // 検索にヒットしない対応履歴は表示されないことを確認
+    $response->assertDontSeeText('ヒットしない対応履歴');
+});
+
+it('ログインユーザーは type で絞り込み検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 検索にヒットする対応履歴をヒットしない対応履歴を作成
+    Interaction::factory()->create([
+        'type' => 'phone',
+        'content' => 'ヒットする対応履歴',
+        'customer_id' => $customer->id,
+    ]);
+    Interaction::factory()->create([
+        'type' => 'email',
+        'content' => 'ヒットしない対応履歴',
+        'customer_id' => $customer->id,
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('interactions.index', ['type' => 'phone']));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットする対応履歴が表示されることを確認
+    $response->assertSeeText('ヒットする対応履歴');
+
+    // 検索にヒットしない対応履歴は表示されないことを確認
+    $response->assertDontSeeText('ヒットしない対応履歴');
+});
+
+it('ログインユーザーは customer_id で絞り込み検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を2件作成
+    $customerA = Customer::factory()->create();
+    $customerB = Customer::factory()->create();
+
+    // 検索にヒットする対応履歴をヒットしない対応履歴を作成
+    Interaction::factory()->create([
+        'content' => 'ヒットする対応履歴',
+        'customer_id' => $customerA->id,
+    ]);
+    Interaction::factory()->create([
+        'content' => 'ヒットしない対応履歴',
+        'customer_id' => $customerB->id,
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('interactions.index', ['customer_id' => $customerA->id]));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットする対応履歴が表示されることを確認
+    $response->assertSeeText('ヒットする対応履歴');
+
+    // 検索にヒットしない対応履歴は表示されないことを確認
+    $response->assertDontSeeText('ヒットしない対応履歴');
+});
+
+it('ログインユーザーは assigned_user_id で絞り込み検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // 他ユーザーを作成
+    $otherUser = User::factory()->create();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 検索にヒットする対応履歴をヒットしない対応履歴を作成
+    Interaction::factory()->create([
+        'content' => 'ヒットする対応履歴',
+        'customer_id' => $customer->id,
+        'assigned_user_id' => $user->id,
+    ]);
+    Interaction::factory()->create([
+        'content' => 'ヒットしない対応履歴',
+        'customer_id' => $customer->id,
+        'assigned_user_id' => $otherUser->id,
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('interactions.index', ['assigned_user_id' => $user->id]));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットする対応履歴が表示されることを確認
+    $response->assertSeeText('ヒットする対応履歴');
+
+    // 検索にヒットしない対応履歴は表示されないことを確認
+    $response->assertDontSeeText('ヒットしない対応履歴');
+});
+
+it('ログインユーザーは interacted_at で範囲検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 検索にヒットする対応履歴とヒットしない対応履歴を作成
+    Interaction::factory()->create([
+        'content' => 'ヒットする対応履歴',
+        'customer_id' => $customer->id,
+        'interacted_at' => '2026-01-15T12:00',
+    ]);
+    Interaction::factory()->create([
+        'content' => 'ヒットしない対応履歴',
+        'customer_id' => $customer->id,
+        'interacted_at' => '2026-02-15T12:00',
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('interactions.index', [
+        'interacted_at_from' => '2026-01-01T12:00',
+        'interacted_at_to' => '2026-01-31T12:00',
+    ]));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットする対応履歴が表示されることを確認
+    $response->assertSeeText('ヒットする対応履歴');
+
+    // 検索にヒットしない対応履歴は表示されないことを確認
+    $response->assertDontSeeText('ヒットしない対応履歴');
+});
+
+it('ログインユーザーは interacted_at の範囲が逆転した場合でも正しく検索できる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 検索にヒットする対応履歴とヒットしない対応履歴を作成
+    Interaction::factory()->create([
+        'content' => 'ヒットする対応履歴',
+        'customer_id' => $customer->id,
+        'interacted_at' => '2026-01-15T12:00',
+    ]);
+    Interaction::factory()->create([
+        'content' => 'ヒットしない対応履歴',
+        'customer_id' => $customer->id,
+        'interacted_at' => '2026-02-15T12:00',
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('interactions.index', [
+        'interacted_at_from' => '2026-01-31T12:00',
+        'interacted_at_to' => '2026-01-01T12:00',
+    ]));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットする対応履歴が表示されることを確認
+    $response->assertSeeText('ヒットする対応履歴');
+
+    // 検索にヒットしない対応履歴は表示されないことを確認
+    $response->assertDontSeeText('ヒットしない対応履歴');
+});
+
+it('ログインユーザーは複数条件を満たす検索ができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $user = $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 顧客に紐づく案件を作成
+    $project = Project::factory()->for($customer, 'customer')->create(['title' => '案件A']);
+
+    // 検索にヒットする対応履歴とヒットしない対応履歴を作成
+    Interaction::factory()->create([
+        'content' => 'ヒットする対応履歴',
+        'customer_id' => $customer->id,
+        'project_id' => $project->id,
+        'type' => 'phone',
+        'assigned_user_id' => $user->id,
+        'interacted_at' => '2026-01-15T12:00',
+    ]);
+    Interaction::factory()->create([
+        'content' => 'ヒットしない対応履歴',
+        'customer_id' => $customer->id,
+        'project_id' => $project->id,
+        'type' => 'email',
+        'assigned_user_id' => $user->id,
+        'interacted_at' => '2026-01-15T12:00',
+    ]);
+
+    // 検索処理にアクセス
+    $response = $this->get(route('interactions.index', [
+        'content_keyword' => 'ヒットする',
+        'project_keyword' => '案件A',
+        'type' => 'phone',
+        'customer_id' => $customer->id,
+        'assigned_user_id' => $user->id,
+        'interacted_at_from' => '2026-01-31T12:00',
+        'interacted_at_to' => '2026-01-01T12:00',
+    ]));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 検索にヒットする対応履歴が表示されることを確認
+    $response->assertSeeText('ヒットする対応履歴');
+
+    // 検索にヒットしない対応履歴は表示されないことを確認
+    $response->assertDontSeeText('ヒットしない対応履歴');
+});
+
+it('ログインユーザーが検索条件なしで検索した場合は全件が表示される', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 顧客に紐づく対応履歴を3件作成
+    $interactions = Interaction::factory()
+        ->for($customer, 'customer')
+        ->count(3)
+        ->create();
+
+    // 検索処理にアクセス
+    $response = $this->get(route('interactions.index'));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 対応履歴の全件が表示されることを確認
+    foreach ($interactions as $interaction) {
+        $response->assertSeeText([
+            $interaction->interacted_at->format('Y-m-d H:i'),
+            Interaction::TYPE[$interaction->type],
+            $interaction->assignedUser->name,
+            $interaction->customer->name,
+        ]);
+    }
+});

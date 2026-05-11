@@ -31,7 +31,7 @@ class CustomerFactory extends Factory
             'status' => fake()->randomElement(['prospect', 'negotiation', 'won', 'lost', 'inactive']),
             'rank' => fake()->randomElement(['A', 'B', 'C']),
             'assigned_user_id' => User::factory(),
-            'memo' => fake()->realText(50),
+            'memo' => fake()->sentence(),
         ];
     }
 }
