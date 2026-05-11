@@ -83,3 +83,75 @@ it('ログインユーザーは interacted_at で降順ソートができる', f
     // 降順ソートで表示されることを確認
     $request->assertSeeInOrder(['テストC', 'テストB', 'テストA']);
 });
+
+it('ログインユーザーは customer_kana で昇順ソートができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を3件作成
+    $customerA = Customer::factory()->create(['kana' => 'あ']);
+    $customerB = Customer::factory()->create(['kana' => 'か']);
+    $customerC = Customer::factory()->create(['kana' => 'さ']);
+
+    // 顧客に紐づく並び順がバラバラの対応履歴を3件作成
+    Interaction::factory()->create([
+        'customer_id' => $customerC->id,
+        'content' => 'テストC',
+    ]);
+    Interaction::factory()->create([
+        'customer_id' => $customerA->id,
+        'content' => 'テストA',
+    ]);
+    Interaction::factory()->create([
+        'customer_id' => $customerB->id,
+        'content' => 'テストB',
+    ]);
+
+    // ソート処理にアクセス
+    $request = $this->get(route('interactions.index', [
+        'sort' => 'customer_kana',
+        'direction' => 'asc',
+    ]));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $request->assertOk();
+
+    // 昇順ソートで表示されることを確認
+    $request->assertSeeInOrder(['テストA', 'テストB', 'テストC']);
+});
+
+it('ログインユーザーは customer_kana で降順ソートができる', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を3件作成
+    $customerA = Customer::factory()->create(['kana' => 'あ']);
+    $customerB = Customer::factory()->create(['kana' => 'か']);
+    $customerC = Customer::factory()->create(['kana' => 'さ']);
+
+    // 顧客に紐づく並び順がバラバラの対応履歴を3件作成
+    Interaction::factory()->create([
+        'customer_id' => $customerA->id,
+        'content' => 'テストA',
+    ]);
+    Interaction::factory()->create([
+        'customer_id' => $customerC->id,
+        'content' => 'テストC',
+    ]);
+    Interaction::factory()->create([
+        'customer_id' => $customerB->id,
+        'content' => 'テストB',
+    ]);
+
+    // ソート処理にアクセス
+    $request = $this->get(route('interactions.index', [
+        'sort' => 'customer_kana',
+        'direction' => 'desc',
+    ]));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $request->assertOk();
+
+    // 降順ソートで表示されることを確認
+    $request->assertSeeInOrder(['テストC', 'テストB', 'テストA']);
+});
