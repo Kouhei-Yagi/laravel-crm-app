@@ -288,3 +288,33 @@ it('ログインユーザーは複数条件を満たす検索ができる', func
     // 検索にヒットしない対応履歴は表示されないことを確認
     $response->assertDontSeeText('ヒットしない対応履歴');
 });
+
+it('ログインユーザーが検索条件なしで検索した場合は全件が表示される', function () {
+    // ログインユーザーを作成し、ログイン状態にする
+    $this->loginUser();
+
+    // 任意の顧客を作成
+    $customer = Customer::factory()->create();
+
+    // 顧客に紐づく対応履歴を3件作成
+    $interactions = Interaction::factory()
+        ->for($customer, 'customer')
+        ->count(3)
+        ->create();
+
+    // 検索処理にアクセス
+    $response = $this->get(route('interactions.index'));
+
+    // アクセス成功（ステータスコード 200）を確認
+    $response->assertOk();
+
+    // 対応履歴の全件が表示されることを確認
+    foreach ($interactions as $interaction) {
+        $response->assertSeeText([
+            $interaction->interacted_at->format('Y-m-d H:i'),
+            Interaction::TYPE[$interaction->type],
+            $interaction->assignedUser->name,
+            $interaction->customer->name,
+        ]);
+    }
+});
