@@ -26,7 +26,7 @@
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
                                 <th class="px-3 py-2 border">対応種別</th>
                                 <td class="px-3 py-2 border">
-                                    {{ App\Models\Interaction::TYPE[$interaction->type] }}
+                                    {{ App\Models\Interaction::TYPES[$interaction->type] }}
                                 </td>
                             </tr>
 

@@ -24,7 +24,7 @@ class InteractionUpdateRequest extends FormRequest
     {
         return [
             'interacted_at' => 'required|date_format:Y-m-d\TH:i',
-            'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPE)),
+            'type' => 'required|in:' . implode(',', array_keys(Interaction::TYPES)),
             'content' => 'required|string|max:2000',
             'memo' => 'nullable|string|max:2000',
         ];
