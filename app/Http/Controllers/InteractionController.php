@@ -27,7 +27,7 @@ class InteractionController extends Controller
     public function index(InteractionSearchRequest $request)
     {
         // 画面で選択肢として表示するため、対応種別・顧客名・担当者のデータを取得する
-        $types = Interaction::TYPE;
+        $types = Interaction::TYPES;
         $customers = Customer::orderBy('kana')->pluck('name', 'id');
         $assignedUsers = User::orderBy('name')->pluck('name', 'id');
 
@@ -50,7 +50,7 @@ class InteractionController extends Controller
     public function create()
     {
         // 対応種別の選択肢
-        $types = Interaction::TYPE;
+        $types = Interaction::TYPES;
 
         // 案件名の選択肢
         $projects = Project::where('assigned_user_id', auth()->id())->pluck('title', 'id');
@@ -105,7 +105,7 @@ class InteractionController extends Controller
     public function edit(Interaction $interaction)
     {
         // 対応種別の選択肢を渡す
-        $types = Interaction::TYPE;
+        $types = Interaction::TYPES;
 
         // 各選択肢の値を持って選択されたinteractionsテーブルのレコードをeditビューに渡す
         return view('interactions.edit', compact('interaction', 'types'));

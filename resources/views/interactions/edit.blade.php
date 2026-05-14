@@ -23,8 +23,8 @@
 
                         {{-- 対応日時 --}}
                         <x-input
-                            name="interaction_at"
-                            id="interaction_at"
+                            name="interacted_at"
+                            id="interacted_at"
                             type="datetime-local"
                             :value="$interaction->interacted_at?->format('Y-m-d\TH:i')"
                             label="対応日時"

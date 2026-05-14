@@ -4823,3 +4823,77 @@ php artisan make:provider AuthServiceProvider
 - データプロバイダの`with()`は連想配列で名前を付けると読みやすい
 
 ---
+
+## 機能名：定数の命名規則統一
+
+### 目的
+
+- コードベース全体の命名規則を統一し、一貫性・可読性・保守性を高めるため
+
+### ブランチ名：**refactor/unify-naming-constants**
+
+### 実装日：2026-05-13
+
+### 作成・変更・自動生成されたファイル
+
+- `app/Models/Interaction.php`（変更）
+- `resources/views/interactions/index.blade.php`（変更）
+- `resources/views/interactions/show.blade.php`（変更）
+- `app/Http/Controllers/InteractionController.php`（変更）
+- `app/Http/Requests/InteractionStoreRequest.php`（変更）
+- `app/Http/Requests/InteractionUpdateRequest.php`（変更）
+- `tests/Feature/Interaction/InteractionIndexTest.php`（変更）
+- `tests/Feature/Interaction/InteractionEditTest.php`（変更）
+
+### 実装内容
+
+- `Interaction`モデルの定数`TYPE`を`TYPES`に変更
+- 上記変更に伴い、定数参照箇所をすべて`TYPES`に統一
+    - 一覧画面（index）
+    - 詳細画面（show）
+    - Controller（検索フォーム用の options）
+    - StoreRequest / UpdateRequest（バリデーションの Rule::in）
+    - Feature Test（定数参照部分）
+
+### 実装手順
+
+1. モデルの定数名を変更
+
+- `Interaction`モデルの`TYPE`→`TYPES`
+
+2. Blade 側の参照を修正
+
+- `interactions/index.blade.php`
+- `interactions/show.blade.php`
+
+3. Controller / FormRequest の参照を修正
+
+- `InteractionController.php`
+- `InteractionStoreRequest.php`
+- `InteractionUpdateRequest.php`
+
+4. テストコードの参照を修正
+
+- `InteractionIndexTest.php`
+- `InteractionEditTest.php`
+
+### 確認内容
+
+- 対応履歴一覧ページ
+    - 対応種別が正しく表示される
+    - 対応種別で正しく検索できる
+- 対応履歴詳細ページ
+    - 対応種別が正しく表示される
+- 対応履歴作成ページ
+    - 対応種別プルダウンが正しく表示される
+    - 正しく登録できる
+- 対応履歴編集ページ
+    - 対応種別プルダウンが正しく表示される
+    - 正しく更新できる
+
+### 気づき・課題
+
+- `Interaction`モデルのみ定数が単数形で定義されており、他モデルと命名規則が揃っていなかった
+- 定数名の揺れは、Blade・Controller・FormRequest・テストなど複数箇所に影響するため、早期に統一しておくことが重要だと思った
+
+---

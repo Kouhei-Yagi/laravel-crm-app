@@ -15,7 +15,7 @@ class Interaction extends Model
     use Sortable;
     use RangeNormalizer;
 
-    public const TYPE = [
+    public const TYPES = [
         'phone' => '電話',
         'email' => 'メール',
         'visit' => '訪問',
