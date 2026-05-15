@@ -74,6 +74,11 @@ class Project extends Model
         return $this->hasMany(Interaction::class, 'project_id');
     }
 
+    public function getStatusLabelAttribute()
+    {
+        return self::STATUSES[$this->status] ?? '不明';
+    }
+
     /**
      * 案件一覧の検索条件をまとめて適用するスコープ
      *
