@@ -68,6 +68,11 @@ class Interaction extends Model
         return $this->belongsTo(User::class, 'assigned_user_id');
     }
 
+    public function getTypeLabelAttribute()
+    {
+        return self::TYPES[$this->type] ?? '不明';
+    }
+
     /**
      * 案件履歴一覧の検索条件をまとめて適用するスコープ
      *
