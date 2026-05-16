@@ -71,6 +71,11 @@ class Customer extends Model
         return $this->hasMany(Interaction::class, 'customer_id');
     }
 
+    public function getStatusLabelAttribute()
+    {
+        return self::STATUSES[$this->status] ?? '不明';
+    }
+
     /**
      * 顧客一覧の検索条件をまとめて適用するスコープ
      *

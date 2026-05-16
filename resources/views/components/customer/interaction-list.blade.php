@@ -42,7 +42,7 @@
 
                     {{-- 対応種別 --}}
                     <td class="px-3 py-2 border">
-                        {{ App\Models\Interaction::TYPE[$interaction->type] }}
+                        {{ $interaction->type_label }}
                     </td>
 
                     {{-- 内容 --}}
