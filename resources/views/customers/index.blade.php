@@ -141,7 +141,7 @@
 
                                     {{-- ステータス --}}
                                     <td class="px-3 py-2 border">
-                                        {{ App\Models\Customer::STATUSES[$customer->status] }}
+                                        {{ $customer->status_label }}
                                     </td>
 
                                     {{-- 担当者 --}}

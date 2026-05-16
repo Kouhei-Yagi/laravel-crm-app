@@ -21,7 +21,7 @@ it('ログインユーザーは対応履歴一覧を表示できる', function (
         $response->assertSeeText($interaction->interacted_at->format('Y-m-d H:i'));
         $response->assertSeeText($interaction->customer->name);
         $response->assertSeeText($interaction->assignedUser->name);
-        $response->assertSeeText(Interaction::TYPES[$interaction->type]);
+        $response->assertSeeText($interaction->type_label);
     }
 });
 

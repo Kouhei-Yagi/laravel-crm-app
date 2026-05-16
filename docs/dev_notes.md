@@ -4897,3 +4897,74 @@ php artisan make:provider AuthServiceProvider
 - 定数名の揺れは、Blade・Controller・FormRequest・テストなど複数箇所に影響するため、早期に統一しておくことが重要だと思った
 
 ---
+
+## 機能名：Model アクセサの導入
+
+### 目的
+
+- Blade の可読性を向上させるため
+- Model に表示ロジックを集約し、責務の一貫性を高めるため
+- 定数の変更に強い構造にすることで、保守性を向上させるため
+
+### ブランチ名：**refactor/add-model-accessors**
+
+### 実装日：2026-05-15 ~ 2026-05-16
+
+### 作成・変更・自動生成されたファイル
+
+- `app/Models/Interaction.php`（変更）
+- `app/Models/Project.php`（変更）
+- `app/Models/Customer.php`（変更）
+- `resources/views/interactions/index.blade.php`（変更）
+- `resources/views/interactions/show.blade.php`（変更）
+- `resources/views/projects/index.blade.php`（変更）
+- `resources/views/projects/show.blade.php`（変更）
+- `resources/views/customers/index.blade.php`（変更）
+- `resources/views/customers/show.blade.php`（変更）
+- `resources/views/components/customer/interaction-list.blade.php`（変更）
+- `resources/views/components/customer/project-list.blade.php`（変更）
+- `tests/Feature/Interaction/InteractionIndexTest.php`（変更）
+- `tests/Feature/Interaction/InteractionEditTest.php`（変更）
+
+### 実装内容
+
+- Model にアクセサを追加し、定数 → ラベル変換を Model 側に集約
+- Blade から変換ロジックを排除し、表示専用のコードに統一
+- コンポーネント内の参照もアクセサに統一
+- テストコードもアクセサを利用する形に修正
+
+### 実装手順
+
+1. Model にアクセサを追加
+
+- `Interaction`：`getTypeLabelAttribute()`
+- `Project`：`getStatusLabelAttribute()`
+- `Customer`：`getStatusLabelAttribute()`/`getRankLabelAttribute()`
+
+2. Blade の参照をアクセサに置換
+
+- interactions（index / show）
+- projects（index / show）
+- customers（index / show）
+- components（interaction-list / project-list）
+
+3. テストコードを修正
+
+- `InteractionIndexTest.php`
+- `InteractionEditTest.php`
+
+### 確認内容
+
+- 対応履歴一覧・詳細ページの対応種別が正しく表示されること
+- 案件一覧・詳細ページのステータスが正しく表示されること
+- 顧客一覧・詳細ページのステータス・ランクが正しく表示されること
+- 詳細ページの案件一覧のステータス・対応履歴の対応種別が正しく表示されること
+- テストが PASS したこと
+
+### 気づき・課題
+
+- `self`は「そのクラス自身」を指し、`self::定数名`でクラス定数を参照できることを再確認した
+- アクセサは`get + 属性名（先頭大文字） + Attribute`という命名規則で定義し、Blade では`$model->属性名`として自然に呼び出せることを理解した
+- Blade にロジックを書かず、Model に集約することで保守性が大きく向上することを実感した
+
+---

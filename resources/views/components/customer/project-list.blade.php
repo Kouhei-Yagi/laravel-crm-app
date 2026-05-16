@@ -47,7 +47,7 @@
 
                     {{-- ステータス --}}
                     <td class="px-3 py-2 border">
-                        {{ App\Models\Project::STATUSES[$project->status] }}
+                        {{ $project->status_label }}
                     </td>
 
                     {{-- 税抜金額 --}}
