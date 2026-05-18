@@ -7,7 +7,7 @@ use App\Http\Controllers\InteractionController;
 use App\Http\Controllers\ProjectController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');;
 });
 
 Route::get('/dashboard', function () {
