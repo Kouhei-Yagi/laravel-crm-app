@@ -71,10 +71,10 @@
                     </x-search.form>
 
                     {{-- 一覧データ --}}
-                    <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
+                    <table class="min-w-full w-full border border-gray-200 dark:border-gray-700 text-sm">
 
                         {{-- 項目名 --}}
-                        <thead class="bg-gray-50 dark:bg-gray-700">
+                        <thead class="bg-gray-100 dark:bg-gray-700">
                             <tr>
                                 {{-- 顧客名 --}}
                                 <x-table.sortable-header
@@ -89,7 +89,7 @@
                                 />
 
                                 {{-- 電話番号 --}}
-                                <th class="px-3 py-2 border">電話番号</th>
+                                <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">電話番号</th>
 
                                 {{-- 会社名 --}}
                                 <x-table.sortable-header
@@ -98,10 +98,10 @@
                                 />
 
                                 {{-- ステータス --}}
-                                <th class="px-3 py-2 border">ステータス</th>
+                                <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">ステータス</th>
 
                                 {{-- 担当者 --}}
-                                <th class="px-3 py-2 border">担当者</th>
+                                <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">担当者</th>
 
                                 {{-- 作成日 --}}
                                 <x-table.sortable-header
@@ -114,10 +114,10 @@
                         {{-- レコード --}}
                         <tbody>
                             @foreach ($customers as $customer)
-                                <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600">
 
                                     {{-- 顧客名 --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         <a href="{{ route('customers.show', $customer) }}"
                                             class="text-blue-600 hover:underline">
                                             {{ $customer->name }}
@@ -125,32 +125,32 @@
                                     </td>
 
                                     {{-- メール --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         {{ $customer->email ?: '未設定' }}
                                     </td>
 
                                     {{-- 電話番号 --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         {{ $customer->phone ?: '未設定' }}
                                     </td>
 
                                     {{-- 会社名 --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         {{ $customer->company_name ?: '未設定' }}
                                     </td>
 
                                     {{-- ステータス --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         {{ $customer->status_label }}
                                     </td>
 
                                     {{-- 担当者 --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         {{ $customer->assignedUser->name }}
                                     </td>
 
                                     {{-- 作成日 --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         {{ $customer->created_at->format('Y-m-d') }}
                                     </td>
                                 </tr>

@@ -32,7 +32,7 @@
     );
 @endphp
 
-<th class="px-3 py-2 border">
+<th class="px-4 py-2 border border-gray-200 dark:border-gray-600">
     {{-- ソートリンク --}}
     <a href="{{ $url }}"
         class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
