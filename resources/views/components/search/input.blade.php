@@ -13,7 +13,7 @@
 
 <div>
     {{-- ラベル --}}
-    <label for="{{ $name }}" class="block text-sm font-medium mb-1">
+    <label for="{{ $name }}" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
         {{ $label }}
     </label>
 
@@ -26,7 +26,8 @@
         placeholder="{{ $placeholder }}"
 
         {{-- Tailwind の共通スタイル（検索フォーム用） --}}
-        class="w-full px-3 py-2 border border-gray-300 rounded-md
-            dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100"
+        class="w-full px-3 py-2 h-10 border border-gray-200 rounded-md
+            placeholder-gray-400
+            dark:bg-gray-500 dark:border-gray-400 dark:text-gray-100 dark:placeholder-gray-200"
     >
 </div>
