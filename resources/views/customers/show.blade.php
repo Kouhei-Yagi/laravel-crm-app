@@ -36,110 +36,45 @@
                     <x-alert :message="session('success')" />
 
                     {{-- 詳細データ --}}
-                    <table class="w-full border border-gray-300 dark:border-gray-700 text-sm">
+                    <table class="min-w-full w-full border border-gray-200 dark:border-gray-600 text-sm">
                         <tbody>
+
+                            @foreach ([
+                                '顧客名' => $customer->name,
+                                'フリガナ' => $customer->kana ?: '未設定',
+                                'メール' => $customer->email ?: '未設定',
+                                '電話番号' => $customer->phone ?: '未設定',
+                                '会社名' => $customer->company_name ?: '未設定',
+                                '部署' => $customer->department ?: '未設定',
+                                '役職' => $customer->position ?: '未設定',
+                                '郵便番号' => $customer->postal_code ?: '未設定',
+                                '住所' => trim(($customer->address ?: '未設定') . ' ' . $customer->address_detail),
+                                'ステータス' => $customer->status_label,
+                                'ランク' => $customer->rank_label,
+                                '担当者' => $customer->assignedUser->name,
+                                '作成日' => $customer->created_at->format('Y-m-d'),
+                                '更新日' => $customer->updated_at->format('Y-m-d'),
+                            ] as $label => $value)
+
+                                <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                    <th class="px-4 py-2 border border-gray-200 dark:border-gray-600 w-40 text-left">
+                                        {{ $label }}
+                                    </th>
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600 break-words">
+                                        {{ $value }}
+                                    </td>
+                                </tr>
+
+                            @endforeach
+
+                            {{-- メモ欄だけ複数行対応 --}}
                             <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border w-40">顧客名</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->name }}
-                                </td>
+                                <th class="px-4 py-2 border border-gray-200 dark:border-gray-600 w-40 text-left">
+                                    メモ
+                                </th>
+                                <td class="px-4 py-2 border border-gray-200 dark:border-gray-600 whitespace-pre-line break-words">{{ $customer->memo ?: '未設定' }}</td>
                             </tr>
 
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">フリガナ</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->kana ?: '未設定' }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">メール</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->email ?: '未設定' }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">電話番号</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->phone ?: '未設定' }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">会社名</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->company_name ?: '未設定' }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">部署</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->department ?: '未設定' }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">役職</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->position ?: '未設定' }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">郵便番号</th>
-                                <td class="px-3 py-2 border whitespace-normal break-words">
-                                    {{ $customer->postal_code ?: '未設定' }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">住所</th>
-                                <td class="px-3 py-2 border whitespace-normal break-words">
-                                    {{ $customer->address ?: '未設定' }} {{ $customer->address_detail }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">ステータス</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->status_label }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">ランク</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->rank_label }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">担当者</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->assignedUser->name }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">作成日</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->created_at->format('Y-m-d') }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">更新日</th>
-                                <td class="px-3 py-2 border">
-                                    {{ $customer->updated_at->format('Y-m-d') }}
-                                </td>
-                            </tr>
-
-                            <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                <th class="px-3 py-2 border">メモ</th>
-                                <td class="px-3 py-2 border whitespace-pre-line">{{ $customer->memo ?: '未設定' }}</td>
-                            </tr>
                         </tbody>
                     </table>
 
