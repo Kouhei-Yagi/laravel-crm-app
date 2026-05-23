@@ -161,7 +161,7 @@
 
                                     {{-- 税抜金額 --}}
                                     <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
-                                        {{ number_format($project->amount) ?: '未設定' }}
+                                        {{ $project->amount !== null ? number_format($project->amount) : '未設定' }}
                                     </td>
 
                                     {{-- 担当者 --}}
