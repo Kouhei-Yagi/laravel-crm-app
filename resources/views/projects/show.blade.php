@@ -40,14 +40,14 @@
                         <tbody>
 
                             @foreach ([
-                                '案件名' => $project->title,
-                                '顧客名' => $project->customer->name,
-                                'ステータス' => $project->status_label,
+                                '案件名' => e($project->title),
+                                '顧客名' => '<a href="' . route('customers.show', $project->customer) . '" class="text-blue-600 hover:underline">' . e($project->customer->name) . '</a>',
+                                'ステータス' => e($project->status_label),
                                 '税抜金額' => $project->amount !== null ? number_format($project->amount) . ' 円' : '未設定',
                                 '期間' => ($project->start_date?->format('Y-m-d') ?: '未設定') . ' ～ ' . ($project->end_date?->format('Y-m-d') ?: '未設定'),
-                                '担当者' => $project->assignedUser->name,
-                                '作成日' => $project->created_at->format('Y-m-d'),
-                                '更新日' => $project->updated_at->format('Y-m-d'),
+                                '担当者' => e($project->assignedUser->name),
+                                '作成日' => e($project->created_at->format('Y-m-d')),
+                                '更新日' => e($project->updated_at->format('Y-m-d')),
                             ] as $label => $value)
 
                                 <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
@@ -55,13 +55,7 @@
                                         {{ $label }}
                                     </th>
                                     <td class="px-4 py-2 border border-gray-200 dark:border-gray-600 break-words">
-                                        @if ($label === '顧客名')
-                                            <a href="{{ route('customers.show', $project->customer) }}" class="text-blue-600 hover:underline">
-                                                {{ $value }}
-                                            </a>
-                                        @else
-                                            {{ $value }}
-                                        @endif
+                                        {!! $value !!}
                                     </td>
                                 </tr>
                             @endforeach
