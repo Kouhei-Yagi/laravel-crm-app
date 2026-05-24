@@ -10,7 +10,7 @@ x-textarea コンポーネント
     'label' => null, // x-field に渡すラベル
     'required' => false, // 必須フラグ
     'help' => null, // 補足説明
-    'placeholder' => null, // placeholder
+    'placeholder' => null, // textarea の placeholder
     'rows' => 4, // 行数（デフォルト4）
 ])
 
@@ -61,12 +61,13 @@ x-textarea コンポーネント
             aria-describedby="{{ $describedBy }}"
         @endif
 
-        {{-- Tailwind の共通スタイルを適用 --}}
-        {{ $attributes->class("
-            w-full border-gray-300 rounded-md shadow-sm
-            text-gray-900 dark:text-gray-100
-            bg-white dark:bg-gray-700 whitespace-pre-line
-        ") }}
+        {{-- Tailwind のスタイルを適用 --}}
+        {{ $attributes->class([
+            "w-full border-gray-300 rounded-md shadow-sm",
+            "text-gray-900 dark:text-gray-100",
+            "bg-white dark:bg-gray-700",
+            "whitespace-pre-line",
+        ]) }}
     >{{ $inputValue }}</textarea>
 
 </x-field>
