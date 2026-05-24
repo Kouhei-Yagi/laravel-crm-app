@@ -6,11 +6,10 @@
 @if ($href)
     <a
         href="{{ $href }}"
-        {{ $attributes->merge([
-            'class' =>
-            'inline-block px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md
-            hover:bg-blue-700
-            dark:bg-blue-500 dark:hover:bg-blue-600'
+        {{ $attributes->class([
+            'inline-block px-4 py-2 text-sm font-medium text-white rounded-md',
+            'bg-blue-600 hover:bg-blue-700',
+            'dark:bg-blue-500 dark:hover:bg-blue-600',
         ]) }}
     >
         {{ $slot }}
@@ -18,11 +17,10 @@
 @else
     <button
         type="{{ $type }}"
-        {{ $attributes->merge([
-            'class' =>
-                'inline-block px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md
-                hover:bg-blue-700
-                dark:bg-blue-500 dark:hover:bg-blue-600'
+        {{ $attributes->class([
+            'inline-block px-4 py-2 text-sm font-medium text-white rounded-md',
+            'bg-blue-600 hover:bg-blue-700',
+            'dark:bg-blue-500 dark:hover:bg-blue-600',
         ]) }}
     >
         {{ $slot }}
