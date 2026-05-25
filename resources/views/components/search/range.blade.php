@@ -13,7 +13,7 @@
 @php
     // 数値入力欄の共通クラス
     $inputClass = 'w-32 px-3 py-2 h-10 border border-gray-200 rounded-md
-                dark:bg-gray-500 dark:border-gray-400 dark:text-gray-100';
+                dark:bg-gray-700 dark:border-gray-400 dark:text-gray-100';
 
     // 実際の name 属性（from/to）を生成
     $nameFrom = $name . '_from';
