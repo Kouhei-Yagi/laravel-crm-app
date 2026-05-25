@@ -16,7 +16,7 @@
                         <span class="text-red-500">*</span> は入力必須項目です。
                     </p>
 
-                    <form action="{{ route('interactions.update', $interaction) }}" method="post" class="space-y-10">
+                    <form action="{{ route('interactions.update', $interaction) }}" method="post" class="space-y-6">
                         @csrf
                         @method('patch')
 
