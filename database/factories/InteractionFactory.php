@@ -28,9 +28,9 @@ class InteractionFactory extends Factory
                 return Customer::find($attributes['customer_id'])->assigned_user_id;
             },
             'type' => fake()->randomElement(['phone', 'email', 'visit', 'meeting']),
-            'content' => fake()->realText(80),
+            'content' => fake()->sentence(),
             'interacted_at' => fake()->datetime(),
-            'memo' => fake()->realText(50),
+            'memo' => fake()->sentence(),
         ];
     }
 }

@@ -19,8 +19,8 @@ class ProjectFactory extends Factory
     {
         return [
             'customer_id' => Customer::factory(),
-            'title' => fake()->realText(15),
-            'description' => fake()->realText(80),
+            'title' => fake()->sentence(),
+            'description' => fake()->sentence(),
             'status' => fake()->randomElement(['estimating', 'proposing', 'contracted', 'lost', 'on_hold']),
             'amount' => fake()->numberBetween(10000, 500000),
             'start_date' => fake()->optional()->date(),
@@ -28,7 +28,7 @@ class ProjectFactory extends Factory
             'assigned_user_id' => function (array $attributes) {
                 return Customer::find($attributes['customer_id'])->assigned_user_id;
             },
-            'memo' => fake()->realText(50),
+            'memo' => fake()->sentence(),
         ];
     }
 }
