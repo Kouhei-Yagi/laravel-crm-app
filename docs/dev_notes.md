@@ -4968,3 +4968,264 @@ php artisan make:provider AuthServiceProvider
 - Blade にロジックを書かず、Model に集約することで保守性が大きく向上することを実感した
 
 ---
+
+## 機能名：UI / UX 調整（全 CRUD 画面の統一・改善）
+
+### 目的
+
+- CRUD 全画面の UI を統一し、業務システムとしての一貫性を高めるため
+- テーブル・検索フォーム・ボタンなど共通 UI の品質を向上させるため
+- 詳細ページの構造を整理し、読みやすさ・操作性を改善させるため
+- ログイン後の導線を実務的なフローに合わせて最適化するため
+- Blade コンポーネントを整理し、保守性を向上させるため
+
+### ブランチ名：**refactor/ui-ux-polish**
+
+### 実装日：2026-05-18 ~ 2026-05-25
+
+### 作成・変更・自動生成されたファイル
+
+- `routes/web.php`（変更）
+- `resources/views/auth/login.blade.php`（変更）
+- `resources/views/layouts/navigation.blade.php`（変更）
+- `resources/views/customers/*`（変更）
+- `resources/views/projects/*`（変更）
+- `resources/views/interactions/*`（変更）
+- `resources/views/components/*`（変更）
+
+### 実装内容
+
+- 導線の改善（ログイン前後の UX 最適化）
+    - `/` → `/login`にリダイレクト
+    - `/dashboard` → `customers.index`にリダイレクト
+    - ログイン画面に`/register`へのリンクを追加
+    - Breeze デフォルトの「Dashboard」を削除し、顧客 / 案件 / 対応履歴 の業務メニューに置き換え
+    - `routeIs('customers.*')`などで active 状態を統一
+- テーブル UI の統一（全一覧ページ）
+    - 行ホバー：`hover:bg-gray-100 dark:hover:bg-gray-600`
+    - odd/even：`odd:bg-white even:bg-gray-50`（dark mode 対応）
+    - border：`border-gray-200 dark:border-gray-600`
+    - th/td：`px-4 py-2`に統一
+    - thead 背景：`bg-gray-100 dark:bg-gray-700`
+    - テーブル幅：`min-w-full`
+    - カード外枠：`border`を追加
+    - ソートヘッダー（x-table.sortable-header）の UI を統一
+- 検索フォーム（x-search.）の統一
+    - カード UI：`border / rounded-lg / shadow-sm`
+    - input/select/date の高さ：`h-10`
+    - border：`border-gray-200`
+    - dark mode：`dark:bg-gray-500`
+    - placeholder 色：`dark:placeholder-gray-200`
+    - range/date の「〜」の色を統一
+    - クラスを`$inputClass`にまとめて重複排除
+- 詳細ページ（show）の UI 統一
+    - h2：`text-2xl font-bold`
+    - 編集・削除ボタンを右上に統一
+    - テーブル UI を全ドメインで統一
+    - `<th>`幅：`w-40`
+    - `<td>`：`break-words`
+    - 複数行テキスト：`whitespace-pre-line`
+    - リンク生成方式：`{!! !!}` + `e()` に統一
+    - 項目は foreach で管理し保守性向上
+    - 戻るボタンの位置を統一
+    - カード外枠に`border`を追加
+- 新規作成（create）・編集（edit）ページの統一
+    - h2：`text-2xl font-bold`
+    - カード UI：`border / shadow-sm / rounded-lg`
+    - セクション構造：`<div class="space-y-6">`
+    - フォーム余白：`space-y-6`に統一
+    - h3：`text-lg font-semibold`
+    - ボタンの並び：primary → secondary
+- コンポーネントの統一
+    - x-input / x-select / x-textarea の class を配列形式に統一
+    - ボタンコンポーネントの class を統一
+    - 検索コンポーネントのラベル・placeholder の色を統一
+    - x-customer.project-list / interaction-list のテーブル UI を統一
+
+### 実装手順
+
+1. 導線の改善
+
+- トップページのリダイレクト設定
+    - `web.php`の`/`にアクセスがあった場合、ログイン画面（`/login`）へリダイレクトするように変更
+    - 業務システムとして一般的なトップページを排除し、ログイン前提の導線に統一
+- ログイン画面の改善
+    - `auth/login.blade.php`にユーザー新規登録（`/register`）へのリンクを追加
+    - リンク同士の間隔が詰まらないようにレイアウトを調整（`flex`→`space-x`など）
+- ログイン後の遷移先の変更
+    - `web.php`の`/dashboard`にアクセスがあった場合、顧客一覧（`customers.index`）へリダイレクトするように変更
+    - ログイン後に最も利用頻度の高い画面へ直接遷移する導線に改善
+
+2. ナビゲーションバーの改善
+
+- ログイン後のナビゲーションバーを業務システム向けに整理
+    - Breeze のデフォルトである「Dashboard」を削除し、業務で利用する主要メニューに置き換え
+- 主要メニューの追加
+    - 顧客一覧（`customers.index`）
+    - 案件一覧（`projects.index`）
+    - 対応履歴一覧（`interactions.index`）
+    - プロフィール（既存のまま）
+    - ログアウト（既存のまま）
+    - active 状態の統一（既存のまま）
+- `request()->routeIs('customers.*')`のように、関連画面すべてでメニューがハイライトされるように調整
+    - 一覧・新規作成・編集など CRUD 全体で統一されたナビゲーションを実現
+
+3. テーブルの軽微な UI 改善（全一覧画面）
+
+- 行ホバーの追加
+    - `hover:bg-gray-100 dark:hover:bg-gray-600` を適用し、行選択時の視認性を向上
+- odd/even の背景色統一
+    - `odd:bg-white even:bg-gray-50`（dark mode 対応含む）で可読性を改善
+- border 色の統一
+    - `border-gray-200 dark:border-gray-600`に統一し、一覧全体の見た目を揃える
+- padding の統一
+    - `<th>`と`<td>`を`px-4 py-2`に統一し、セル間の余白を整える
+- ヘッダー背景色の統一
+    - `<thead>`に`bg-gray-100 dark:bg-gray-700`を適用し、見出しの視認性を改善
+- テーブル幅の統一
+    - `min-w-full`を使用し、画面幅にフィットする安定したレイアウトに統一
+- 見出し（h2）の統一
+    - すべての一覧ページでタイトルを`text-2xl font-bold text-gray-800 dark:text-gray-200`に統一し、視認性を向上
+- カード外枠の統一
+    - `border` の追加
+- テーブル外枠の統一
+    - border 色を`dark:border-gray-600`に統一
+
+4. ボタンの UI 統一（全 CRUD 画面）
+
+- primary / secondary / danger の UI を統一
+    - 余白（`px-4 py-2`）
+    - フォント（`text-sm font-medium`）
+    - 角丸（`rounded-md`）
+    - inline-block の統一
+- hover / dark:hover の統一
+    - primary：blue 系
+    - secondary：gray 系
+    - danger：red 系
+    - dark mode でも自然な濃淡になるよう調整
+- HTML の class 属性に直接記述する Laravel 標準スタイルに統一
+    - UI を PHP に書かず、Blade 側で完結させることで可読性を向上
+- 全 CRUD 画面に自動反映されるようコンポーネント側で統一
+    - 各画面のボタンを個別に修正する必要がなく、保守性が向上
+
+5. 検索フォームの軽微な改善（一覧画面）
+
+- 検索フォーム全体（`x-search.form`）の改善
+    - タイトルの視認性アップ（`text-base`/ 色調整）
+    - 余白の調整（`p-5`）
+    - カード感の強化（`border`/`rounded-lg`/`shadow-sm`）
+    - ボタン位置の統一（右下 /`gap-4`）
+- 入力欄（`x-search.input`）の改善
+    - 高さを`h-10`に統一
+    - border を`border-gray-200`に統一
+    - placeholder の視認性改（`dark:placeholder-gray-200`）
+    - dark mode の背景色調整（`dark:bg-gray-500`）
+- セレクトボックス（`x-search.select`）の改善
+    - input と高さ・余白を統一（`h-10`/`px-3`/`py-2`）
+    - `border-gray-200`に統一
+    - dark mode の背景色調整（`dark:bg-gray-500`）
+    - 未選択 option の視認性改善
+- 日付範囲入力（`x-search.date`）の改善
+    - input と高さを統一（`h-10`）
+    - `border-gray-200`に統一
+    - dark mode の背景色調整（`dark:bg-gray-500`）
+    - 「〜」の色を統一（`text-gray-600`/`dark:text-gray-300`）
+    - クラスを`$inputClass`にまとめて重複を排除
+- 数値範囲入力（`x-search.range`）の改善
+    - input と高さを統一（`h-10`）
+    - `border-gray-200`に統一
+    - dark mode の背景色調整（`dark:bg-gray-500`）
+    - 「〜」の色を統一（`text-gray-600`/`dark:text-gray-300`）
+    - クラスを`$inputClass`にまとめて重複を排除
+
+6. 詳細ページの軽微な改善（全詳細ページ共通）
+
+- 見出し（h2）の統一
+    - すべての詳細ページでタイトルを`text-2xl font-bold text-gray-800 dark:text-gray-200`に統一し、視認性を向上
+- 編集・削除ボタンの位置統一
+    - 右上に配置し、顧客詳細・案件詳細・対応履歴詳細で統一
+    - ボタンは`x-button.primary`/`x-button.danger`を使用し、UI を統一
+- テーブル UI の統一
+    - すべての詳細ページで以下を統一
+    - `min-w-full`による安定した幅
+    - `border-gray-200 dark:border-gray-600`の統一
+    - `px-4 py-2`の余白統一
+    - `odd/even`の背景色統一
+    - `odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700`
+    - `<th>`の幅を`w-40`に統一し、読みやすさを向上
+    - `<td>`に`break-words`を適用し、長文でも崩れないように調整
+- 複数行テキストの統一
+    - 案件内容・メモ・対応内容などの自由記述欄は`whitespace-pre-line`を適用し、改行を保持して表示
+- リンク生成方式の統一
+    - 値の段階で HTML を組み立て、`{!! !!}`で出力する方式に統一
+    - 文字列は必ず`e()`でエスケープし、XSS を防止
+    - 顧客名・案件名などのリンクはすべて同じ方式で生成
+- 項目の管理方式の統一（`foreach`化）
+    - 固定項目はすべて`foreach`でまとめて管理
+    - 項目追加・削除が容易になり、保守性が向上
+    - 顧客詳細・案件詳細・対応履歴詳細で統一されたコード構造に
+- 戻るボタンの位置統一
+    - 詳細ページ下部に`x-button.secondary`を配置し、UI を統一
+- カード外枠の統一
+    - `border` の追加
+
+7. 新規作成ページの軽微な改善
+
+- 見出し（h2）の統一
+    - すべての新規作成ページで`text-2xl font-bold text-gray-800 dark:text-gray-200`に統一し、視認性を向上
+- カード UI の統一
+    - `bg-white dark:bg-gray-800`
+    - `border border-gray-200 dark:border-gray-600`
+    - `shadow-sm`
+    - `rounded-lg`
+    - 検索フォーム・詳細ページと同じカード UI に統一
+- セクション構造の統一
+    - `<div class="space-y-6">`で項目をまとめる
+    - `<form class="space-y-6">`でセクション間の余白を統一
+    - セクションタイトル（h3）は`text-lg font-semibold text-gray-800 dark:text-gray-200`
+
+8. 編集ージの軽微な改善
+
+- 見出し（h2）の統一
+    - すべての編集ページで`text-2xl font-bold text-gray-800 dark:text-gray-200`に統一し、視認性を向上
+- カード UI の統一
+    - `bg-white dark:bg-gray-800`
+    - `border border-gray-200 dark:border-gray-600`
+    - `shadow-sm`
+    - `rounded-lg`
+    - index / show / create と同じカード UI に統一
+- セクション構造の統一
+    - `<div class="space-y-6">`で項目をまとめる
+    - `<form class="space-y-6">`でセクション間の余白を統一
+    - セクションタイトル（h3）は`text-lg font-semibold text-gray-800 dark:text-gray-200`
+
+9. コンポーネントの軽微な改善
+
+- 入力コンポーネントの統一
+    - class 形式を配列に統一
+- ボタンコンポーネントの統一
+    - class 形式を配列に統一
+- 検索コンポーネントの統一
+    - ラベル色・placeholder 色の統一
+
+### 確認内容
+
+- CRUD 一連の操作（一覧 → 詳細 → 編集 → 更新 → 削除 → 戻る）が正しく動作すること
+- ログイン前後の導線（`/` → `/login`、ログイン後 → 顧客一覧）が正しく動作すること
+- ナビゲーションバーの遷移と active 状態が正しく反映されること
+- テーブル（ソート・hover・odd/even・幅・border）が全ドメインで統一されていること
+- 検索フォーム（input / select / date / range）の送信・保持・フィルタが正しく動作すること
+- 詳細ページの表示（foreach、リンク遷移、複数行テキスト）が正しく動作すること
+- create / edit のフォーム（必須チェック、disabled、余白統一）が正しく反映されていること
+
+### 気づき・課題
+
+- `Route::has()`や`routeIs()`の役割を理解し、ナビゲーション制御の仕組みを把握できた
+- `__()`や`e()`の役割を理解し、翻訳・エスケープの重要性を学んだ
+- 詳細ページの項目を foreach で管理することで、保守性が大幅に向上することを理解した
+- `number_format()`は null を 0 と扱うため、null チェックが必要であることを学んだ
+- 業務システムでは「ログイン前提の導線」「CRUD の UI 統一」が UX に直結することを実感した
+- dark mode 対応やコンポーネント統一により、全体の品質が大きく向上した
+- disabled input の見た目統一など、任意の改善余地は残る
+
+---
