@@ -3,8 +3,8 @@
         <div class="flex justify-between items-center">
 
             {{-- タイトル --}}
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                案件履歴一覧
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 leading-tight">
+                対応履歴一覧
             </h2>
 
             {{-- ボタン --}}
@@ -16,8 +16,8 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 shadow-sm rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
                     {{-- フラッシュメッセージ --}}
@@ -77,10 +77,10 @@
                     </x-search.form>
 
                     {{-- 一覧データ --}}
-                    <table class="min-w-max w-full border border-gray-300 dark:border-gray-700 text-sm">
+                    <table class="min-w-full w-full border border-gray-200 dark:border-gray-600 text-sm">
 
                         {{-- 項目名 --}}
-                        <thead class="bg-gray-50 dark:bg-gray-700">
+                        <thead class="bg-gray-100 dark:bg-gray-700">
                             <tr>
                                 {{-- 対応日時 --}}
                                 <x-table.sortable-header
@@ -89,13 +89,13 @@
                                 />
 
                                 {{-- 対応種別 --}}
-                                <th class="px-3 py-2 border">対応種別</th>
+                                <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">対応種別</th>
 
                                 {{-- 内容 --}}
-                                <th class="px-3 py-2 border">内容</th>
+                                <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">内容</th>
 
                                 {{-- 案件名 --}}
-                                <th class="px-3 py-2 border">案件名</th>
+                                <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">案件名</th>
 
                                 {{-- 顧客名 --}}
                                 <x-table.sortable-header
@@ -104,17 +104,17 @@
                                 />
 
                                 {{-- 担当者 --}}
-                                <th class="px-3 py-2 border">担当者</th>
+                                <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">担当者</th>
                             </tr>
                         </thead>
 
                         {{-- レコード --}}
                         <tbody>
                             @foreach ($interactions as $interaction)
-                                <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                <tr class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600">
 
                                     {{-- 対応日時 --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         <a href="{{ route('interactions.show', $interaction) }}"
                                             class="text-blue-600 hover:underline">
                                             {{ $interaction->interacted_at->format('Y-m-d H:i') }}
@@ -122,17 +122,17 @@
                                     </td>
 
                                     {{-- 対応種別 --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         {{ $interaction->type_label }}
                                     </td>
 
                                     {{-- 内容 --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         {{ Str::limit($interaction->content, 30) }}
                                     </td>
 
                                     {{-- 案件名 --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         @if ($interaction->project)
                                             <a href="{{ route('projects.show', $interaction->project) }}"
                                                 class="text-blue-600 hover:underline">
@@ -144,7 +144,7 @@
                                     </td>
 
                                     {{-- 顧客名 --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         <a href="{{ route('customers.show', $interaction->customer) }}"
                                             class="text-blue-600 hover:underline">
                                             {{ $interaction->customer->name }}
@@ -152,7 +152,7 @@
                                     </td>
 
                                     {{-- 担当者 --}}
-                                    <td class="px-3 py-2 border">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">
                                         {{ $interaction->assignedUser->name }}
                                     </td>
                                 </tr>
@@ -161,14 +161,12 @@
                     </table>
                 </div>
 
-            </div>
-
-            {{-- ページネーション --}}
-            <div class="mt-4">
-                {{ $interactions->links() }}
+                {{-- ページネーション --}}
+                <div class="mt-4">
+                    {{ $interactions->links() }}
+                </div>
             </div>
 
         </div>
-    </div>
     </div>
 </x-app-layout>

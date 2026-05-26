@@ -14,7 +14,7 @@
 <div>
     {{-- ラベル（空文字なら表示しない） --}}
     @if ($label !== '')
-        <label for="{{ $name }}" class="block text-sm font-medium mb-1">
+        <label for="{{ $name }}" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
             {{ $label }}
         </label>
     @endif
@@ -23,8 +23,9 @@
     <select
         name="{{ $name }}"
         id="{{ $name }}"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md
-            dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100"
+        class="w-full px-3 py-2 h-10 border border-gray-200 rounded-md
+            text-gray-700 placeholder-gray-400
+            dark:bg-gray-700 dark:border-gray-400 dark:text-gray-100 dark:placeholder-gray-300"
     >
 
         {{-- 空の選択肢 --}}

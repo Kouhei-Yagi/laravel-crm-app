@@ -12,8 +12,8 @@
 
 @php
     // 日付入力欄の共通クラス
-    $inputClass = 'w-40 px-3 py-2 border border-gray-300 rounded-md
-                dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100';
+    $inputClass = 'w-40 px-3 py-2 h-10 border border-gray-200 rounded-md
+                dark:bg-gray-700 dark:border-gray-400 dark:text-gray-100';
 
     // 実際の name 属性（from/to）を生成
     $nameFrom = $name . '_from';
@@ -23,7 +23,7 @@
 <div>
     {{-- ラベル（空文字なら表示しない） --}}
     @if ($label)
-        <label class="block text-sm font-medium mb-1">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
             {{ $label }}
         </label>
     @endif

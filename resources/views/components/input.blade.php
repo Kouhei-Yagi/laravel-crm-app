@@ -71,8 +71,7 @@ x-input コンポーネント
         {{-- Tailwind のスタイルを適用 --}}
         {{ $attributes->class([
             // 共通スタイル
-            "w-full border-gray-300 rounded-md shadow-sm
-             text-gray-900 dark:text-gray-100",
+            "w-full border-gray-300 rounded-md shadow-sm text-gray-900 dark:text-gray-100",
 
             // 通常時の背景
             "bg-white dark:bg-gray-700" => ! $disabled,

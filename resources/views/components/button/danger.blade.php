@@ -2,10 +2,13 @@
     'type' => 'button',
 ])
 
-@php
-    $classes = 'inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 dark:hover:bg-red-500';
-@endphp
-
-<button type="{{ $type }}" {{ $attributes->merge(['class' => $classes]) }}>
+<button
+    type="{{ $type }}"
+    {{ $attributes->class([
+        'inline-block px-4 py-2 text-sm font-medium text-white rounded-md',
+        'bg-red-600 hover:bg-red-700',
+        'dark:bg-red-500 dark:hover:bg-red-600',
+    ]) }}
+>
     {{ $slot }}
 </button>

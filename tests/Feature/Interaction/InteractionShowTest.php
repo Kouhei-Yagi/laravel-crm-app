@@ -26,7 +26,7 @@ it('ログインユーザーは対応履歴詳細画面を表示できる', func
     // 対応履歴が表示されていることを確認
     $response->assertSeeText([
         $interaction->interacted_at->format('Y-m-d H:i'),
-        Interaction::TYPE[$interaction->type],
+        $interaction->label_type,
         $interaction->content,
         $interaction->customer->name,
         $interaction->assignedUser->name,

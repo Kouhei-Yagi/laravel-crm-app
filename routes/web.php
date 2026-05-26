@@ -7,11 +7,11 @@ use App\Http\Controllers\InteractionController;
 use App\Http\Controllers\ProjectController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');;
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect()->route('customers.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

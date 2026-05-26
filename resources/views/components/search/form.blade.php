@@ -4,11 +4,11 @@
 ])
 
 <form action="{{ $action }}" method="get" {{ $attributes->merge(['class' => 'mb-6']) }}>
-    <div class="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-gray-50 dark:bg-gray-700">
+    <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-5 bg-gray-50 dark:bg-gray-700 shadow-sm">
 
         {{-- タイトル --}}
         <div class="mb-3 pb-2 border-b border-gray-300 dark:border-gray-600">
-            <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">
+            <span class="text-base font-semibold text-gray-800 dark:text-gray-100">
                 {{ $title }}
             </span>
         </div>
@@ -19,7 +19,7 @@
         </div>
 
         {{-- ボタン --}}
-        <div class="flex justify-end mt-4 gap-3">
+        <div class="flex justify-end mt-6 gap-4">
             <x-search.button.clear :href="$action" />
             <x-search.button.submit />
         </div>
