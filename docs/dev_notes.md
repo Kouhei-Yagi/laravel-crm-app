@@ -5229,3 +5229,110 @@ php artisan make:provider AuthServiceProvider
 - disabled input の見た目統一など、任意の改善余地は残る
 
 ---
+
+## 機能名：ダミーデータの改善
+
+### 目的
+
+- 自然な日本語のダミーデータを生成し、画面の見栄えを向上させるため
+- 顧客 → 案件 → 対応履歴 の階層構造を再現するため
+- Factory / Seeder のデータをバリデーション仕様・マスタ値と整合させるため
+- 担当者（assigned_user_id）を固定ユーザーから割り当て、実務的なデータにするため
+
+### ブランチ名：**chore/refine-demo-data**
+
+### 実装日：2026-05-30
+
+### 作成・変更・自動生成されたファイル
+
+- `database/seeders/UserSeeder.php`（新規）
+- `database/factories/CustomerFactory.php`（変更）
+- `database/factories/ProjectFactory.php`（変更）
+- `database/factories/InteractionFactory.php`（変更）
+- `database/seeders/DatabaseSeeder.php`（変更）
+
+### 実装内容
+
+- UserSeeder を作成し、固定 5 名の担当者を登録
+- CustomerFactory を日本語辞書化し、`fake()->optional()`によりnullデータを含ませるよう改善
+- ProjectFactory を日本語辞書化し、顧客の担当者を引き継ぎ、`fake()->optional()`によりnullデータを含ませるよう改善
+- InteractionFactory を日本語辞書化及び案件紐付け/単発対応に対応し、`fake()->optional()`によりnullデータを含ませるよう改善
+- DatabaseSeeder を階層構造（User → Customer → Project → Interaction）に変更
+- migrate:fresh --seed によるデータ再生成
+
+### 実装手順
+
+1. UserSeeder の作成
+
+- 固定 5 名の担当者を登録するための Seeder を新規作成
+- 名前・メールアドレスを日本語で定義
+- パスワードは`Hash::make('password')`で暗号化
+- `email_verified_at`を設定し、ログイン可能な状態に
+- DatabaseSeeder から呼び出せるように準備
+
+2. CustomerFactory の改善
+
+- 顧客名とカナの整合性を保つため、日本語名辞書を作成
+- 辞書をシャッフルし、重複しないように index 管理
+- 担当者（assigned_user_id）を UserSeeder の 5 名からランダムに割り当て
+- メール・電話・住所などの optional を 0.8 に設定
+- 日本語の memo 辞書を作成し、自然な文章を生成
+- 顧客ステータス（status / rank）をマスタ値に合わせて生成
+
+3. ProjectFactory の改善
+
+- 顧客をランダムに取得し、担当者を案件にも引き継ぐ
+- title / description / memo を日本語辞書から生成
+- start_date と end_date の整合性を保つため、
+    - start を過去〜未来の範囲で生成
+    - end を start 以降の日付で生成
+- status をマスタ値（estimating / proposing / contracted / lost / on_hold）に合わせる
+
+4. InteractionFactory の改善
+
+- 80% → 案件に紐づく履歴
+- 20% → 単発対応（project_id = null）
+- 案件紐付け時は
+    - project → customer → assigned_user を引き継ぐ
+- 単発対応時は
+    - customer → assigned_user を引き継ぐ
+- content / memo を日本語辞書化し、自然な文章に変更
+- type をマスタ値に合わせて phone / email / meeting / visit に統一
+- interacted_at を過去 1 年以内で生成し、実務的な履歴に
+
+5. DatabaseSeeder を階層構造に変更
+
+- Seeder の実行順序を実務的な階層構造に変更
+    1. UserSeeder（担当者）
+    2. CustomerFactory（顧客）
+    3. ProjectFactory（案件）
+    4. InteractionFactory（対応履歴）
+- 外部キー整合性を保つため、この順序が必須
+- 顧客 60 件、案件 100 件、対応履歴 250 件に調整し、
+    - ページネーションが自然に出る
+    - 顧客詳細 → 案件 → 対応履歴の画面が実務的になる
+
+6. ダミーデータの再作成
+
+    ```sh
+    migrate:fresh --seed
+    ```
+
+### 確認内容
+
+- Seeder がエラーなく実行されること
+- 顧客一覧でページネーションが表示されること
+- 顧客詳細 → 案件 → 対応履歴の階層が自然に表示されること
+- 日本語の文章が自然で、未設定項目が少なく見栄えが良いこと
+- マスタ値（status / rank / project_status / interaction_type）と Factory の値が一致していること
+- assigned_user_id が正しく顧客・案件・対応履歴に引き継がれていること
+
+### 気づき・課題
+
+- Factory はランダムデータ生成に便利だが、見せる用のデータは辞書方式が最も自然であることを理解した。
+- `$this->call()`は「Seeder 内で他の Seeder を実行するためのメソッド」であり、Seeder の実行順序を制御する仕組みであることを理解した。
+- CustomerFactory で`name`と`kana`の整合性を保つには、日本語名辞書を連想配列で管理する必要があることを理解した。
+- `fake()->optional()`はデフォルトで 50% が null になるため、見せる用データでは`optional(0.8)`など確率調整が必須であることを理解した。
+- Faker の文章生成（`text()` / `sentence()`）は日本語ロケールでも英語になるため、日本語文章は辞書方式で作る必要があることを理解した。
+
+---
