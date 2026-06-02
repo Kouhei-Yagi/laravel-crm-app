@@ -5336,3 +5336,56 @@ php artisan make:provider AuthServiceProvider
 - Faker の文章生成（`text()` / `sentence()`）は日本語ロケールでも英語になるため、日本語文章は辞書方式で作る必要があることを理解した。
 
 ---
+
+## 機能名：Factory のテスト対応
+
+### 目的
+
+- テスト環境で Factory が null を返して例外が発生する問題を解消するため
+- Seeder 依存の Factory を「テストでも壊れない安全な Factory」に改善するため
+- Policy / Request など Factory に依存するテストを安定して PASS させるため
+
+### ブランチ名：**bugfix/factory-test-stability**
+
+### 実装日：2026-06-02
+
+### 作成・変更・自動生成されたファイル
+
+- `database/factories/CustomerFactory.php`（変更）
+- `database\factories\ProjectFactory.php`（変更）
+- `database/factories/InteractionFactory.php`（変更）
+
+### 実装内容
+
+- Customer / Project / Interaction の Factory の null 安全化（テスト対応）
+    - 各 Factory に「依存データが存在しない場合は自動生成する」処理を追加
+
+### 実装手順
+
+1. CustomerFactory の修正
+
+- User が存在しない場合に null となり例外が発生していた
+- `User::inRandomOrder()->first()`が null の場合は`User::factory()->create()`を実行することで、`assigned_user_id`が常に存在する状態を保証
+
+2. ProjectFactory の修正
+
+- Customer が存在しない場合に null となり例外が発生していた
+- `Customer::inRandomOrder()->first()`が null の場合は`Customer::factory()->create()`を実行することで、Project の`customer_id`/`assigned_user_id`が常に整合性を保つ
+
+3. InteractionFactory の修正
+
+- Project または Customer が存在しない場合に null となり例外が発生していた
+- Project が存在しない場合は`Project::factory()->create()`、Customer が存在しない場合は`Customer::factory()->create()`を実行することで、Interaction の外部キーが常に正しく設定される
+
+### 確認内容
+
+- 全 Factory がテスト環境で null を返さず、例外が発生しないこと
+- Factory に依存するテストがすべて PASS すること
+- 実務環境（Seeder 実行時）でも従来どおり自然なダミーデータが生成されること
+
+### 気づき・課題
+
+- Factory は Seeder 用とテスト用の両方で使われるため、依存データが存在しない場合の null 対策が必須であると理解した
+- テスト環境では Seeder が実行されないため、Factory のランダム生成は壊れやすいといういうことを理解した
+- Factory 作成時に「テストでも壊れないか」を意識して設計することが重要
+- Request のバリデーション改善（空文字 → null 変換など）は、検討する余地あり
