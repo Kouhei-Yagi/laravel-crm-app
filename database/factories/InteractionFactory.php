@@ -24,7 +24,8 @@ class InteractionFactory extends Factory
 
         if ($isLinkedToProject) {
             // 案件をランダムに取得
-            $project = Project::inRandomOrder()->first();
+            // テストでは Seeder が実行されず、project が存在しないため、なければ作成する
+            $project = Project::inRandomOrder()->first() ?? Project::factory()->create();
 
             // 案件 → 顧客 → 担当者 を引き継ぐ
             $customerId = $project->customer_id;
@@ -36,7 +37,8 @@ class InteractionFactory extends Factory
             $projectId = null;
 
             // 顧客をランダムに取得
-            $customer = Customer::inRandomOrder()->first();
+            // テストでは Seeder が実行されず、customer が存在しないため、なければ作成する
+            $customer = Customer::inRandomOrder()->first() ?? Customer::factory()->create();
 
             $customerId = $customer->id;
             $assignedUserId = $customer->assigned_user_id;
