@@ -50,7 +50,14 @@ class CustomerFactory extends Factory
         self::$index++;
 
         // 担当者（UserSeeder の 5 名からランダム）
-        $assignedUserId = User::inRandomOrder()->first()->id;
+        // テストでは Seeder が実行されず、User が存在しないため、なければ作成する
+        $user = User::inRandomOrder()->first();
+
+        if (!$user) {
+            $user = User::factory()->create();
+        }
+
+        $assignedUserId = $user->id;
 
         // 日本語メモ辞書
         $memos = [
