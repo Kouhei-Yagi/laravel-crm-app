@@ -18,7 +18,8 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         // 顧客をランダムに取得
-        $customer = Customer::inRandomOrder()->first();
+        // テストでは Seeder が実行されず、customer が存在しないため、なければ作成する
+        $customer = Customer::inRandomOrder()->first() ?? Customer::factory()->create();
 
         // 顧客の担当者を案件にも引き継ぐ
         $assignedUserId = $customer->assigned_user_id;
