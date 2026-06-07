@@ -16,7 +16,7 @@ erDiagram
         string company_name "nullable"
         string department "nullable"
         string position "nullable"
-        string postal_code "nullable"
+        string postal_code "nullable, length:7"
         string address "nullable"
         string address_detail "nullable"
         enum status "prospect / negotiation / won / lost / inactive"
@@ -34,7 +34,7 @@ erDiagram
         string title
         text description "nullable"
         enum status "estimating / proposing / contracted / lost / on_hold"
-        int amount "nullable"
+        unsigned int amount "nullable"
         date start_date "nullable"
         date end_date "nullable"
         int assigned_user_id FK
@@ -47,7 +47,7 @@ erDiagram
     interactions {
         int id PK "UNIQUE - AUTO_INCREMENT"
         int customer_id FK
-        int project_id FK "nullable"
+        int project_id FK "nullable, nullOnDelete"
         int assigned_user_id FK
         enum type "phone / email / visit / meeting"
         text content
