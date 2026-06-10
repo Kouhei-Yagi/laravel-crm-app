@@ -8,63 +8,63 @@ erDiagram
     users ||--o{ interactions : "logs"
 
     customers {
-        int id PK "UNIQUE - AUTO_INCREMENT"
-        string name
-        string kana "nullable"
-        string email "nullable"
-        string phone "nullable"
-        string company_name "nullable"
-        string department "nullable"
-        string position "nullable"
-        string postal_code "nullable, length:7"
-        string address "nullable"
-        string address_detail "nullable"
-        enum status "prospect / negotiation / won / lost / inactive"
-        enum rank "A / B / C"
-        int assigned_user_id FK
-        text memo "nullable"
-        datetime created_at
-        datetime updated_at
-        datetime deleted_at "nullable"
+        id int PK "UNIQUE - AUTO_INCREMENT"
+        name string
+        kana string "nullable"
+        email string "nullable"
+        phone string "nullable"
+        company_name string "nullable"
+        department string "nullable"
+        position string "nullable"
+        postal_code string "nullable, length:7"
+        address string "nullable"
+        address_detail string "nullable"
+        status enum "prospect / negotiation / won / lost / inactive"
+        rank enum "A / B / C"
+        assigned_user_id int FK
+        memo text "nullable"
+        created_at datetime
+        updated_at datetime
+        deleted_at datetime "nullable"
     }
 
     projects {
-        int id PK "UNIQUE - AUTO_INCREMENT"
-        int customer_id FK
-        string title
-        text description "nullable"
-        enum status "estimating / proposing / contracted / lost / on_hold"
-        unsigned int amount "nullable"
-        date start_date "nullable"
-        date end_date "nullable"
-        int assigned_user_id FK
-        text memo "nullable"
-        datetime created_at
-        datetime updated_at
-        datetime deleted_at "nullable"
+        id int PK "UNIQUE - AUTO_INCREMENT"
+        customer_id int FK
+        title string
+        description text "nullable"
+        status enum "estimating / proposing / contracted / lost / on_hold"
+        amount int "nullable"
+        start_date date "nullable"
+        end_date date "nullable"
+        assigned_user_id int FK
+        memo text "nullable"
+        created_at datetime
+        updated_at datetime
+        deleted_at datetime "nullable"
     }
 
     interactions {
-        int id PK "UNIQUE - AUTO_INCREMENT"
-        int customer_id FK
-        int project_id FK "nullable, nullOnDelete"
-        int assigned_user_id FK
-        enum type "phone / email / visit / meeting"
-        text content
-        datetime interacted_at
-        text memo "nullable"
-        datetime created_at
-        datetime updated_at
-        datetime deleted_at "nullable"
+        id int PK "UNIQUE - AUTO_INCREMENT"
+        customer_id int FK
+        project_id int FK "nullable, nullOnDelete"
+        assigned_user_id int FK
+        type enum "phone / email / visit / meeting"
+        content text
+        interacted_at datetime
+        memo text "nullable"
+        created_at datetime
+        updated_at datetime
+        deleted_at datetime "nullable"
     }
 
     users {
-        int id PK "UNIQUE - AUTO_INCREMENT"
-        string name
-        string email "UNIQUE"
-        datetime email_verified_at "nullable"
-        string password
-        string remember_token
-        datetime created_at
-        datetime updated_at
+        id int PK "UNIQUE - AUTO_INCREMENT"
+        name string
+        email string "UNIQUE"
+        email_verified_at datetime "nullable"
+        password string
+        remember_token string
+        created_at datetime
+        updated_at datetime
     }
