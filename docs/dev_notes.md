@@ -5452,3 +5452,66 @@ php artisan make:provider AuthServiceProvider
 - `.env.example`の設定は README のセットアップ手順と整合性を保つ必要がある
 
 ---
+
+## 機能名：Git Hub の整理
+
+### 目的
+
+- Git Hub をポートフォリオとして公開できる状態に整えるため
+- リポジトリ名・README・不要ファイルなどを整理し、閲覧者にとって分かりやすい構成にするため
+
+### ブランチ名：**chore/github-cleanup**
+
+### 実装日：2026-06-08 ~ 2026-06-12
+
+### 作成・変更・自動生成されたファイル
+
+- `README.md`（変更）
+- `.env`（変更）
+- `.env.example`（変更）
+- `resources/views/welcome.blade.php`（削除）
+- `resources/views/dashboard.blade.php`（削除）
+
+### 実装内容
+
+- リポジトリ名の変更と GitHub 側の設定（Description / Topics / Pinned）
+- APP_NAME の統一（`.env` / `.env.example`）
+- Breeze 初期ページの削除（welcome / dashboard）
+- プロフィール README の作成
+
+### 実装手順
+
+1. リポジトリ名の変更
+
+- リポジトリ名を変更（`customer-manager`→`laravel-crm-app`）
+- ローカルの`origin`を新 URL に変更
+- README の clone URL を新しい URL に更新
+- GitHub の About 欄（Description / Topics）を設定
+- Pinned Repositories に固定
+
+2. APP_NAME 修正
+
+- `.env`/`.env.example`の APP_NAME を `Laravel CRM App` に統一
+
+3. 不要ファイル・設定の整理
+
+- Breeze 初期ページ（welcome / dashboard）を削除
+
+4. GitHub プロフィール README 準備
+
+- プロフィール用リポジトリを作成
+- 自己紹介・スキルセット・代表作・改善予定を整理
+
+### 確認内容
+
+- GitHub のリポジトリ名が「laravel-crm-app」に変更されている
+- ブラウザのタブタイトルが「Laravel CRM App」になっている
+- プロフィール README が GitHub トップに反映されている
+
+### 気づき・課題
+
+- Breeze の初期ページは残しておくと混乱を招く恐れがある
+- リポジトリ名変更後は clone URL や About 欄など複数箇所の修正が必要
+- 今後は改善予定を Issue 化し、Projects で管理すると開発ログがより明確になると思った
+
+---
