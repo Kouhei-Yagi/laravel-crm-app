@@ -5515,3 +5515,64 @@ php artisan make:provider AuthServiceProvider
 - 今後は改善予定を Issue 化し、Projects で管理すると開発ログがより明確になると思った
 
 ---
+
+## 機能名：Git Hub で Issues / Projects の導入
+
+### 目的
+
+- GitHub Issues / Projects を使ったタスク管理の仕組みを整備するため
+- Issue テンプレートを追加し、実務的な開発フローを再現するため
+- 改善タスクを体系的に管理し、開発プロセスの透明性を高めるため
+
+### ブランチ名：**docs/setup-github-projects**
+
+### 実装日：2026-06-15
+
+### 作成・変更・自動生成されたファイル
+
+- `.github/ISSUE_TEMPLATE/task.md`（新規）
+- `.github/ISSUE_TEMPLATE/docs.md`（新規）
+- `.github/ISSUE_TEMPLATE/bug.md`（新規）
+
+### 実装内容
+
+- GitHub が認識する Issue テンプレート用ディレクトリ`.github/ISSUE_TEMPLATE/`を作成
+- Task / Docs / Bug の3種類の Issue テンプレートを追加
+
+### 実装手順
+
+1. Issue テンプレート用のファイルを作る
+
+- `.github/ISSUE_TEMPLATE/`ディレクトリを作る
+- `task.md`（機能追加・改善タスク用）・`docs.md`（ドキュメント・調査・理解用）・`bug.md`（バグ報告用）を作成
+
+2. テンプレートを GitHub に反映する
+
+- ブランチでコミット → push
+- PR を作成し、main にマージ
+
+3. Projects（Kanban）を作る
+
+- GitHub の Projects タブから新規 Project を作成
+- テンプレートは「Board（カンバン）」を選ぶ
+- カラムを用意（To Do / In Progress / Done）
+
+4. 改善リストを Issue 化して、Project に載せる
+
+- 改善項目を Issue に分解
+- To Do に追加
+
+### 確認内容
+
+- GitHub の「New Issue」で Task / Docs / Bug のテンプレートが表示されること
+- テンプレート選択後、title・labels が自動で設定されるこｔ
+- Projects（Kanban）が作成でき、Issue を紐づけられるこｔ
+- Issue → Branch → PR → Merge → Done の流れが再現できるこｔ
+
+### 気づき・課題
+
+- Projects の運用はシンプルに始め、必要に応じて拡張する方針とした
+- 改善タスクを Issue 化することで、作業の優先度と進捗が明確になる
+- 今後、必要に応じて config.yml を追加し、テンプレートの並び順やデフォルト設定を調整する余地あり
+
+---
