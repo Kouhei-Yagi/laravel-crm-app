@@ -1,3 +1,6 @@
+![PHP Version](https://img.shields.io/badge/PHP-8.4-blue)
+![Laravel Version](https://img.shields.io/badge/Laravel-12.46-red)
+
 # 顧客管理システム（CRM / Laravel オリジナルアプリ）
 
 ## 1. アプリ概要
